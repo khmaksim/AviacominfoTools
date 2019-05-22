@@ -25,7 +25,7 @@ void ObstraclesHandler::replyFinished(QNetworkReply *reply)
 {
     if (reply->error() != QNetworkReply::NoError)
         qDebug() << "Error: " << reply->error() << reply->errorString() << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-    else {
+    else if (reply->url() == QUrl("http://www.caica.ru/ObstacleList/rus/")) {
         QByteArray data = reply->readAll();
         int pos = 0;
 //        int start = -1;
@@ -59,7 +59,19 @@ void ObstraclesHandler::replyFinished(QNetworkReply *reply)
         }
         emit finished(airfields);
     }
+    else {
+        qDebug() << "Reply Good";
+    }
     reply->deleteLater();
+}
+
+void ObstraclesHandler::getListObstracles(const QString &file)
+{
+    QNetworkRequest request;
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QVariant(QString("text/xml")));
+    request.setUrl(QUrl("http://www.caica.ru/ObstacleList/rus/").resolved(QUrl(file)));
+
+    reply = manager->get(request);
 }
 
 void ObstraclesHandler::updateProgress(qint64 r, qint64 t)

@@ -18,6 +18,8 @@ class ObstraclesHandler : public QObject
         explicit ObstraclesHandler(QObject *parent = nullptr);
         ~ObstraclesHandler();
 
+        void getListObstracles(const QString&);
+
     public slots:
         void replyFinished(QNetworkReply*);
         void updateProgress(qint64,qint64);

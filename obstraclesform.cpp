@@ -21,7 +21,7 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     obstraclesHandler = new ObstraclesHandler;
 
     connect(obstraclesHandler, SIGNAL(finished(QVector<Airfield>&)), this, SLOT(setListView(QVector<Airfield>&)));
-    connect(ui->tableView, SIGNAL(clicked(QModelIndex)), this, SLOT(getObstracleAirfield(QModelIndex)));
+    connect(ui->listView, SIGNAL(clicked(QModelIndex)), this, SLOT(getObstracleAirfield(QModelIndex)));
 }
 
 ObstraclesForm::~ObstraclesForm()
@@ -47,5 +47,8 @@ void ObstraclesForm::setListView(QVector<Airfield> &airfields)
 
 void ObstraclesForm::getObstracleAirfield(const QModelIndex &index)
 {
-//    qDebug() << airfieldsModel->itemData(index).
+    QString hrefFile = airfieldsModel->data(index, ListItemDelegate::HrefRole).toString();
+
+    if (!hrefFile.isEmpty())
+        obstraclesHandler->getListObstracles(hrefFile);
 }
