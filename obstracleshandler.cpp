@@ -9,7 +9,9 @@ ObstraclesHandler::ObstraclesHandler(QObject *parent) : QObject(parent)
     connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
 
     QNetworkRequest request;
-    request.setHeader(QNetworkRequest::ContentTypeHeader, QVariant(QString("text/xml")));
+    request.setRawHeader("User-Agent", "MyOwnBrowser 1.0");
+    request.setHeader(QNetworkRequest::UserAgentHeader, QVariant(QString("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0")));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QVariant(QString("text/html")));
     request.setUrl(QUrl("http://www.caica.ru/ObstacleList/rus/"));
     reply = manager->get(request);
 
@@ -23,16 +25,17 @@ ObstraclesHandler::~ObstraclesHandler()
 
 void ObstraclesHandler::replyFinished(QNetworkReply *reply)
 {
-    if (reply->error() != QNetworkReply::NoError)
+    if (reply->error() != QNetworkReply::NoError) {
         qDebug() << "Error: " << reply->error() << reply->errorString() << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+        manager->get(reply->request());
+    }
     else if (reply->url() == QUrl("http://www.caica.ru/ObstacleList/rus/")) {
         QByteArray data = reply->readAll();
         int pos = 0;
+        QVector<Airfield> airfields;
 //        int start = -1;
 //        int end = -1;
         QString startMenu = "<div class=\"menu\">";
-//        QString startItemMenu = "<div class=\"menu_item\">";
-//        QString endItemMenu = "</div>";
         QRegExp regExp("<a target=\"view_frame\" href=\"([^\"]+)\">([^<]+)<br /><b>([^<]+)</b></a>");
 
         if ((pos = data.indexOf(startMenu, pos)) > 0) {
@@ -53,14 +56,31 @@ void ObstraclesHandler::replyFinished(QNetworkReply *reply)
                 airfield.href = regExp.cap(1);
                 airfield.name = regExp.cap(2);
                 airfield.icao = regExp.cap(3);
-//                qDebug() << airfield.name;
                 airfields << airfield;
             }
         }
         emit finished(airfields);
     }
     else {
-        qDebug() << "Reply Good";
+        QByteArray data = reply->readAll();
+        int pos = 0;
+        QRegExp regExp("<td>([^<]*)</td>");
+        QVector<QVector<QString>> table;
+        QVector<QString> row;
+
+        int col = 0;
+        while ((pos = regExp.indexIn(data, pos)) != -1) {
+            pos += regExp.matchedLength();
+            row.append(regExp.cap(1));
+            col++;
+
+            if (col == 26) {
+                col = 0;
+                table << row;
+                row.clear();
+            }
+        }
+        emit finished(table);
     }
     reply->deleteLater();
 }
@@ -68,7 +88,8 @@ void ObstraclesHandler::replyFinished(QNetworkReply *reply)
 void ObstraclesHandler::getListObstracles(const QString &file)
 {
     QNetworkRequest request;
-    request.setHeader(QNetworkRequest::ContentTypeHeader, QVariant(QString("text/xml")));
+    request.setHeader(QNetworkRequest::UserAgentHeader, QVariant(QString("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0")));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QVariant(QString("text/html")));
     request.setUrl(QUrl("http://www.caica.ru/ObstacleList/rus/").resolved(QUrl(file)));
 
     reply = manager->get(request);

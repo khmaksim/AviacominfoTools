@@ -28,14 +28,25 @@ SOURCES += \
         mainwidget.cpp \
     obstraclesform.cpp \
     obstracleshandler.cpp \
-    listitemdelegate.cpp
+    listitemdelegate.cpp \
+    tablemodel.cpp \
+    searchmodel.cpp
 
 HEADERS += \
         mainwidget.h \
     obstraclesform.h \
     obstracleshandler.h \
-    listitemdelegate.h
+    listitemdelegate.h \
+    tablemodel.h \
+    searchmodel.h
 
 FORMS += \
         mainwidget.ui \
     obstraclesform.ui
+
+RESOURCES += \
+    aviacominfotools.qrc
+
+TRANSLATIONS = aviacominfotools_ru.ts
+
+include(../QtWaitingSpinner-master/qtwaitingspinner.pri)

@@ -27,10 +27,11 @@ class ObstraclesHandler : public QObject
     private:
         QNetworkAccessManager *manager;
         QNetworkReply *reply;
-        QVector<Airfield> airfields;
+//        QVector<Airfield> airfields;
 
     signals:
         void finished(QVector<Airfield>&);
+        void finished(QVector<QVector<QString>>&);
 };
 
 #endif // OBSTRACLESHANDLER_H
