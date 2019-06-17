@@ -20,6 +20,8 @@ class MainWidget : public QWidget
 
     private:
         Ui::MainWidget *ui;
+
+        void connectDatabase();
 };
 
 #endif // MAINWIDGET_H

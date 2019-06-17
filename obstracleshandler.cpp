@@ -64,23 +64,47 @@ void ObstraclesHandler::replyFinished(QNetworkReply *reply)
     else {
         QByteArray data = reply->readAll();
         int pos = 0;
-        QRegExp regExp("<td>([^<]*)</td>");
+
+//        pos = data.indexOf("tbody");        // find begin table body
+//        if (pos == 0)
+//            return;
+
+        QRegExp tableBeginRegExp("<tbody");
+        QRegExp rowBeginRegExp("<tr[^>]*>");
+        QRegExp rowEndRegExp("</tr>");
+        QRegExp colRegExp("<td>([^<]*)</td>");
         QVector<QVector<QString>> table;
         QVector<QString> row;
+        int posEndRow = 0;
 
-        int col = 0;
-        while ((pos = regExp.indexIn(data, pos)) != -1) {
-            pos += regExp.matchedLength();
-            row.append(regExp.cap(1));
-            col++;
+        data.replace("<td />", "<td></td>");        // fixed syntax error
+        pos = tableBeginRegExp.indexIn(data, pos);      // position begin table body
 
-            if (col == 26) {
-                col = 0;
-                table << row;
-                row.clear();
+        if (pos != -1) {
+            while ((pos = rowBeginRegExp.indexIn(data, pos)) != -1) {
+                posEndRow = rowEndRegExp.indexIn(data, pos);
+
+                if (posEndRow == -1)
+                    continue;
+
+                while ((pos = colRegExp.indexIn(data, pos)) != -1) {
+                    pos += colRegExp.matchedLength();
+
+                    if (pos > posEndRow) {
+                        pos = posEndRow;
+                        table << row;
+                        row.clear();
+                        break;
+                    }
+
+                    row.append(colRegExp.cap(1));
+                }
+                //  add table last row
+                if (!row.isEmpty())
+                    table << row;
             }
+            emit finished(table);
         }
-        emit finished(table);
     }
     reply->deleteLater();
 }
