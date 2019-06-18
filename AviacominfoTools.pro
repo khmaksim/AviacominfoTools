@@ -30,7 +30,8 @@ SOURCES += \
     obstracleshandler.cpp \
     listitemdelegate.cpp \
     tablemodel.cpp \
-    searchmodel.cpp
+    searchmodel.cpp \
+    qgroupheaderview.cpp
 
 HEADERS += \
         mainwidget.h \
@@ -38,7 +39,8 @@ HEADERS += \
     obstracleshandler.h \
     listitemdelegate.h \
     tablemodel.h \
-    searchmodel.h
+    searchmodel.h \
+    qgroupheaderview.h
 
 FORMS += \
         mainwidget.ui \

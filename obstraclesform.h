@@ -33,6 +33,9 @@ class ObstraclesForm : public QWidget
         SearchModel *searchModel;
         WaitingSpinnerWidget *spinner;
 
+        void readSettings();
+        void writeSettings();
+
     private slots:
         void setListView(QVector<Airfield>&);
         void setTableView(QVector<QVector<QString>>&);

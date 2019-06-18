@@ -8,10 +8,12 @@
 #include <QFileDialog>
 #include <QSaveFile>
 #include <QSortFilterProxyModel>
+#include <QSettings>
 #include "listitemdelegate.h"
 #include "tablemodel.h"
 #include "searchmodel.h"
 #include "waitingspinnerwidget.h"
+#include "qgroupheaderview.h"
 
 ObstraclesForm::ObstraclesForm(QWidget *parent) :
     QWidget(parent),
@@ -44,6 +46,38 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
 
     ui->listView->setItemDelegate(listItemDelegate);
     ui->listView->setModel(searchModel);
+
+    QGroupHeaderView *groupHeaderView = new QGroupHeaderView(Qt::Horizontal, ui->tableView);
+    obstraclesModel->setHorizontalHeaderLabels(QStringList() << tr("*")
+                                                             << tr("ID")
+                                                             << tr("Name")
+                                                             << tr("Type of\n configuration")
+                                                             << tr("Human\n settlement")
+                                                             << tr("Location options | coordinate\n system")
+                                                             << tr("Location options | latitude")
+                                                             << tr("Location options | longitude")
+                                                             << tr("Location options | latitude of\n center of\n arc/circle")
+                                                             << tr("Location options | longitude of\n center of\n arc/circle")
+                                                             << tr("Location options | arc/circle\n radius (m)")
+                                                             << tr("Location options | horizontal\n accuracy (m)")
+                                                             << tr("Height | orthometric\n height MSL (m)")
+                                                             << tr("Height | relative\n height AGL (m)")
+                                                             << tr("Height | vertical\n accuracy (m)")
+                                                             << tr("Design parameters | type of\n material")
+                                                             << tr("Design parameters | fragility")
+                                                             << tr("Marking day | Yes/no")
+                                                             << tr("Marking day | template")
+                                                             << tr("Marking day | color")
+                                                             << tr("Night marking | Yes/no")
+                                                             << tr("Night marking | color")
+                                                             << tr("Night marking | type of\n light")
+                                                             << tr("Night marking | intensity")
+                                                             << tr("Night marking | lights working\n time")
+                                                             << tr("Night marking | compliance\n 14 ADJ. ICAO")
+                                                             << tr("Data source | supplier")
+                                                             << tr("Data source | date of\n submission"));
+
+    ui->tableView->setHorizontalHeader(groupHeaderView);
     ui->tableView->setModel(obstraclesModel);
 
     obstraclesHandler = new ObstraclesHandler;
@@ -60,6 +94,8 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
 //    spinner->setColor(QColor(81, 4, 71));
     spinner->start();
 
+    readSettings();
+
     connect(obstraclesHandler, SIGNAL(finished(QVector<Airfield>&)), this, SLOT(setListView(QVector<Airfield>&)));
     connect(obstraclesHandler, SIGNAL(finished(QVector<Airfield>&)), spinner, SLOT(stop()));
     connect(obstraclesHandler, SIGNAL(finished(QVector<QVector<QString>>&)), this, SLOT(setTableView(QVector<QVector<QString>>&)));
@@ -73,8 +109,29 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
 
 ObstraclesForm::~ObstraclesForm()
 {
+    writeSettings();
     delete obstraclesHandler;
     delete ui;
+}
+
+void ObstraclesForm::writeSettings()
+{
+    QSettings settings;
+
+    settings.beginGroup("geometry");
+    settings.setValue(ui->splitter->objectName(), ui->splitter->saveState());
+    settings.setValue(ui->tableView->objectName(), ui->tableView->horizontalHeader()->saveState());
+    settings.endGroup();
+}
+
+void ObstraclesForm::readSettings()
+{
+    QSettings settings;
+
+    settings.beginGroup("geometry");
+    ui->splitter->restoreState(settings.value(ui->splitter->objectName()).toByteArray());
+    ui->tableView->horizontalHeader()->restoreState(settings.value(ui->tableView->objectName()).toByteArray());
+    settings.endGroup();
 }
 
 void ObstraclesForm::setListView(QVector<Airfield> &airfields)
@@ -102,7 +159,11 @@ void ObstraclesForm::getObstracleAirfield(const QModelIndex &index)
 
 void ObstraclesForm::setTableView(QVector<QVector<QString>> &dataTable)
 {
-    obstraclesModel->clear();
+    // remove all rows
+    while (obstraclesModel->rowCount() > 0) {
+        obstraclesModel->removeRow(0);
+    }
+
     for (int i = 0; i < dataTable.size(); i++) {
         QVector<QString> dataRow = dataTable.at(i);
         QList<QStandardItem *> items;
