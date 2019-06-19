@@ -84,17 +84,17 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     ui->tableView->setHorizontalHeader(groupHeaderView);
     ui->tableView->setModel(obstraclesModel);
 
-    spinner = new WaitingSpinnerWidget(this);
-    spinner->setRoundness(70.0);
-    spinner->setMinimumTrailOpacity(15.0);
-    spinner->setTrailFadePercentage(70.0);
-    spinner->setNumberOfLines(12);
-    spinner->setLineLength(15);
-    spinner->setLineWidth(4);
-    spinner->setInnerRadius(10);
-    spinner->setRevolutionsPerSecond(1);
-//    spinner->setColor(QColor(81, 4, 71));
-    spinner->start();
+//    spinner = new WaitingSpinnerWidget(this);
+//    spinner->setRoundness(70.0);
+//    spinner->setMinimumTrailOpacity(15.0);
+//    spinner->setTrailFadePercentage(70.0);
+//    spinner->setNumberOfLines(12);
+//    spinner->setLineLength(15);
+//    spinner->setLineWidth(4);
+//    spinner->setInnerRadius(10);
+//    spinner->setRevolutionsPerSecond(1);
+////    spinner->setColor(QColor(81, 4, 71));
+//    spinner->start();
 
     readSettings();
 
@@ -103,7 +103,7 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
 //    connect(obstraclesHandler, SIGNAL(finished(QVector<QVector<QString>>&)), this, SLOT(setTableView(QVector<QVector<QString>>&)));
 //    connect(obstraclesHandler, SIGNAL(finished(QVector<QVector<QString>>&)), spinner, SLOT(stop()));
 //    connect(ui->listView, SIGNAL(clicked(QModelIndex)), this, SLOT(getObstracleForAirfield(QModelIndex)));
-    connect(ui->listView, SIGNAL(clicked(QModelIndex)), spinner, SLOT(start()));
+//    connect(ui->listView, SIGNAL(clicked(QModelIndex)), spinner, SLOT(start()));
     connect(ui->tableView, SIGNAL(clicked(QModelIndex)), this, SLOT(enabledToolButton()));
     connect(exportButton, SIGNAL(clicked(bool)), this, SLOT(exportToFile()));
     connect(ui->searchLineEdit, SIGNAL(textChanged(QString)), this, SLOT(searchAirfield(QString)));

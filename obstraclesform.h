@@ -32,7 +32,7 @@ class ObstraclesForm : public QWidget
         QStandardItemModel *airfieldsModel;
         TableModel *obstraclesModel;
         SearchModel *searchModel;
-        WaitingSpinnerWidget *spinner;
+//        WaitingSpinnerWidget *spinner;
 
         void readSettings();
         void writeSettings();

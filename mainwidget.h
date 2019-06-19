@@ -25,6 +25,9 @@ class MainWidget : public QWidget
 
         ObstraclesHandler *obstraclesHandler;
         Database *db;
+
+        void readSettings();
+        void writeSettings();
 };
 
 #endif // MAINWIDGET_H
