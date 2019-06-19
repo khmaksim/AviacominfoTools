@@ -197,7 +197,7 @@ void ObstraclesForm::enabledToolButton()
 
 void ObstraclesForm::exportToFile()
 {
-    QString nameFile = QFileDialog::getSaveFileName(this, tr("Save file"), QDir::homePath());
+    QString nameFile = QFileDialog::getSaveFileName(this, tr("Save file"), QString("C:/prep.txt"));
     if (nameFile.isEmpty()) {
         qDebug() << "Empty name save file";
         return;
