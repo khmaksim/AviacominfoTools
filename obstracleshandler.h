@@ -18,20 +18,23 @@ class ObstraclesHandler : public QObject
         explicit ObstraclesHandler(QObject *parent = nullptr);
         ~ObstraclesHandler();
 
-        void getListObstracles(const QString&);
-
     public slots:
-        void replyFinished(QNetworkReply*);
-        void updateProgress(qint64,qint64);
+        void checkUpdates();
 
     private:
         QNetworkAccessManager *manager;
         QNetworkReply *reply;
-//        QVector<Airfield> airfields;
+        QVector<Airfield> airfields;
+
+        void getListObstracles(const QString&);
+        void getListAirfields();
+
+    private slots:
+        void replyFinished(QNetworkReply*);
+        void updateProgress(qint64,qint64);
 
     signals:
-        void finished(QVector<Airfield>&);
-        void finished(QVector<QVector<QString>>&);
+        void finished(Airfield, QVector<QVector<QString>>&);
 };
 
 #endif // OBSTRACLESHANDLER_H

@@ -1,8 +1,8 @@
 #include "mainwidget.h"
 #include "ui_mainwidget.h"
 #include "obstraclesform.h"
-#include <QSqlDatabase>
-#include <QFile>
+#include "obstracleshandler.h"
+#include "database.h"
 #include <QDebug>
 
 MainWidget::MainWidget(QWidget *parent) :
@@ -13,9 +13,12 @@ MainWidget::MainWidget(QWidget *parent) :
     ObstraclesForm *form = new ObstraclesForm(this);
     ui->stackedWidget->addWidget(form);
 
-    connectDatabase();
+    db = new Database(this);
+    obstraclesHandler = new ObstraclesHandler(this);
 
+    connect(obstraclesHandler, SIGNAL(finished(Airfield,QVector<QVector<QString> >&)), db, SLOT(update(Airfield,QVector<QVector<QString> >&)));
     connect(ui->obstracleButton, SIGNAL(clicked(bool)), this, SLOT(showObstracles()));
+    connect(ui->pushButton, SIGNAL(clicked(bool)), obstraclesHandler, SLOT(checkUpdates()));
 }
 
 MainWidget::~MainWidget()
@@ -26,17 +29,4 @@ MainWidget::~MainWidget()
 void MainWidget::showObstracles()
 {
     ui->stackedWidget->setCurrentIndex(1);
-}
-
-void MainWidget::connectDatabase()
-{
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-
-    if (!QFile("AviacominfoTools.db").exists())
-        qDebug() << "File database is not found.";
-
-    db.setDatabaseName("AviacominfoTools.db");
-
-    if (!db.open())
-        qDebug() << "Can not connected to database.";
 }

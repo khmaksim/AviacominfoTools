@@ -72,4 +72,5 @@ void ListItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
        painter->drawText(nameAirfieldRect, Qt::AlignLeft|Qt::AlignTop|Qt::TextWordWrap, nameAirfield);
 
        painter->restore();
+       QStyledItemDelegate::paint(painter, option, index);
 }

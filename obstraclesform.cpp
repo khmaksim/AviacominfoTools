@@ -42,12 +42,16 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     searchModel->setSourceModel(airfieldsModel);
     searchModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     obstraclesModel = new TableModel(this);
-    ListItemDelegate *listItemDelegate = new ListItemDelegate();
 
-    ui->listView->setItemDelegate(listItemDelegate);
+    ui->listView->setItemDelegate(new ListItemDelegate());
     ui->listView->setModel(searchModel);
+//    ui->listView->setStyleSheet("QListView::item:selected { background: #66b3ff;color: white; }"
+//                                "QListView::item:hover { background: #e6f2ff;color: black; }");
 
     QGroupHeaderView *groupHeaderView = new QGroupHeaderView(Qt::Horizontal, ui->tableView);
+//    groupHeaderView->setStyleSheet("QHeaderView::section { color: black;border: 0.5px solid #bfbfbf; }");
+    groupHeaderView->setSortIndicator(1, Qt::AscendingOrder);
+    groupHeaderView->setSortIndicatorShown(true);
     obstraclesModel->setHorizontalHeaderLabels(QStringList() << tr("*")
                                                              << tr("ID")
                                                              << tr("Name")
@@ -80,8 +84,6 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     ui->tableView->setHorizontalHeader(groupHeaderView);
     ui->tableView->setModel(obstraclesModel);
 
-    obstraclesHandler = new ObstraclesHandler;
-
     spinner = new WaitingSpinnerWidget(this);
     spinner->setRoundness(70.0);
     spinner->setMinimumTrailOpacity(15.0);
@@ -96,11 +98,11 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
 
     readSettings();
 
-    connect(obstraclesHandler, SIGNAL(finished(QVector<Airfield>&)), this, SLOT(setListView(QVector<Airfield>&)));
-    connect(obstraclesHandler, SIGNAL(finished(QVector<Airfield>&)), spinner, SLOT(stop()));
-    connect(obstraclesHandler, SIGNAL(finished(QVector<QVector<QString>>&)), this, SLOT(setTableView(QVector<QVector<QString>>&)));
-    connect(obstraclesHandler, SIGNAL(finished(QVector<QVector<QString>>&)), spinner, SLOT(stop()));
-    connect(ui->listView, SIGNAL(clicked(QModelIndex)), this, SLOT(getObstracleAirfield(QModelIndex)));
+//    connect(obstraclesHandler, SIGNAL(finished(QVector<Airfield>&)), this, SLOT(setListView(QVector<Airfield>&)));
+//    connect(obstraclesHandler, SIGNAL(finished(QVector<Airfield>&)), spinner, SLOT(stop()));
+//    connect(obstraclesHandler, SIGNAL(finished(QVector<QVector<QString>>&)), this, SLOT(setTableView(QVector<QVector<QString>>&)));
+//    connect(obstraclesHandler, SIGNAL(finished(QVector<QVector<QString>>&)), spinner, SLOT(stop()));
+//    connect(ui->listView, SIGNAL(clicked(QModelIndex)), this, SLOT(getObstracleForAirfield(QModelIndex)));
     connect(ui->listView, SIGNAL(clicked(QModelIndex)), spinner, SLOT(start()));
     connect(ui->tableView, SIGNAL(clicked(QModelIndex)), this, SLOT(enabledToolButton()));
     connect(exportButton, SIGNAL(clicked(bool)), this, SLOT(exportToFile()));
@@ -110,7 +112,7 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
 ObstraclesForm::~ObstraclesForm()
 {
     writeSettings();
-    delete obstraclesHandler;
+//    delete obstraclesHandler;
     delete ui;
 }
 
@@ -149,13 +151,13 @@ void ObstraclesForm::setListView(QVector<Airfield> &airfields)
     ui->listView->repaint();
 }
 
-void ObstraclesForm::getObstracleAirfield(const QModelIndex &index)
-{
-    QString hrefFile = searchModel->data(index, ListItemDelegate::HrefRole).toString();
+//void ObstraclesForm::getObstracleForAirfield(const QModelIndex &index)
+//{
+//    QString hrefFile = searchModel->data(index, ListItemDelegate::HrefRole).toString();
 
-    if (!hrefFile.isEmpty())
-        obstraclesHandler->getListObstracles(hrefFile);
-}
+//    if (!hrefFile.isEmpty())
+//        obstraclesHandler->getListObstracles(hrefFile);
+//}
 
 void ObstraclesForm::setTableView(QVector<QVector<QString>> &dataTable)
 {

@@ -7,6 +7,8 @@ namespace Ui {
     class MainWidget;
 }
 
+class Database;
+class ObstraclesHandler;
 class MainWidget : public QWidget
 {
         Q_OBJECT
@@ -21,7 +23,8 @@ class MainWidget : public QWidget
     private:
         Ui::MainWidget *ui;
 
-        void connectDatabase();
+        ObstraclesHandler *obstraclesHandler;
+        Database *db;
 };
 
 #endif // MAINWIDGET_H

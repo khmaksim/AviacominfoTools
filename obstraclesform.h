@@ -11,7 +11,6 @@ namespace Ui {
 class QStandardItemModel;
 class QToolBar;
 class QToolButton;
-class ObstraclesHandler;
 class TableModel;
 class SearchModel;
 class WaitingSpinnerWidget;
@@ -23,11 +22,13 @@ class ObstraclesForm : public QWidget
         explicit ObstraclesForm(QWidget *parent = 0);
         ~ObstraclesForm();
 
+//    public slots:
+//        void updateData();
+
     private:
         Ui::ObstraclesForm *ui;
         QToolBar *toolBar;
         QToolButton *exportButton;
-        ObstraclesHandler *obstraclesHandler;
         QStandardItemModel *airfieldsModel;
         TableModel *obstraclesModel;
         SearchModel *searchModel;
@@ -39,7 +40,7 @@ class ObstraclesForm : public QWidget
     private slots:
         void setListView(QVector<Airfield>&);
         void setTableView(QVector<QVector<QString>>&);
-        void getObstracleAirfield(const QModelIndex&);
+//        void getObstracleForAirfield(const QModelIndex&);
         void enabledToolButton();
         void exportToFile();
         void searchAirfield(const QString&);

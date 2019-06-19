@@ -31,7 +31,8 @@ SOURCES += \
     listitemdelegate.cpp \
     tablemodel.cpp \
     searchmodel.cpp \
-    qgroupheaderview.cpp
+    qgroupheaderview.cpp \
+    database.cpp
 
 HEADERS += \
         mainwidget.h \
@@ -40,7 +41,8 @@ HEADERS += \
     listitemdelegate.h \
     tablemodel.h \
     searchmodel.h \
-    qgroupheaderview.h
+    qgroupheaderview.h \
+    database.h
 
 FORMS += \
         mainwidget.ui \
