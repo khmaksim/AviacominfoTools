@@ -37,7 +37,6 @@ void ObstraclesHandler::replyFinished(QNetworkReply *reply)
                 airfields << airfield;
 
                 getListObstracles(airfield.href);
-                break;
             }
         }
     }

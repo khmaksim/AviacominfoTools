@@ -14,6 +14,7 @@
 #include "searchmodel.h"
 #include "waitingspinnerwidget.h"
 #include "qgroupheaderview.h"
+#include "filterpanel.h"
 
 ObstraclesForm::ObstraclesForm(QWidget *parent) :
     QWidget(parent),
@@ -27,8 +28,15 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     exportButton->setIcon(QIcon(":/images/res/img/filesave.png"));
     exportButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
+    filterButton = new QToolButton(this);
+    filterButton->setText(tr("Filter"));
+    filterButton->setIconSize(QSize(32, 32));
+    filterButton->setIcon(QIcon(":/images/res/img/filter.png"));
+    filterButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+
     toolBar = new QToolBar(this);
     toolBar->addWidget(exportButton);
+    toolBar->addWidget(filterButton);
 
     ui->splitter->setSizes(QList<int>() << 150 << 300);
 
@@ -106,6 +114,7 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
 //    connect(ui->listView, SIGNAL(clicked(QModelIndex)), spinner, SLOT(start()));
     connect(ui->tableView, SIGNAL(clicked(QModelIndex)), this, SLOT(enabledToolButton()));
     connect(exportButton, SIGNAL(clicked(bool)), this, SLOT(exportToFile()));
+    connect(filterButton, SIGNAL(clicked(bool)), this, SLOT(showFilterPanel()));
     connect(ui->searchLineEdit, SIGNAL(textChanged(QString)), this, SLOT(searchAirfield(QString)));
 }
 
@@ -226,4 +235,16 @@ void ObstraclesForm::exportToFile()
 void ObstraclesForm::searchAirfield(const QString &searchRequest)
 {
     searchModel->setFilterRegExp(searchRequest);
+}
+
+void ObstraclesForm::showFilterPanel()
+{
+    FilterPanel *filterPanel = new FilterPanel(this);
+    QPoint pos = ui->tableView->mapToGlobal(QPoint(0, 0));
+    int widthTableView = ui->tableView->geometry().width();
+    int heightTableView = ui->tableView->geometry().height();
+
+    filterPanel->setGeometry(pos.x() + widthTableView / 2, pos.y() + heightTableView / 2,
+                             filterPanel->width(), filterPanel->height());
+    filterPanel->show();
 }

@@ -32,7 +32,8 @@ SOURCES += \
     tablemodel.cpp \
     searchmodel.cpp \
     qgroupheaderview.cpp \
-    database.cpp
+    database.cpp \
+    filterpanel.cpp
 
 HEADERS += \
         mainwidget.h \
@@ -42,7 +43,8 @@ HEADERS += \
     tablemodel.h \
     searchmodel.h \
     qgroupheaderview.h \
-    database.h
+    database.h \
+    filterpanel.h
 
 FORMS += \
         mainwidget.ui \

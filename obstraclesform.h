@@ -14,6 +14,7 @@ class QToolButton;
 class TableModel;
 class SearchModel;
 class WaitingSpinnerWidget;
+class QFrame;
 class ObstraclesForm : public QWidget
 {
         Q_OBJECT
@@ -29,10 +30,12 @@ class ObstraclesForm : public QWidget
         Ui::ObstraclesForm *ui;
         QToolBar *toolBar;
         QToolButton *exportButton;
+        QToolButton *filterButton;
         QStandardItemModel *airfieldsModel;
         TableModel *obstraclesModel;
         SearchModel *searchModel;
 //        WaitingSpinnerWidget *spinner;
+        QFrame *filterPanel;
 
         void readSettings();
         void writeSettings();
@@ -44,6 +47,7 @@ class ObstraclesForm : public QWidget
         void enabledToolButton();
         void exportToFile();
         void searchAirfield(const QString&);
+        void showFilterPanel();
 };
 
 #endif // OBSTRACLESFORM_H
