@@ -11,13 +11,13 @@ MainWidget::MainWidget(QWidget *parent) :
     ui(new Ui::MainWidget)
 {
     ui->setupUi(this);
-    ObstraclesForm *form = new ObstraclesForm(this);
-    ui->stackedWidget->addWidget(form);
-
     db = new Database(this);
     obstraclesHandler = new ObstraclesHandler(this);
 
     readSettings();
+
+    ObstraclesForm *form = new ObstraclesForm(this);
+    ui->stackedWidget->addWidget(form);
 
     connect(obstraclesHandler, SIGNAL(finished(Airfield,QVector<QVector<QString> >&)), db, SLOT(update(Airfield,QVector<QVector<QString> >&)));
     connect(ui->obstracleButton, SIGNAL(clicked(bool)), this, SLOT(showObstracles()));

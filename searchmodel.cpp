@@ -3,7 +3,7 @@
 
 SearchModel::SearchModel(QObject *parent)
 {
-
+    Q_UNUSED(parent)
 }
 
 SearchModel::~SearchModel()

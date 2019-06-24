@@ -15,6 +15,7 @@ class TableModel;
 class SearchModel;
 class WaitingSpinnerWidget;
 class QFrame;
+class QSqlRecord;
 class ObstraclesForm : public QWidget
 {
         Q_OBJECT
@@ -39,11 +40,11 @@ class ObstraclesForm : public QWidget
 
         void readSettings();
         void writeSettings();
+        void setListView();
+        void setTableView(QVector<QVariantList>);
 
     private slots:
-        void setListView(QVector<Airfield>&);
-        void setTableView(QVector<QVector<QString>>&);
-//        void getObstracleForAirfield(const QModelIndex&);
+        void getObstracleForAirfield(const QModelIndex&);
         void enabledToolButton();
         void exportToFile();
         void searchAirfield(const QString&);

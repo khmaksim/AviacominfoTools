@@ -6,6 +6,7 @@
 #include <QSqlError>
 #include <QDebug>
 #include <QVariant>
+#include <QSqlRecord>
 
 Database::Database(QObject *parent) : QObject(parent)
 {
@@ -18,6 +19,57 @@ Database::Database(QObject *parent) : QObject(parent)
 
     if (!db.open())
         qDebug() << "Can not connected to database.";
+}
+
+QVector<Airfield> Database::getAirfields()
+{
+    QSqlQuery query;
+    QVector<Airfield> airfields = QVector<Airfield>();
+
+    query.exec("SELECT name, code_icao, id FROM airfield ORDER BY name");
+    while (query.next()) {
+        Airfield airfield;
+        airfield.name = query.value(0).toString();
+        airfield.icao = query.value(1).toString();
+        airfield.id = query.value(2).toUInt();
+        airfields.append(airfield);
+    }
+    return airfields;
+}
+
+QVector<QVariantList> Database::getObstracles(uint id)
+{
+    QSqlQuery query;
+    QVector<QVariantList> obstracles = QVector<QVariantList>();
+
+    query.prepare("SELECT ob.id, ob.name, tc.name, lo.name, cs.name, "
+                 "ob.latitude, ob.longitude, ob.latitude_center, ob.longitude_center, ob.radius, ob.horizontal_accuracy, "
+                 "ob.orthometric_height, ob.relative_height, ob.vertical_precision, tm.name, fg.name, "
+                 "ob.marking_daytime, ob.marking_daytime_template, ob.marking_daytime_color, ob.night_marking, "
+                 "ob.night_marking_color, ob.night_marking_type_light, ob.night_marking_intensity, "
+                 "ob.night_marking_work_time, ob.accordance_icao, ob.source_data, ob.date_updated "
+                 "FROM obstracle ob "
+                 "LEFT OUTER JOIN type_configuration_obstracle tc ON tc.id = ob.type_configuration "
+                 "LEFT OUTER JOIN locality lo ON lo.id = ob.locality "
+                 "LEFT OUTER JOIN coordinate_system cs ON cs.id = ob.coordinate_system "
+                 "LEFT OUTER JOIN type_material tm ON tm.id = ob.type_material "
+                 "LEFT OUTER JOIN fragility fg ON fg.id = ob.fragility WHERE ob.airfield = ?");
+    query.addBindValue(id);
+    if (!query.exec()) {
+        qDebug() << query.lastError().text();
+        qDebug() << query.lastQuery();
+        qDebug() << query.boundValues();
+    }
+
+    while (query.next()) {
+        QSqlRecord record = query.record();
+        QVariantList list = QVariantList();
+        for (int i = 0; i < record.count(); i++)
+            list.append(record.value(i));
+        obstracles.append(list);
+    }
+
+    return obstracles;
 }
 
 void Database::update(Airfield airfield, QVector<QVector<QString> > &obstracles)

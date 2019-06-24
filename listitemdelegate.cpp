@@ -2,6 +2,7 @@
 
 ListItemDelegate::ListItemDelegate(QStyledItemDelegate *parent)
 {
+    Q_UNUSED(parent)
 }
 
 ListItemDelegate::~ListItemDelegate()

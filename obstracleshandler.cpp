@@ -30,13 +30,13 @@ void ObstraclesHandler::replyFinished(QNetworkReply *reply)
         if ((pos = data.indexOf(startMenu, pos)) > 0) {
             while ((pos = regExp.indexIn(data, pos)) != -1) {
                 pos += regExp.matchedLength();
+                QString href = regExp.cap(1);
                 Airfield airfield;
-                airfield.href = regExp.cap(1);
                 airfield.name = regExp.cap(2);
                 airfield.icao = regExp.cap(3);
                 airfields << airfield;
 
-                getListObstracles(airfield.href);
+                getListObstracles(href);
             }
         }
     }

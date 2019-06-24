@@ -7,6 +7,7 @@ struct Airfield {
     QString name;
     QString icao;
     QString href;
+    uint id;
 };
 
 class QNetworkReply;

@@ -10,6 +10,9 @@ class Database : public QObject
     public:
         explicit Database(QObject *parent = nullptr);
 
+        static QVector<Airfield> getAirfields();
+        static QVector<QVariantList> getObstracles(uint);
+
     public slots:
         void update(Airfield, QVector<QVector<QString> >&);
 };

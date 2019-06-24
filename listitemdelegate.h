@@ -11,7 +11,7 @@ class ListItemDelegate : public QStyledItemDelegate
         Q_OBJECT
 
     public:
-        enum DataRole { CodeICAORole = Qt::UserRole + 1, NameAirfieldRole, HrefRole };
+        enum DataRole { CodeICAORole = Qt::UserRole + 1, NameAirfieldRole, IdRole };
 
         explicit ListItemDelegate(QStyledItemDelegate *parent = 0);
         ~ListItemDelegate();
