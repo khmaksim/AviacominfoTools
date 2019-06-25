@@ -132,6 +132,7 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     connect(filterButton, SIGNAL(clicked(bool)), this, SLOT(showFilterPanel()));
     connect(ui->searchLineEdit, SIGNAL(textChanged(QString)), searchModel, SLOT(setFilterRegExp(QString)));
     connect(sideBar, SIGNAL(searchTextChanged(QString)), sortSearchFilterTableModel, SLOT(setFilterRegExp(QString)));
+    connect(sideBar, SIGNAL(toggled(QString, bool)), sortSearchFilterTableModel, SLOT(setFilterProperty(QString, bool)));
 }
 
 ObstraclesForm::~ObstraclesForm()

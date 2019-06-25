@@ -10,8 +10,15 @@ class SortSearchFilterTableModel : public QSortFilterProxyModel
         explicit SortSearchFilterTableModel(QObject *parent = nullptr);
         ~SortSearchFilterTableModel();
 
+    public slots:
+        void setFilterProperty(QString, bool);
+
     protected:
         bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
+
+    private:
+        bool markingDay;
+        bool nightMarking;
 };
 
 #endif // SORTSEARCHMODEL_H

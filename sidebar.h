@@ -21,8 +21,12 @@ class SideBar : public QWidget
     private:
         Ui::SideBar *ui;
 
+    private slots:
+        void checkBoxChanged(bool);
+
     signals:
         void searchTextChanged(QString);
+        void toggled(QString, bool);
 };
 
 #endif // SIDEBAR_H

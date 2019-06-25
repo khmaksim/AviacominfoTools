@@ -9,6 +9,8 @@ SideBar::SideBar(QWidget *parent) :
     setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
 
     connect(ui->searchLineEdit, SIGNAL(textChanged(QString)), this, SIGNAL(searchTextChanged(QString)));
+    connect(ui->markingDayCheckBox, SIGNAL(toggled(bool)), this, SLOT(checkBoxChanged(bool)));
+    connect(ui->nightMarkingCheckBox, SIGNAL(toggled(bool)), this, SLOT(checkBoxChanged(bool)));
 }
 
 SideBar::~SideBar()
@@ -19,4 +21,9 @@ SideBar::~SideBar()
 QSize SideBar::sizeHint()
 {
     return QSize(150, 400);
+}
+
+void SideBar::checkBoxChanged(bool f)
+{
+    emit toggled(sender()->objectName(), f);
 }
