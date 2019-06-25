@@ -17,6 +17,8 @@
 #include "qgroupheaderview.h"
 #include "filterpanel.h"
 #include "database.h"
+#include "sidebar.h"
+#include "sortsearchfiltertablemodel.h"
 
 ObstraclesForm::ObstraclesForm(QWidget *parent) :
     QWidget(parent),
@@ -40,23 +42,30 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     toolBar->addWidget(exportButton);
     toolBar->addWidget(filterButton);
 
+    sideBar = new SideBar(this);
+
     ui->splitter->setSizes(QList<int>() << 150 << 300);
 
     QGridLayout *layout = new QGridLayout(this);
-    layout->addWidget(toolBar, 0, 0, 1, 2);
+    layout->addWidget(toolBar, 0, 0, 1, 3);
     layout->addWidget(ui->splitter, 1, 0, 2, 2);
+    layout->addWidget(sideBar, 1, 2, 2, 1);
     setLayout(layout);
 
     airfieldsModel = new QStandardItemModel(this);
     searchModel = new SearchModel(this);
     searchModel->setSourceModel(airfieldsModel);
     searchModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
-    obstraclesModel = new TableModel(this);
-
     ui->listView->setItemDelegate(new ListItemDelegate());
     ui->listView->setModel(searchModel);
+
 //    ui->listView->setStyleSheet("QListView::item:selected { background: #66b3ff;color: white; }"
 //                                "QListView::item:hover { background: #e6f2ff;color: black; }");
+
+    obstraclesModel = new TableModel(this);
+    sortSearchFilterTableModel = new SortSearchFilterTableModel(this);
+    sortSearchFilterTableModel->setSourceModel(obstraclesModel);
+    ui->tableView->setModel(sortSearchFilterTableModel);
 
     QGroupHeaderView *groupHeaderView = new QGroupHeaderView(Qt::Horizontal, ui->tableView);
 //    groupHeaderView->setStyleSheet("QHeaderView::section { color: black;border: 0.5px solid #bfbfbf; }");
@@ -92,7 +101,10 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
                                                              << tr("Data source | date of\n submission"));
 
     ui->tableView->setHorizontalHeader(groupHeaderView);
-    ui->tableView->setModel(obstraclesModel);
+    ui->tableView->setSortingEnabled(true);
+    ui->tableView->horizontalHeader()->setSortIndicator(1, Qt::AscendingOrder);
+    ui->tableView->horizontalHeader()->setSortIndicatorShown(true);
+    ui->tableView->horizontalHeader()->setSectionsClickable(true);
 
     setListView();
 //    spinner = new WaitingSpinnerWidget(this);
@@ -104,7 +116,7 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
 //    spinner->setLineWidth(4);
 //    spinner->setInnerRadius(10);
 //    spinner->setRevolutionsPerSecond(1);
-////    spinner->setColor(QColor(81, 4, 71));
+//    spinner->setColor(QColor(81, 4, 71));
 //    spinner->start();
 
     readSettings();
@@ -118,7 +130,8 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     connect(ui->tableView, SIGNAL(clicked(QModelIndex)), this, SLOT(enabledToolButton()));
     connect(exportButton, SIGNAL(clicked(bool)), this, SLOT(exportToFile()));
     connect(filterButton, SIGNAL(clicked(bool)), this, SLOT(showFilterPanel()));
-    connect(ui->searchLineEdit, SIGNAL(textChanged(QString)), this, SLOT(searchAirfield(QString)));
+    connect(ui->searchLineEdit, SIGNAL(textChanged(QString)), searchModel, SLOT(setFilterRegExp(QString)));
+    connect(sideBar, SIGNAL(searchTextChanged(QString)), sortSearchFilterTableModel, SLOT(setFilterRegExp(QString)));
 }
 
 ObstraclesForm::~ObstraclesForm()
@@ -167,7 +180,6 @@ void ObstraclesForm::setListView()
 void ObstraclesForm::getObstracleForAirfield(const QModelIndex &index)
 {
     uint idAirfield = searchModel->data(index, ListItemDelegate::IdRole).toUInt();
-    qDebug() << idAirfield;
     setTableView(Database::getObstracles(idAirfield));
 }
 
@@ -193,7 +205,7 @@ void ObstraclesForm::setTableView(QVector<QVariantList> obstracles)
         obstraclesModel->appendRow(items);
     }
 
-    ui->tableView->repaint();
+//    ui->tableView->repaint();
 }
 
 void ObstraclesForm::enabledToolButton()
@@ -236,10 +248,10 @@ void ObstraclesForm::exportToFile()
     file.commit();
 }
 
-void ObstraclesForm::searchAirfield(const QString &searchRequest)
-{
-    searchModel->setFilterRegExp(searchRequest);
-}
+//void ObstraclesForm::searchAirfield(const QString &searchRequest)
+//{
+//    searchModel->setFilterRegExp(searchRequest);
+//}
 
 void ObstraclesForm::showFilterPanel()
 {

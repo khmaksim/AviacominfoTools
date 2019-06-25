@@ -15,7 +15,8 @@ class TableModel;
 class SearchModel;
 class WaitingSpinnerWidget;
 class QFrame;
-class QSqlRecord;
+class SortSearchFilterTableModel;
+class SideBar;
 class ObstraclesForm : public QWidget
 {
         Q_OBJECT
@@ -35,8 +36,10 @@ class ObstraclesForm : public QWidget
         QStandardItemModel *airfieldsModel;
         TableModel *obstraclesModel;
         SearchModel *searchModel;
+        SortSearchFilterTableModel *sortSearchFilterTableModel;
 //        WaitingSpinnerWidget *spinner;
         QFrame *filterPanel;
+        SideBar *sideBar;
 
         void readSettings();
         void writeSettings();
@@ -47,7 +50,7 @@ class ObstraclesForm : public QWidget
         void getObstracleForAirfield(const QModelIndex&);
         void enabledToolButton();
         void exportToFile();
-        void searchAirfield(const QString&);
+//        void searchAirfield(const QString&);
         void showFilterPanel();
 };
 

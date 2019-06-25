@@ -33,7 +33,9 @@ SOURCES += \
     searchmodel.cpp \
     qgroupheaderview.cpp \
     database.cpp \
-    filterpanel.cpp
+    filterpanel.cpp \
+    sidebar.cpp \
+    sortsearchfiltertablemodel.cpp
 
 HEADERS += \
         mainwidget.h \
@@ -44,11 +46,14 @@ HEADERS += \
     searchmodel.h \
     qgroupheaderview.h \
     database.h \
-    filterpanel.h
+    filterpanel.h \
+    sidebar.h \
+    sortsearchfiltertablemodel.h
 
 FORMS += \
         mainwidget.ui \
-    obstraclesform.ui
+    obstraclesform.ui \
+    sidebar.ui
 
 RESOURCES += \
     aviacominfotools.qrc
