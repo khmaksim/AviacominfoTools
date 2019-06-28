@@ -35,7 +35,8 @@ SOURCES += \
     database.cpp \
     filterpanel.cpp \
     sidebar.cpp \
-    sortsearchfiltertablemodel.cpp
+    sortsearchfiltertablemodel.cpp \
+    checkboxitemdelegate.cpp
 
 HEADERS += \
         mainwidget.h \
@@ -48,7 +49,8 @@ HEADERS += \
     database.h \
     filterpanel.h \
     sidebar.h \
-    sortsearchfiltertablemodel.h
+    sortsearchfiltertablemodel.h \
+    checkboxitemdelegate.h
 
 FORMS += \
         mainwidget.ui \

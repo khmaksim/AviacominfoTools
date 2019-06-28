@@ -19,6 +19,7 @@
 #include "database.h"
 #include "sidebar.h"
 #include "sortsearchfiltertablemodel.h"
+#include "checkboxitemdelegate.h"
 
 ObstraclesForm::ObstraclesForm(QWidget *parent) :
     QWidget(parent),
@@ -105,6 +106,7 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     ui->tableView->horizontalHeader()->setSortIndicator(1, Qt::AscendingOrder);
     ui->tableView->horizontalHeader()->setSortIndicatorShown(true);
     ui->tableView->horizontalHeader()->setSectionsClickable(true);
+    ui->tableView->setItemDelegateForColumn(0, new CheckboxItemDelegate(this));
 
     setListView();
 //    spinner = new WaitingSpinnerWidget(this);
@@ -121,12 +123,7 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
 
     readSettings();
 
-//    connect(obstraclesHandler, SIGNAL(finished(QVector<Airfield>&)), this, SLOT(setListView(QVector<Airfield>&)));
-//    connect(obstraclesHandler, SIGNAL(finished(QVector<Airfield>&)), spinner, SLOT(stop()));
-//    connect(obstraclesHandler, SIGNAL(finished(QVector<QVector<QString>>&)), this, SLOT(setTableView(QVector<QVector<QString>>&)));
-//    connect(obstraclesHandler, SIGNAL(finished(QVector<QVector<QString>>&)), spinner, SLOT(stop()));
     connect(ui->listView, SIGNAL(clicked(QModelIndex)), this, SLOT(getObstracleForAirfield(QModelIndex)));
-//    connect(ui->listView, SIGNAL(clicked(QModelIndex)), spinner, SLOT(start()));
     connect(ui->tableView, SIGNAL(clicked(QModelIndex)), this, SLOT(enabledToolButton()));
     connect(exportButton, SIGNAL(clicked(bool)), this, SLOT(exportToFile()));
     connect(filterButton, SIGNAL(clicked(bool)), this, SLOT(showFilterPanel()));
