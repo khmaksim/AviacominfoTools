@@ -70,8 +70,7 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
 
     QGroupHeaderView *groupHeaderView = new QGroupHeaderView(Qt::Horizontal, ui->tableView);
 //    groupHeaderView->setStyleSheet("QHeaderView::section { color: black;border: 0.5px solid #bfbfbf; }");
-    groupHeaderView->setSortIndicator(1, Qt::AscendingOrder);
-    groupHeaderView->setSortIndicatorShown(true);
+    groupHeaderView->setCheckable(true);
     obstraclesModel->setHorizontalHeaderLabels(QStringList() << tr("*")
                                                              << tr("ID")
                                                              << tr("Name")
@@ -130,6 +129,7 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     connect(ui->searchLineEdit, SIGNAL(textChanged(QString)), searchModel, SLOT(setFilterRegExp(QString)));
     connect(sideBar, SIGNAL(searchTextChanged(QString)), sortSearchFilterTableModel, SLOT(setFilterRegExp(QString)));
     connect(sideBar, SIGNAL(toggled(QString, bool)), sortSearchFilterTableModel, SLOT(setFilterProperty(QString, bool)));
+    connect(groupHeaderView, SIGNAL(clickedCheckBox(bool)), this, SLOT(setCheckedRowTable(bool)));
 }
 
 ObstraclesForm::~ObstraclesForm()
@@ -261,4 +261,13 @@ void ObstraclesForm::showFilterPanel()
     filterPanel->setGeometry(pos.x() + widthTableView / 2, pos.y() + heightTableView / 2,
                              filterPanel->width(), filterPanel->height());
     filterPanel->show();
+}
+
+void ObstraclesForm::setCheckedRowTable(bool checked)
+{
+    if (obstraclesModel->rowCount() == 0)
+        return;
+
+    for (int row = 0; row < obstraclesModel->rowCount(); row++)
+        obstraclesModel->item(row)->setData(checked, Qt::UserRole);
 }

@@ -5,11 +5,12 @@
 SortSearchFilterTableModel::SortSearchFilterTableModel(QObject *parent)
 {
     Q_UNUSED(parent)
+    markingDay = false;
+    nightMarking = false;
 }
 
 SortSearchFilterTableModel::~SortSearchFilterTableModel()
 {
-
 }
 
 bool SortSearchFilterTableModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const

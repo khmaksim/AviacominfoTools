@@ -1,3 +1,4 @@
+#include <QApplication>
 #include "qgroupheaderview.h"
 
 QGroupHeaderView::QGroupHeaderView(Qt::Orientation ornt, QWidget *parent) :
@@ -5,6 +6,8 @@ QGroupHeaderView::QGroupHeaderView(Qt::Orientation ornt, QWidget *parent) :
 {
     rowsCount = 1;
     showSizeTip = false;
+    checkable = false;
+    checked = false;
 
     connect(this, SIGNAL(sectionCountChanged(int,int)), SLOT(newSectionCount(int,int)));
     connect(this, SIGNAL(sectionResized(int,int,int)), SLOT(onSectionResize(int,int,int)));
@@ -131,22 +134,17 @@ void QGroupHeaderView::paintHeader(QPainter *p, int logicalIndex, const QRect &r
                                       : defaultAlignment());
 
     opt.iconAlignment = Qt::AlignVCenter;
-    opt.text = model()->headerData(logicalIndex, orientation(),
-                                   Qt::DisplayRole).toString();
+    opt.text = model()->headerData(logicalIndex, orientation(), Qt::DisplayRole).toString();
     if (textElideMode() != Qt::ElideNone)
-        opt.text = opt.fontMetrics.elidedText(opt.text, textElideMode(),
-                                              rect.width() - 4);
+        opt.text = opt.fontMetrics.elidedText(opt.text, textElideMode(), rect.width() - 4);
 
-    QVariant variant = model()->headerData(logicalIndex, orientation(),
-                                    Qt::DecorationRole);
+    QVariant variant = model()->headerData(logicalIndex, orientation(), Qt::DecorationRole);
     opt.icon = qvariant_cast<QIcon>(variant);
     if (opt.icon.isNull())
         opt.icon = qvariant_cast<QPixmap>(variant);
-    QVariant foregroundBrush = model()->headerData(logicalIndex, orientation(),
-                                                    Qt::ForegroundRole);
+    QVariant foregroundBrush = model()->headerData(logicalIndex, orientation(), Qt::ForegroundRole);
     if (foregroundBrush.canConvert<QBrush>())
-        opt.palette.setBrush(QPalette::ButtonText,
-                             qvariant_cast<QBrush>(foregroundBrush));
+        opt.palette.setBrush(QPalette::ButtonText, qvariant_cast<QBrush>(foregroundBrush));
 
     QPointF oldBO = p->brushOrigin();
     QVariant backgroundBrush = model()->headerData(logicalIndex, orientation(),
@@ -169,12 +167,15 @@ void QGroupHeaderView::paintHeader(QPainter *p, int logicalIndex, const QRect &r
     else
         opt.position = QStyleOptionHeader::Middle;
     opt.orientation = orientation();
-    for(int i = 0; i < rowsCount; i++) {
-        if(headerMatrix[logicalIndex][i].sectText == "") continue;
+
+
+    for (int i = 0; i < rowsCount; i++) {
+        if (headerMatrix[logicalIndex][i].sectText == "")
+            continue;
         int wd(0), hg(0);
-        for(int j = 0; j < headerMatrix[logicalIndex][i].colspan; j++)
+        for (int j = 0; j < headerMatrix[logicalIndex][i].colspan; j++)
             wd += sectionSize(logicalIndex+j);
-        for(int j = 0; j < headerMatrix[logicalIndex][i].rowspan; j++)
+        for (int j = 0; j < headerMatrix[logicalIndex][i].rowspan; j++)
             hg++;
         hg *= rect.height()/rowsCount;
         opt.text = headerMatrix[logicalIndex][i].sectText;
@@ -182,12 +183,29 @@ void QGroupHeaderView::paintHeader(QPainter *p, int logicalIndex, const QRect &r
         style()->drawControl(QStyle::CE_Header, &opt, p, this);
     }
 
+    if (logicalIndex == 0 && isCheckable()) {
+        QStyleOptionButton option;
+        QRect cr = qApp->style()->subElementRect(QStyle::SE_ViewItemCheckIndicator, &option);
+        int deltaX = (rect.width() - cr.width()) / 2;
+        int deltaY = (rect.height() - cr.height()) / 2;
+        option.rect = QRect(rect.left() + deltaX, rect.top() + deltaY, cr.width(), cr.height());
+        option.state |= QStyle::State_Enabled;
+
+        if (isChecked())
+            option.state |= QStyle::State_On;
+        else
+            option.state |= QStyle::State_Off;
+
+        style()->drawPrimitive(QStyle::PE_IndicatorCheckBox, &option, p);
+    }
     p->setBrushOrigin(oldBO);
 }
 
-void QGroupHeaderView::paintSection(QPainter */*painter*/, const QRect &/*rect*/,
-                                    int /*logicalIndex*/) const
+void QGroupHeaderView::paintSection(QPainter *painter, const QRect &rect, int logicalIndex) const
 {
+    Q_UNUSED(painter)
+    Q_UNUSED(rect)
+    Q_UNUSED(logicalIndex)
     /*Drawing header in this way may cause some sort of 'bugs',
      *so this method just ignored and 'moved' to paintEvent().
      */
@@ -198,6 +216,7 @@ void QGroupHeaderView::paintEvent(QPaintEvent *e)
     QHeaderView::paintEvent(e); // processing default event
     QPainter p(viewport());
     p.translate(-offset(), 0);  // offset if model view has been scrolled
+
     for(int i = 0; i < count(); i++) {
         QRect r(sectionPosition(i), 0, sectionSize(i), height());
         paintHeader(&p, i, r);
@@ -223,4 +242,30 @@ void QGroupHeaderView::setTextSectionColor(int section, int row, const QColor &c
     if (section > count() -1 || row > rowsCount - 1)
           return;
 //     headerMatrix[section][row].palette.setColor(QPalette::ButtonText, color);
+}
+
+bool QGroupHeaderView::isCheckable() const
+{
+    return checkable;
+}
+
+void QGroupHeaderView::setCheckable(bool checkable)
+{
+    this->checkable = checkable;
+}
+
+bool QGroupHeaderView::isChecked() const
+{
+    return checked;
+}
+
+void QGroupHeaderView::mousePressEvent(QMouseEvent *event)
+{
+    if (isChecked())
+        checked = false;
+    else
+        checked = true;
+
+    emit clickedCheckBox(checked);
+    QHeaderView::mousePressEvent(event);
 }

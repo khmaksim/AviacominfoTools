@@ -15,7 +15,7 @@ bool TableModel::setData(const QModelIndex &index, const QVariant &value, int ro
     if (!index.isValid())
         return false;
 
-    if (role == Qt::CheckStateRole)
+    if (role == Qt::UserRole)
     {
         if ((Qt::CheckState)value.toInt() == Qt::Checked)
             return QStandardItemModel::setData(index, value, role);
@@ -30,7 +30,7 @@ QVariant TableModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    if (role == Qt::CheckStateRole && index.column() == 0)
+    if (role == Qt::UserRole && index.column() == 0)
     {
         if (QStandardItemModel::data(index, role).toInt() == Qt::Checked)
             return Qt::Checked;
