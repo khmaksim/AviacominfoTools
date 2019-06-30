@@ -30,7 +30,7 @@ QVariant TableModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    if (role == Qt::UserRole && index.column() == 0)
+    if (role == Qt::CheckStateRole && index.column() == 0)
     {
         if (QStandardItemModel::data(index, role).toInt() == Qt::Checked)
             return Qt::Checked;

@@ -18,7 +18,7 @@ class QGroupHeaderView : public QHeaderView
         void setSizeTip(bool show);
         void setCheckable(bool);
         bool isCheckable() const;
-        //    void setCheckable(bool);
+        void setChecked(bool);
         bool isChecked() const;
 
     private:

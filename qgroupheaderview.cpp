@@ -259,6 +259,12 @@ bool QGroupHeaderView::isChecked() const
     return checked;
 }
 
+void QGroupHeaderView::setChecked(bool checked)
+{
+    this->checked = checked;
+    updateSection(0);
+}
+
 void QGroupHeaderView::mousePressEvent(QMouseEvent *event)
 {
     if (isChecked())

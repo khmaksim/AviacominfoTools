@@ -183,6 +183,8 @@ void ObstraclesForm::getObstracleForAirfield(const QModelIndex &index)
 
 void ObstraclesForm::setTableView(QVector<QVariantList> obstracles)
 {
+    // uncheked header
+    qobject_cast<QGroupHeaderView*>(ui->tableView->horizontalHeader())->setChecked(false);
     // remove all rows
     while (obstraclesModel->rowCount() > 0) {
         obstraclesModel->removeRow(0);
@@ -202,8 +204,6 @@ void ObstraclesForm::setTableView(QVector<QVariantList> obstracles)
         }
         obstraclesModel->appendRow(items);
     }
-
-//    ui->tableView->repaint();
 }
 
 void ObstraclesForm::enabledToolButton()
@@ -245,11 +245,6 @@ void ObstraclesForm::exportToFile()
     }
     file.commit();
 }
-
-//void ObstraclesForm::searchAirfield(const QString &searchRequest)
-//{
-//    searchModel->setFilterRegExp(searchRequest);
-//}
 
 void ObstraclesForm::showFilterPanel()
 {
