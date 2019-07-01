@@ -267,11 +267,14 @@ void QGroupHeaderView::setChecked(bool checked)
 
 void QGroupHeaderView::mousePressEvent(QMouseEvent *event)
 {
-    if (isChecked())
-        checked = false;
-    else
-        checked = true;
+    // if mouse press on first column
+    if (event->pos().x() <= sectionSize(0)) {
+        if (isChecked())
+            checked = false;
+        else
+            checked = true;
 
-    emit clickedCheckBox(checked);
+        emit clickedCheckBox(checked);
+    }
     QHeaderView::mousePressEvent(event);
 }
