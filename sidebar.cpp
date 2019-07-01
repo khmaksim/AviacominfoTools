@@ -13,7 +13,6 @@ SideBar::SideBar(QWidget *parent) :
 
     ui->minRadiusLabel->setNum(ui->radiusSlider->minimum());
     ui->maxRadiusLabel->setNum(ui->radiusSlider->maximum());
-    setValueRadius(ui->radiusSlider->value());
 
     FlowLayout *scrollAreaLayout = new FlowLayout();
 //    ui->scrollArea->setLayout(scrollAreaLayout);
@@ -22,10 +21,15 @@ SideBar::SideBar(QWidget *parent) :
     connect(ui->searchLineEdit, SIGNAL(textChanged(QString)), this, SIGNAL(searchTextChanged(QString)));
     connect(ui->markingDayCheckBox, SIGNAL(toggled(bool)), this, SLOT(checkBoxChanged(bool)));
     connect(ui->nightMarkingCheckBox, SIGNAL(toggled(bool)), this, SLOT(checkBoxChanged(bool)));
-    connect(ui->radiusSlider, SIGNAL(valueChanged(int)), this, SLOT(setValueRadius(int)));
+    connect(ui->radiusSlider, SIGNAL(valueChanged(int)), this, SLOT(updateLabelValueRadius(int)));
     connect(ui->radiusSlider, SIGNAL(valueChanged(int)), this, SIGNAL(filterRadius()));
     connect(ui->addTagButton, SIGNAL(clicked(bool)), this, SLOT(addTagShow()));
     connect(ui->nameTagLineEdit, SIGNAL(textChanged(QString)), this, SLOT(enabledTagButton()));
+    connect(ui->radius1Button, SIGNAL(clicked(bool)), this, SLOT(setRadius()));
+    connect(ui->radius2Button, SIGNAL(clicked(bool)), this, SLOT(setRadius()));
+    connect(ui->radius3Button, SIGNAL(clicked(bool)), this, SLOT(setRadius()));
+
+    emit ui->radiusSlider->valueChanged(50);
 }
 
 SideBar::~SideBar()
@@ -43,9 +47,9 @@ void SideBar::checkBoxChanged(bool f)
     emit toggled(sender()->objectName(), f);
 }
 
-void SideBar::setValueRadius(int value)
+void SideBar::updateLabelValueRadius(int value)
 {
-    ui->valueRadiusLabel->setText(QString::number(value).append(tr(" km")));
+    ui->valueRadiusLabel->setText(QString("%1 %2").arg(value).arg(tr("km")));
 }
 
 float SideBar::getLat()
@@ -102,4 +106,10 @@ void SideBar::enabledTagButton()
 void SideBar::showSelectColorTag()
 {
 
+}
+
+void SideBar::setRadius()
+{
+    int value = qobject_cast<QPushButton*>(sender())->text().remove(QRegExp("\\D+")).toInt();
+    ui->radiusSlider->setValue(value);
 }

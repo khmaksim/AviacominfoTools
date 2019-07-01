@@ -73,7 +73,7 @@
            <x>0</x>
            <y>0</y>
            <width>212</width>
-           <height>129</height>
+           <height>101</height>
           </rect>
          </property>
         </widget>
@@ -151,6 +151,56 @@
          <bool>false</bool>
         </property>
         <layout class="QGridLayout" name="gridLayout_2">
+         <item row="1" column="1" colspan="2">
+          <widget class="QLabel" name="valueRadiusLabel">
+           <property name="text">
+            <string>TextLabel</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2" colspan="2">
+          <widget class="QLineEdit" name="lonLineEdit">
+           <property name="placeholderText">
+            <string>lon (e050 20 20.10)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QPushButton" name="radius1Button">
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+background-color: rgb(217, 217, 217);
+    border-radius: 2px;
+	color: rgb(79, 79, 79);
+    min-width: 30px;
+	border: 1px solid;
+	border-color: rgb(135, 135, 135);
+	height: 20px;
+}
+QPushButton:pressed {
+	
+	background-color: rgb(234, 234, 234);
+}
+</string>
+           </property>
+           <property name="text">
+            <string>46 km</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0" colspan="2">
+          <widget class="QLineEdit" name="latLineEdit">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="placeholderText">
+            <string>lat (n50 30 00)</string>
+           </property>
+          </widget>
+         </item>
          <item row="2" column="0" colspan="4">
           <widget class="QSlider" name="radiusSlider">
            <property name="maximum">
@@ -170,37 +220,10 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="2" colspan="2">
-          <widget class="QLineEdit" name="lonLineEdit">
-           <property name="placeholderText">
-            <string>lon (e050 20 20.10)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="0" colspan="2">
-          <widget class="QLineEdit" name="latLineEdit">
-           <property name="text">
-            <string/>
-           </property>
-           <property name="placeholderText">
-            <string>lat (n50 30 00)</string>
-           </property>
-          </widget>
-         </item>
          <item row="1" column="0">
           <widget class="QLabel" name="minRadiusLabel">
            <property name="text">
             <string>TextLabel</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1" colspan="2">
-          <widget class="QLabel" name="valueRadiusLabel">
-           <property name="text">
-            <string>TextLabel</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
            </property>
           </widget>
          </item>
@@ -211,6 +234,52 @@
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QPushButton" name="radius2Button">
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+background-color: rgb(217, 217, 217);
+    border-radius: 2px;
+	color: rgb(79, 79, 79);
+    min-width: 30px;
+	border: 1px solid;
+	border-color: rgb(135, 135, 135);
+	height: 20px;
+}
+QPushButton:pressed {
+	
+	background-color: rgb(234, 234, 234);
+}
+</string>
+           </property>
+           <property name="text">
+            <string>50 km</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="2">
+          <widget class="QPushButton" name="radius3Button">
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+background-color: rgb(217, 217, 217);
+    border-radius: 2px;
+	color: rgb(79, 79, 79);
+    min-width: 30px;
+	border: 1px solid;
+	border-color: rgb(135, 135, 135);
+	height: 20px;
+}
+QPushButton:pressed {
+	
+	background-color: rgb(234, 234, 234);
+}
+</string>
+           </property>
+           <property name="text">
+            <string>55 km</string>
            </property>
           </widget>
          </item>
