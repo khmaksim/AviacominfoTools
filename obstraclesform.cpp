@@ -38,6 +38,7 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     filterButton->setIconSize(QSize(32, 32));
     filterButton->setIcon(QIcon(":/images/res/img/filter.png"));
     filterButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    filterButton->setEnabled(false);
 
     toolBar = new QToolBar(this);
     toolBar->addWidget(exportButton);
@@ -130,6 +131,7 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     connect(sideBar, SIGNAL(searchTextChanged(QString)), sortSearchFilterTableModel, SLOT(setFilterRegExp(QString)));
     connect(sideBar, SIGNAL(toggled(QString, bool)), sortSearchFilterTableModel, SLOT(setFilterProperty(QString, bool)));
     connect(groupHeaderView, SIGNAL(clickedCheckBox(bool)), this, SLOT(setCheckedRowTable(bool)));
+    connect(sideBar, SIGNAL(filterRadius()), this, SLOT(setFilterRadius()));
 }
 
 ObstraclesForm::~ObstraclesForm()
@@ -265,4 +267,9 @@ void ObstraclesForm::setCheckedRowTable(bool checked)
 
     for (int row = 0; row < obstraclesModel->rowCount(); row++)
         obstraclesModel->item(row)->setData(checked, Qt::UserRole);
+}
+
+void ObstraclesForm::setFilterRadius()
+{
+    sortSearchFilterTableModel->setFilterRadius(sideBar->getLat(), sideBar->getLon(), sideBar->getRadius());
 }

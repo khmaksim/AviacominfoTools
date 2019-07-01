@@ -53,6 +53,7 @@ class ObstraclesForm : public QWidget
 //        void searchAirfield(const QString&);
         void showFilterPanel();
         void setCheckedRowTable(bool);
+        void setFilterRadius();
 };
 
 #endif // OBSTRACLESFORM_H

@@ -10,6 +10,8 @@ class SortSearchFilterTableModel : public QSortFilterProxyModel
         explicit SortSearchFilterTableModel(QObject *parent = nullptr);
         ~SortSearchFilterTableModel();
 
+        void setFilterRadius(float, float, int);
+
     public slots:
         void setFilterProperty(QString, bool);
 
@@ -19,6 +21,11 @@ class SortSearchFilterTableModel : public QSortFilterProxyModel
     private:
         bool markingDay;
         bool nightMarking;
+        float lat;
+        float lon;
+        int radius;
+
+        float convertCoordInDec(const QString) const;
 };
 
 #endif // SORTSEARCHMODEL_H
