@@ -30,6 +30,9 @@ class SideBar : public QWidget
     private slots:
         void checkBoxChanged(bool);
         void setValueRadius(int);
+        void addTagShow();
+        void enabledTagButton();
+        void showSelectColorTag();
 
     signals:
         void searchTextChanged(QString);

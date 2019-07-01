@@ -268,47 +268,62 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="33"/>
+        <location filename="sidebar.ui" line="20"/>
         <source>Tags</source>
         <translation>Теги</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="40"/>
+        <location filename="sidebar.ui" line="26"/>
+        <source>Name tag</source>
+        <translation>Название тега</translation>
+    </message>
+    <message>
+        <location filename="sidebar.ui" line="36"/>
+        <source>...</source>
+        <translation>...</translation>
+    </message>
+    <message>
+        <location filename="sidebar.ui" line="46"/>
+        <source>Add tag</source>
+        <translation>Добавить тег</translation>
+    </message>
+    <message>
+        <location filename="sidebar.ui" line="88"/>
         <source>Search</source>
         <translation>Поиск</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="49"/>
+        <location filename="sidebar.ui" line="97"/>
         <source>Input text...</source>
         <translation>Введите тексе...</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="59"/>
+        <location filename="sidebar.ui" line="110"/>
         <source>Filter</source>
         <translation>Фильтр</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="68"/>
+        <location filename="sidebar.ui" line="119"/>
         <source>Marking day</source>
         <translation>Маркировка дневная</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="75"/>
+        <location filename="sidebar.ui" line="126"/>
         <source>Night marking</source>
         <translation>Маркировка ночная</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="91"/>
+        <location filename="sidebar.ui" line="142"/>
         <source>Radius</source>
         <translation>Радиус</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="125"/>
+        <location filename="sidebar.ui" line="176"/>
         <source>lon (e050 20 20.10)</source>
         <translation>долгота (в050 20 20.10)</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="135"/>
+        <location filename="sidebar.ui" line="186"/>
         <source>lat (n50 30 00)</source>
         <translation>широта (c50 30 00)</translation>
     </message>
@@ -321,14 +336,14 @@
         <translation type="vanished">широта</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="142"/>
-        <location filename="sidebar.ui" line="149"/>
-        <location filename="sidebar.ui" line="159"/>
+        <location filename="sidebar.ui" line="193"/>
+        <location filename="sidebar.ui" line="200"/>
+        <location filename="sidebar.ui" line="210"/>
         <source>TextLabel</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="sidebar.cpp" line="40"/>
+        <location filename="sidebar.cpp" line="48"/>
         <source> km</source>
         <translation>км</translation>
     </message>
