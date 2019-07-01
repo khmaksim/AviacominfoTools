@@ -124,7 +124,8 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     readSettings();
 
     connect(ui->listView, SIGNAL(clicked(QModelIndex)), this, SLOT(getObstracleForAirfield(QModelIndex)));
-    connect(ui->tableView, SIGNAL(clicked(QModelIndex)), this, SLOT(enabledToolButton()));
+//    connect(ui->tableView, SIGNAL(clicked(QModelIndex)), this, SLOT(enabledToolButton()));
+    connect(sortSearchFilterTableModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this, SLOT(enabledToolButton()));
     connect(exportButton, SIGNAL(clicked(bool)), this, SLOT(exportToFile()));
     connect(filterButton, SIGNAL(clicked(bool)), this, SLOT(showFilterPanel()));
     connect(ui->searchLineEdit, SIGNAL(textChanged(QString)), searchModel, SLOT(setFilterRegExp(QString)));
@@ -196,11 +197,7 @@ void ObstraclesForm::setTableView(QVector<QVariantList> obstracles)
         QList<QStandardItem *> items;
         QVariantList fields = obstracles.at(i);
 
-        QStandardItem *itemCheckable = new QStandardItem();
-        itemCheckable->setData(false, Qt::CheckStateRole);
-        itemCheckable->setFlags(itemCheckable->flags() | Qt::ItemIsUserCheckable | Qt::ItemIsEditable);
-        items.append(itemCheckable);
-
+        items.append(new QStandardItem());
         for (int j = 0; j < fields.size(); j++) {
             items.append(new QStandardItem(fields.at(j).toString()));
         }
@@ -210,13 +207,14 @@ void ObstraclesForm::setTableView(QVector<QVariantList> obstracles)
 
 void ObstraclesForm::enabledToolButton()
 {
+    bool enable = false;
     for (int row = 0; row < obstraclesModel->rowCount(); row++) {
-        if (obstraclesModel->item(row)->data(Qt::CheckStateRole).toBool()) {
-            exportButton->setEnabled(true);
-            return;
+        if (obstraclesModel->item(row)->data(Qt::UserRole).toBool()) {
+            enable = true;
+            break;
         }
     }
-    exportButton->setEnabled(false);
+    exportButton->setEnabled(enable);
     return;
 }
 

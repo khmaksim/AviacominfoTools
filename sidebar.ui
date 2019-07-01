@@ -291,6 +291,22 @@ QPushButton:pressed {
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>searchLineEdit</tabstop>
+  <tabstop>markingDayCheckBox</tabstop>
+  <tabstop>nightMarkingCheckBox</tabstop>
+  <tabstop>groupBox_4</tabstop>
+  <tabstop>latLineEdit</tabstop>
+  <tabstop>lonLineEdit</tabstop>
+  <tabstop>radiusSlider</tabstop>
+  <tabstop>radius1Button</tabstop>
+  <tabstop>radius2Button</tabstop>
+  <tabstop>radius3Button</tabstop>
+  <tabstop>nameTagLineEdit</tabstop>
+  <tabstop>colorTagToolButton</tabstop>
+  <tabstop>addTagButton</tabstop>
+  <tabstop>scrollArea</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
