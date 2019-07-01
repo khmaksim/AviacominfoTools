@@ -51,6 +51,36 @@ bool SortSearchFilterTableModel::filterAcceptsRow(int sourceRow, const QModelInd
     return result;
 }
 
+bool SortSearchFilterTableModel::lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const
+{
+    QVariant leftData = sourceModel()->data(source_left);
+    QVariant rightData = sourceModel()->data(source_right);
+
+//    if (leftData.type() == QVariant::Int) {
+    if (leftData.toString().contains(QRegExp("^\\d+\\.?\\d*$")) &&
+            rightData.toString().contains(QRegExp("^\\d+\\.?\\d*$"))) {
+        return leftData.toInt() < rightData.toInt();
+    } /*else {
+        static const QRegularExpression emailPattern("[\\w\\.]*@[\\w\\.]*");
+
+        QString leftString = leftData.toString();
+        if (left.column() == 1) {
+            const QRegularExpressionMatch match = emailPattern.match(leftString);
+            if (match.hasMatch())
+                leftString = match.captured(0);
+        }
+        QString rightString = rightData.toString();
+        if (right.column() == 1) {
+            const QRegularExpressionMatch match = emailPattern.match(rightString);
+            if (match.hasMatch())
+                rightString = match.captured(0);
+        }
+
+        return QString::localeAwareCompare(leftString, rightString) < 0;
+    }*/
+    return QSortFilterProxyModel::lessThan(source_left, source_right);
+}
+
 void SortSearchFilterTableModel::setFilterProperty(QString objectName, bool flag)
 {
     if (objectName.contains("day", Qt::CaseInsensitive))
