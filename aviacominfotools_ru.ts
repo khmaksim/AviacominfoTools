@@ -61,8 +61,9 @@
     </message>
     <message>
         <location filename="obstraclesform.ui" line="39"/>
-        <source>Search airfield</source>
-        <translation>Поиск аэродрома</translation>
+        <source>Search airfield (code ICAO or name)</source>
+        <oldsource>Search airfield</oldsource>
+        <translation>Поиск аэродрома (код ИКАО или название)</translation>
     </message>
     <message>
         <location filename="obstraclesform.ui" line="60"/>
@@ -277,32 +278,37 @@
         <translation>Поиск</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="55"/>
+        <location filename="sidebar.ui" line="49"/>
+        <source>Input text...</source>
+        <translation>Введите тексе...</translation>
+    </message>
+    <message>
+        <location filename="sidebar.ui" line="59"/>
         <source>Filter</source>
         <translation>Фильтр</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="64"/>
+        <location filename="sidebar.ui" line="68"/>
         <source>Marking day</source>
         <translation>Маркировка дневная</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="71"/>
+        <location filename="sidebar.ui" line="75"/>
         <source>Night marking</source>
         <translation>Маркировка ночная</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="87"/>
+        <location filename="sidebar.ui" line="91"/>
         <source>Radius</source>
         <translation>Радиус</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="121"/>
+        <location filename="sidebar.ui" line="125"/>
         <source>lon (e050 20 20.10)</source>
         <translation>долгота (в050 20 20.10)</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="131"/>
+        <location filename="sidebar.ui" line="135"/>
         <source>lat (n50 30 00)</source>
         <translation>широта (c50 30 00)</translation>
     </message>
@@ -315,9 +321,9 @@
         <translation type="vanished">широта</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="138"/>
-        <location filename="sidebar.ui" line="145"/>
-        <location filename="sidebar.ui" line="155"/>
+        <location filename="sidebar.ui" line="142"/>
+        <location filename="sidebar.ui" line="149"/>
+        <location filename="sidebar.ui" line="159"/>
         <source>TextLabel</source>
         <translation></translation>
     </message>

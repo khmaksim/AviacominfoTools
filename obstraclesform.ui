@@ -36,7 +36,7 @@
         <bool>true</bool>
        </property>
        <property name="placeholderText">
-        <string>Search airfield</string>
+        <string>Search airfield (code ICAO or name)</string>
        </property>
        <property name="cursorMoveStyle">
         <enum>Qt::LogicalMoveStyle</enum>
