@@ -31,10 +31,9 @@ class SideBar : public QWidget
         void checkBoxChanged(bool);
         void updateLabelValueRadius(int);
         void addTagShow();
-        void enabledTagButton();
         void showSelectColorTag();
         void setRadius();
-        void clearFilter();
+        void resetFilter();
 
     signals:
         void searchTextChanged(QString);

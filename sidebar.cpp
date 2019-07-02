@@ -24,7 +24,6 @@ SideBar::SideBar(QWidget *parent) :
     connect(ui->radiusSlider, SIGNAL(valueChanged(int)), this, SLOT(updateLabelValueRadius(int)));
     connect(ui->radiusSlider, SIGNAL(valueChanged(int)), this, SIGNAL(filterRadius()));
     connect(ui->addTagButton, SIGNAL(clicked(bool)), this, SLOT(addTagShow()));
-    connect(ui->nameTagLineEdit, SIGNAL(textChanged(QString)), this, SLOT(enabledTagButton()));
     connect(ui->radius1Button, SIGNAL(clicked(bool)), this, SLOT(setRadius()));
     connect(ui->radius2Button, SIGNAL(clicked(bool)), this, SLOT(setRadius()));
     connect(ui->radius3Button, SIGNAL(clicked(bool)), this, SLOT(setRadius()));
@@ -82,26 +81,20 @@ float SideBar::convertCoordInDec(QString coordStr)
 
 void SideBar::addTagShow()
 {
-//    QInputDialog *inputDialog = new QInputDialog(this);
-//    inputDialog->setInputMode(QInputDialog::TextInput);
-//    inputDialog->setLabelText(tr("Name tag:"));
-//    inputDialog->setWindowTitle(tr("Input name tag"));
-//    inputDialog->setOkButtonText(tr("Add"));
-//    inputDialog->setCancelButtonText(tr("Cancel"));
-//    if (inputDialog->exec() == QInputDialog::Accepted) {
-//    QLabel *tag = new QLabel(ui->nameTagLineEdit->text());
-    QCheckBox *tag = new QCheckBox(ui->nameTagLineEdit->text(), ui->scrollAreaWidgetContents);
-//    ui->scrollArea->layout()->addWidget(tag);
-    ui->scrollAreaWidgetContents->layout()->addWidget(tag);
+    QInputDialog *inputDialog = new QInputDialog(this, Qt::CustomizeWindowHint | Qt::WindowTitleHint);
+    inputDialog->setInputMode(QInputDialog::TextInput);
+    inputDialog->setLabelText(tr("Name tag:"));
+    inputDialog->setWindowTitle(tr("Input name tag"));
+    inputDialog->setOkButtonText(tr("Add"));
+    inputDialog->setCancelButtonText(tr("Cancel"));
+    if (inputDialog->exec() == QInputDialog::Accepted) {
+        QCheckBox *tag = new QCheckBox(inputDialog->textValue(), ui->scrollAreaWidgetContents);
+        //    ui->scrollArea->layout()->addWidget(tag);
+        ui->scrollAreaWidgetContents->layout()->addWidget(tag);
 
-//    ui->scrollArea->setGeometry(QRect(QPoint(0, 0), ui->scrollArea->sizeHint()));
-    ui->scrollAreaWidgetContents->adjustSize();
-}
-
-void SideBar::enabledTagButton()
-{
-    ui->addTagButton->setEnabled(!ui->nameTagLineEdit->text().isEmpty());
-    ui->colorTagToolButton->setEnabled(!ui->nameTagLineEdit->text().isEmpty());
+        //    ui->scrollArea->setGeometry(QRect(QPoint(0, 0), ui->scrollArea->sizeHint()));
+        ui->scrollAreaWidgetContents->adjustSize();
+    }
 }
 
 void SideBar::showSelectColorTag()

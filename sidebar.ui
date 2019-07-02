@@ -20,34 +20,17 @@
       <string>Tags</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_4">
-      <item row="0" column="0">
-       <widget class="QLineEdit" name="nameTagLineEdit">
-        <property name="placeholderText">
-         <string>Name tag</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QToolButton" name="colorTagToolButton">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>...</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0" colspan="2">
+      <item row="0" column="0" colspan="2">
        <widget class="QPushButton" name="addTagButton">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="text">
          <string>Add tag</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="0" colspan="2">
+      <item row="1" column="0" colspan="2">
        <widget class="QScrollArea" name="scrollArea">
         <property name="frameShape">
          <enum>QFrame::NoFrame</enum>
@@ -73,7 +56,7 @@
            <x>0</x>
            <y>0</y>
            <width>212</width>
-           <height>72</height>
+           <height>98</height>
           </rect>
          </property>
         </widget>
@@ -289,7 +272,7 @@ QPushButton:pressed {
       <item row="3" column="0">
        <widget class="QPushButton" name="resetFilterButton">
         <property name="text">
-         <string>Clear</string>
+         <string>Reset</string>
         </property>
        </widget>
       </item>
@@ -309,8 +292,6 @@ QPushButton:pressed {
   <tabstop>radius1Button</tabstop>
   <tabstop>radius2Button</tabstop>
   <tabstop>radius3Button</tabstop>
-  <tabstop>nameTagLineEdit</tabstop>
-  <tabstop>colorTagToolButton</tabstop>
   <tabstop>addTagButton</tabstop>
   <tabstop>scrollArea</tabstop>
  </tabstops>
