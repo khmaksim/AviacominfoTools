@@ -34,6 +34,7 @@ class SideBar : public QWidget
         void enabledTagButton();
         void showSelectColorTag();
         void setRadius();
+        void clearFilter();
 
     signals:
         void searchTextChanged(QString);

@@ -73,7 +73,7 @@
            <x>0</x>
            <y>0</y>
            <width>212</width>
-           <height>101</height>
+           <height>72</height>
           </rect>
          </property>
         </widget>
@@ -113,28 +113,8 @@
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
-      <item row="0" column="0">
-       <widget class="QCheckBox" name="markingDayCheckBox">
-        <property name="text">
-         <string>Marking day</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QCheckBox" name="nightMarkingCheckBox">
-        <property name="text">
-         <string>Night marking</string>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
-        </property>
-        <property name="tristate">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
       <item row="2" column="0">
-       <widget class="QGroupBox" name="groupBox_4">
+       <widget class="QGroupBox" name="radiusGroupBox">
         <property name="enabled">
          <bool>true</bool>
         </property>
@@ -286,6 +266,33 @@ QPushButton:pressed {
         </layout>
        </widget>
       </item>
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="markingDayCheckBox">
+        <property name="text">
+         <string>Marking day</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="nightMarkingCheckBox">
+        <property name="text">
+         <string>Night marking</string>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+        <property name="tristate">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QPushButton" name="resetFilterButton">
+        <property name="text">
+         <string>Clear</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
@@ -295,7 +302,7 @@ QPushButton:pressed {
   <tabstop>searchLineEdit</tabstop>
   <tabstop>markingDayCheckBox</tabstop>
   <tabstop>nightMarkingCheckBox</tabstop>
-  <tabstop>groupBox_4</tabstop>
+  <tabstop>radiusGroupBox</tabstop>
   <tabstop>latLineEdit</tabstop>
   <tabstop>lonLineEdit</tabstop>
   <tabstop>radiusSlider</tabstop>

@@ -28,6 +28,7 @@ SideBar::SideBar(QWidget *parent) :
     connect(ui->radius1Button, SIGNAL(clicked(bool)), this, SLOT(setRadius()));
     connect(ui->radius2Button, SIGNAL(clicked(bool)), this, SLOT(setRadius()));
     connect(ui->radius3Button, SIGNAL(clicked(bool)), this, SLOT(setRadius()));
+    connect(ui->resetFilterButton, SIGNAL(clicked(bool)), this, SLOT(resetFilter()));
 
     emit ui->radiusSlider->valueChanged(50);
 }
@@ -112,4 +113,14 @@ void SideBar::setRadius()
 {
     int value = qobject_cast<QPushButton*>(sender())->text().remove(QRegExp("\\D+")).toInt();
     ui->radiusSlider->setValue(value);
+}
+
+void SideBar::resetFilter()
+{
+    ui->markingDayCheckBox->setChecked(false);
+    ui->nightMarkingCheckBox->setChecked(false);
+    ui->radiusGroupBox->setChecked(false);
+    ui->latLineEdit->clear();
+    ui->lonLineEdit->clear();
+    ui->radiusSlider->setValue(50);
 }
