@@ -9,7 +9,8 @@
 #include <QSaveFile>
 #include <QSortFilterProxyModel>
 #include <QSettings>
-#include <QSqlRecord>
+//#include <QSqlRecord>
+#include <QPropertyAnimation>
 #include "listitemdelegate.h"
 #include "tablemodel.h"
 #include "searchmodel.h"
@@ -49,17 +50,16 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     ui->splitter->setSizes(QList<int>() << 150 << 300);
 
     QGridLayout *layout = new QGridLayout(this);
-    layout->addWidget(toolBar, 0, 0, 1, 3);
+    layout->addWidget(toolBar, 0, 0, 1, 2);
     layout->addWidget(ui->splitter, 1, 0, 2, 2);
-    layout->addWidget(sideBar, 1, 2, 2, 1);
     setLayout(layout);
 
     airfieldsModel = new QStandardItemModel(this);
-    searchModel = new SearchModel(this);
-    searchModel->setSourceModel(airfieldsModel);
-    searchModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    searchAirfieldsModel = new SearchModel(this);
+    searchAirfieldsModel->setSourceModel(airfieldsModel);
+    searchAirfieldsModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     ui->listView->setItemDelegate(new ListItemDelegate());
-    ui->listView->setModel(searchModel);
+    ui->listView->setModel(searchAirfieldsModel);
 
 //    ui->listView->setStyleSheet("QListView::item:selected { background: #66b3ff;color: white; }"
 //                                "QListView::item:hover { background: #e6f2ff;color: black; }");
@@ -108,7 +108,7 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     ui->tableView->horizontalHeader()->setSectionsClickable(true);
     ui->tableView->setItemDelegateForColumn(0, new CheckboxItemDelegate(this));
 
-    setListView();
+    updateModelAirfields();
 //    spinner = new WaitingSpinnerWidget(this);
 //    spinner->setRoundness(70.0);
 //    spinner->setMinimumTrailOpacity(15.0);
@@ -123,15 +123,14 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
 
     readSettings();
 
-    connect(ui->listView, SIGNAL(clicked(QModelIndex)), this, SLOT(getObstracleForAirfield(QModelIndex)));
-//    connect(ui->tableView, SIGNAL(clicked(QModelIndex)), this, SLOT(enabledToolButton()));
+    connect(ui->listView, SIGNAL(clicked(QModelIndex)), this, SLOT(updateModelObstracles(QModelIndex)));
     connect(sortSearchFilterTableModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this, SLOT(enabledToolButton()));
     connect(exportButton, SIGNAL(clicked(bool)), this, SLOT(exportToFile()));
     connect(filterButton, SIGNAL(clicked(bool)), this, SLOT(showFilterPanel()));
-    connect(ui->searchLineEdit, SIGNAL(textChanged(QString)), searchModel, SLOT(setFilterRegExp(QString)));
+    connect(ui->searchLineEdit, SIGNAL(textChanged(QString)), searchAirfieldsModel, SLOT(setFilterRegExp(QString)));
     connect(sideBar, SIGNAL(searchTextChanged(QString)), sortSearchFilterTableModel, SLOT(setFilterRegExp(QString)));
     connect(sideBar, SIGNAL(toggled(QString, bool)), sortSearchFilterTableModel, SLOT(setFilterProperty(QString, bool)));
-    connect(groupHeaderView, SIGNAL(clickedCheckBox(bool)), this, SLOT(setCheckedRowTable(bool)));
+    connect(groupHeaderView, SIGNAL(clickedCheckBox(bool)), this, SLOT(setCheckedAllRowTable(bool)));
     connect(sideBar, SIGNAL(filterRadius()), this, SLOT(setFilterRadius()));
 }
 
@@ -140,6 +139,12 @@ ObstraclesForm::~ObstraclesForm()
     writeSettings();
 //    delete obstraclesHandler;
     delete ui;
+}
+
+void ObstraclesForm::resizeEvent(QResizeEvent *event)
+{
+    QWidget::resizeEvent(event);
+    sideBar->setGeometry(width() - 20, toolBar->height(), sideBar->size().width(), height() - toolBar->height());
 }
 
 void ObstraclesForm::writeSettings()
@@ -162,12 +167,11 @@ void ObstraclesForm::readSettings()
     settings.endGroup();
 }
 
-void ObstraclesForm::setListView()
+void ObstraclesForm::updateModelAirfields()
 {
     QVector<Airfield> airfields = Database::getAirfields();
-    QVector<Airfield>::iterator it;
 
-    for (it = airfields.begin(); it != airfields.end(); ++it) {
+    for (QVector<Airfield>::iterator it = airfields.begin(); it != airfields.end(); ++it) {
         QStandardItem *item = new QStandardItem;
         item->setData((*it).name, ListItemDelegate::NameAirfieldRole);
         item->setData((*it).icao, ListItemDelegate::CodeICAORole);
@@ -178,14 +182,10 @@ void ObstraclesForm::setListView()
     ui->listView->repaint();
 }
 
-void ObstraclesForm::getObstracleForAirfield(const QModelIndex &index)
+void ObstraclesForm::updateModelObstracles(const QModelIndex &index)
 {
-    uint idAirfield = searchModel->data(index, ListItemDelegate::IdRole).toUInt();
-    setTableView(Database::getObstracles(idAirfield));
-}
-
-void ObstraclesForm::setTableView(QVector<QVariantList> obstracles)
-{
+    uint idAirfield = searchAirfieldsModel->data(index, ListItemDelegate::IdRole).toUInt();
+    QVector<QVariantList> obstracles = Database::getObstracles(idAirfield);
     // uncheked header
     qobject_cast<QGroupHeaderView*>(ui->tableView->horizontalHeader())->setChecked(false);
     // remove all rows
@@ -258,7 +258,7 @@ void ObstraclesForm::showFilterPanel()
     filterPanel->show();
 }
 
-void ObstraclesForm::setCheckedRowTable(bool checked)
+void ObstraclesForm::setCheckedAllRowTable(bool checked)
 {
     if (obstraclesModel->rowCount() == 0)
         return;

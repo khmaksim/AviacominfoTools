@@ -27,6 +27,8 @@ class ObstraclesForm : public QWidget
 
 //    public slots:
 //        void updateData();
+    protected:
+        void resizeEvent(QResizeEvent *event);
 
     private:
         Ui::ObstraclesForm *ui;
@@ -35,7 +37,7 @@ class ObstraclesForm : public QWidget
         QToolButton *filterButton;
         QStandardItemModel *airfieldsModel;
         TableModel *obstraclesModel;
-        SearchModel *searchModel;
+        SearchModel *searchAirfieldsModel;
         SortSearchFilterTableModel *sortSearchFilterTableModel;
 //        WaitingSpinnerWidget *spinner;
         QFrame *filterPanel;
@@ -43,16 +45,14 @@ class ObstraclesForm : public QWidget
 
         void readSettings();
         void writeSettings();
-        void setListView();
-        void setTableView(QVector<QVariantList>);
+        void updateModelAirfields();
 
     private slots:
-        void getObstracleForAirfield(const QModelIndex&);
+        void updateModelObstracles(const QModelIndex&);
         void enabledToolButton();
         void exportToFile();
-//        void searchAirfield(const QString&);
         void showFilterPanel();
-        void setCheckedRowTable(bool);
+        void setCheckedAllRowTable(bool);
         void setFilterRadius();
 };
 

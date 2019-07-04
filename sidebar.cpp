@@ -2,6 +2,10 @@
 #include "ui_sidebar.h"
 #include <QDebug>
 #include <QInputDialog>
+#include <QMouseEvent>
+#include <QPropertyAnimation>
+#include <QTimer>
+#include <QBitmap>
 #include "flowlayout.h"
 
 SideBar::SideBar(QWidget *parent) :
@@ -9,14 +13,21 @@ SideBar::SideBar(QWidget *parent) :
     ui(new Ui::SideBar)
 {
     ui->setupUi(this);
-    setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
+    setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Expanding);
+//    QPalette palette = this->palette();
+//    palette.setBrush(QPalette::Background, QBrush(QColor(128, 128, 128)));
+//    setPalette(palette);
+//    QPixmap maskPix(":/images/res/img/mask.png");
+//    setMask(maskPix.scaled(size()).mask());
+
+    isShown = false;
+    this->parent = parent;
+    timer = new QTimer(this);
 
     ui->minRadiusLabel->setNum(ui->radiusSlider->minimum());
     ui->maxRadiusLabel->setNum(ui->radiusSlider->maximum());
 
-    FlowLayout *scrollAreaLayout = new FlowLayout();
-//    ui->scrollArea->setLayout(scrollAreaLayout);
-    ui->scrollAreaWidgetContents->setLayout(scrollAreaLayout);
+    ui->scrollAreaWidgetContents->setLayout(new FlowLayout());
 
     connect(ui->searchLineEdit, SIGNAL(textChanged(QString)), this, SIGNAL(searchTextChanged(QString)));
     connect(ui->markingDayCheckBox, SIGNAL(toggled(bool)), this, SLOT(checkBoxChanged(bool)));
@@ -28,6 +39,7 @@ SideBar::SideBar(QWidget *parent) :
     connect(ui->radius2Button, SIGNAL(clicked(bool)), this, SLOT(setRadius()));
     connect(ui->radius3Button, SIGNAL(clicked(bool)), this, SLOT(setRadius()));
     connect(ui->resetFilterButton, SIGNAL(clicked(bool)), this, SLOT(resetFilter()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(showHide()));
 
     emit ui->radiusSlider->valueChanged(50);
 }
@@ -35,6 +47,28 @@ SideBar::SideBar(QWidget *parent) :
 SideBar::~SideBar()
 {
     delete ui;
+}
+
+void SideBar::enterEvent(QEvent *)
+{
+    if (!isShown)
+        showHide();
+    if (timer->isActive())
+        timer->stop();
+}
+
+void SideBar::leaveEvent(QEvent *)
+{
+    timer->start(5000);
+}
+
+void SideBar::resizeEvent(QResizeEvent *event)
+{
+    QWidget::resizeEvent(event);
+    if (isShown)
+        showHide();
+    QPixmap maskPix(":/images/res/img/mask.png");
+    ui->label->setMask(maskPix.scaled(ui->label->size()).mask());
 }
 
 QSize SideBar::sizeHint()
@@ -116,4 +150,37 @@ void SideBar::resetFilter()
     ui->latLineEdit->clear();
     ui->lonLineEdit->clear();
     ui->radiusSlider->setValue(50);
+}
+
+void SideBar::showHide()
+{
+    animationSideBar = new QPropertyAnimation(this, "geometry");
+    animationSideBar->setDuration(300);
+
+    QRect startRect(parent->width() - 20, y(), width(), height());
+    QRect endRect(parent->width() - width(), y(), width(), height());
+
+    if (!isShown) {
+        animationSideBar->setStartValue(startRect);
+        animationSideBar->setEndValue(endRect);
+    }
+    else {
+        animationSideBar->setStartValue(endRect);
+        animationSideBar->setEndValue(startRect);
+    }
+
+    animationSideBar->start();
+    QTimer::singleShot(animationSideBar->duration(), this, SLOT(changeArrow()));
+
+    isShown = !isShown;
+    if (timer->isActive())
+        timer->stop();
+}
+
+void SideBar::changeArrow()
+{
+    if (isShown)
+        ui->label->setPixmap(QPixmap(":/images/res/img/arrow-right.png"));
+    else
+        ui->label->setPixmap(QPixmap(":/images/res/img/arrow-left.png"));
 }

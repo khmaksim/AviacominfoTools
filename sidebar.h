@@ -7,6 +7,7 @@ namespace Ui {
     class SideBar;
 }
 
+class QPropertyAnimation;
 class SideBar : public QWidget
 {
         Q_OBJECT
@@ -19,11 +20,25 @@ class SideBar : public QWidget
         float getLon();
         int getRadius();
 
+    public slots:
+        void showHide();
+
     protected:
         QSize sizeHint();
+        void resizeEvent(QResizeEvent *event);
+//        void mouseMoveEvent(QMouseEvent *event);
+        void leaveEvent(QEvent*);
+        void enterEvent(QEvent*);
 
     private:
         Ui::SideBar *ui;
+        QTimer *timer;
+
+        QWidget *parent;
+        QPropertyAnimation *animationSideBar;
+
+        bool isShown;
+        QRect m_geometry;
 
         float convertCoordInDec(QString);
 
@@ -34,6 +49,7 @@ class SideBar : public QWidget
         void showSelectColorTag();
         void setRadius();
         void resetFilter();
+        void changeArrow();
 
     signals:
         void searchTextChanged(QString);
