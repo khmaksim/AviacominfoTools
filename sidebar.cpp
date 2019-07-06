@@ -7,6 +7,7 @@
 #include <QTimer>
 #include <QBitmap>
 #include "flowlayout.h"
+#include "obstraclesform.h"
 #include "databaseaccess.h"
 
 SideBar::SideBar(QWidget *parent) :
@@ -145,6 +146,8 @@ void SideBar::showAddTag()
 void SideBar::addTagToScrollArea(const QString &nameTag)
 {
     QCheckBox *tag = new QCheckBox(nameTag, ui->scrollAreaWidgetContents);
+    connect(tag, SIGNAL(clicked(bool)), this, SLOT(setTagForObstracles(bool)));
+    connect(tag, SIGNAL(clicked(bool)), this, SLOT(filterTag()));
     ui->scrollAreaWidgetContents->layout()->addWidget(tag);
     ui->scrollAreaWidgetContents->adjustSize();
 }
@@ -201,4 +204,17 @@ void SideBar::changeArrow()
         ui->label->setPixmap(QPixmap(":/images/res/img/arrow-right.png"));
     else
         ui->label->setPixmap(QPixmap(":/images/res/img/arrow-left.png"));
+}
+
+void SideBar::setTagForObstracles(bool checked)
+{
+    if (!checked)
+        return;
+    QVariantList idObstracles = qobject_cast<ObstraclesForm*>(this->parent)->getCheckedObstralcles();
+    QCheckBox *selectedTag = qobject_cast<QCheckBox*>(sender());
+    DatabaseAccess::getInstance()->setTag(selectedTag->text(), idObstracles);
+}
+
+void SideBar::filterTag()
+{
 }

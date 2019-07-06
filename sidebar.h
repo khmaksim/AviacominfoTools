@@ -52,6 +52,8 @@ class SideBar : public QWidget
         void setRadius();
         void resetFilter();
         void changeArrow();
+        void filterTag();
+        void setTagForObstracles(bool);
 
     signals:
         void searchTextChanged(QString);

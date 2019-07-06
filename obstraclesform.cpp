@@ -132,6 +132,7 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     connect(sideBar, SIGNAL(toggled(QString, bool)), sortSearchFilterTableModel, SLOT(setFilterProperty(QString, bool)));
     connect(groupHeaderView, SIGNAL(clickedCheckBox(bool)), this, SLOT(setCheckedAllRowTable(bool)));
     connect(sideBar, SIGNAL(filterRadius()), this, SLOT(setFilterRadius()));
+    connect(ui->tableView, SIGNAL(clicked(QModelIndex)), this, SLOT(showTags(QModelIndex)));
 }
 
 ObstraclesForm::~ObstraclesForm()
@@ -207,14 +208,12 @@ void ObstraclesForm::updateModelObstracles(const QModelIndex &index)
 
 void ObstraclesForm::enabledToolButton()
 {
-    bool enable = false;
+    idSelectedObstracles.clear();
     for (int row = 0; row < obstraclesModel->rowCount(); row++) {
-        if (obstraclesModel->item(row)->data(Qt::UserRole).toBool()) {
-            enable = true;
-            break;
-        }
+        if (obstraclesModel->item(row)->data(Qt::UserRole).toBool())
+            idSelectedObstracles.append(obstraclesModel->item(row, 1)->data(Qt::DisplayRole).toString());    // remember id obstracle
     }
-    exportButton->setEnabled(enable);
+    exportButton->setEnabled(idSelectedObstracles.size() > 0);
     return;
 }
 
@@ -270,4 +269,13 @@ void ObstraclesForm::setCheckedAllRowTable(bool checked)
 void ObstraclesForm::setFilterRadius()
 {
     sortSearchFilterTableModel->setFilterRadius(sideBar->getLat(), sideBar->getLon(), sideBar->getRadius());
+}
+
+QVariantList ObstraclesForm::getCheckedObstralcles()
+{
+    return idSelectedObstracles;
+}
+
+void ObstraclesForm::showTags(const QModelIndex &index)
+{
 }

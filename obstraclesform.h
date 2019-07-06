@@ -25,8 +25,8 @@ class ObstraclesForm : public QWidget
         explicit ObstraclesForm(QWidget *parent = 0);
         ~ObstraclesForm();
 
-//    public slots:
-//        void updateData();
+        QVariantList getCheckedObstralcles();
+
     protected:
         void resizeEvent(QResizeEvent *event);
 
@@ -42,6 +42,7 @@ class ObstraclesForm : public QWidget
 //        WaitingSpinnerWidget *spinner;
         QFrame *filterPanel;
         SideBar *sideBar;
+        QVariantList idSelectedObstracles;
 
         void readSettings();
         void writeSettings();
@@ -54,6 +55,7 @@ class ObstraclesForm : public QWidget
         void showFilterPanel();
         void setCheckedAllRowTable(bool);
         void setFilterRadius();
+        void showTags(const QModelIndex&);
 };
 
 #endif // OBSTRACLESFORM_H

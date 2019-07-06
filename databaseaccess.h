@@ -19,6 +19,7 @@ class DatabaseAccess : public QObject
         QSqlDatabase db;
 
     public:
+        void setTag(const QString&, const QVariantList&);
         QVector<QString> getTags();
         QVector<Airfield> getAirfields();
         QVector<QVariantList> getObstracles(uint);

@@ -39,6 +39,40 @@ QVector<QString> DatabaseAccess::getTags()
     return tags;
 }
 
+void DatabaseAccess::setTag(const QString &nameTag, const QVariantList &idObstrales)
+{
+    QSqlQuery query;
+    uint idTag = 0;
+
+    query.prepare("SELECT id FROM tag WHERE name = :name");
+    query.bindValue(":name", nameTag);
+    if (!query.exec()) {
+        qDebug() << query.lastError().text();
+        qDebug() << query.lastQuery();
+        qDebug() << query.boundValues();
+    }
+    if (query.first()) {
+        idTag = query.value(0).toUInt();
+    }
+    else
+        return;
+
+    query.prepare("INSERT INTO obstracle_tag (id_obstracle, id_tag) SELECT :id_obstracle, :id_tag WHERE NOT EXISTS(SELECT 1 "
+                  "FROM obstracle_tag WHERE id_obstracle = :id_obstracle AND id_tag = :id_tag)");
+
+    query.bindValue(":id_obstracle", idObstrales);
+
+    QVariantList tags;
+    for (int i = 0; i < idObstrales.size(); i++)
+        tags << idTag;
+    query.bindValue(":id_tag", tags);
+    if (!query.execBatch()) {
+        qDebug() << query.lastError().text();
+        qDebug() << query.lastQuery();
+        qDebug() << query.boundValues();
+    }
+}
+
 bool DatabaseAccess::createTag(const QString &nameTag)
 {
     QSqlQuery query;
