@@ -25,6 +25,10 @@ bool SortSearchFilterTableModel::filterAcceptsRow(int sourceRow, const QModelInd
         QModelIndex index = sourceModel()->index(sourceRow, col, sourceParent);
         result |= sourceModel()->data(index).toString().contains(filterRegExp());
     }
+    if (!tags.isEmpty()) {
+        result &= sourceModel()->data(sourceModel()->index(sourceRow, 0, sourceParent), Qt::UserRole + 1)
+                  .toString().contains(QRegExp(tags.join("|")));
+    }
 
     if (markingDay)
         result &= sourceModel()->data(sourceModel()->index(sourceRow, 17, sourceParent))
@@ -81,12 +85,14 @@ bool SortSearchFilterTableModel::lessThan(const QModelIndex &source_left, const 
     return QSortFilterProxyModel::lessThan(source_left, source_right);
 }
 
-void SortSearchFilterTableModel::setFilterProperty(QString objectName, bool flag)
+void SortSearchFilterTableModel::setFilterProperty(QString objectName, QVariant value)
 {
-    if (objectName.contains("day", Qt::CaseInsensitive))
-        markingDay = flag;
-    else if (objectName.contains("night", Qt::CaseInsensitive))
-        nightMarking = flag;
+    if (objectName.contains("markingDayCheckBox", Qt::CaseInsensitive))
+        markingDay = value.toBool();
+    else if (objectName.contains("nightMarkingCheckBox", Qt::CaseInsensitive))
+        nightMarking = value.toBool();
+    else
+        tags = value.toStringList();
 
     invalidateFilter();
 }

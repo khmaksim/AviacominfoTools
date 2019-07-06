@@ -129,7 +129,7 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     connect(filterButton, SIGNAL(clicked(bool)), this, SLOT(showFilterPanel()));
     connect(ui->searchLineEdit, SIGNAL(textChanged(QString)), searchAirfieldsModel, SLOT(setFilterRegExp(QString)));
     connect(sideBar, SIGNAL(searchTextChanged(QString)), sortSearchFilterTableModel, SLOT(setFilterRegExp(QString)));
-    connect(sideBar, SIGNAL(toggled(QString, bool)), sortSearchFilterTableModel, SLOT(setFilterProperty(QString, bool)));
+    connect(sideBar, SIGNAL(changedFilterProperty(QString, QVariant)), sortSearchFilterTableModel, SLOT(setFilterProperty(QString, QVariant)));
     connect(groupHeaderView, SIGNAL(clickedCheckBox(bool)), this, SLOT(setCheckedAllRowTable(bool)));
     connect(sideBar, SIGNAL(filterRadius()), this, SLOT(setFilterRadius()));
     connect(ui->tableView, SIGNAL(clicked(QModelIndex)), this, SLOT(showTags(QModelIndex)));
@@ -198,8 +198,10 @@ void ObstraclesForm::updateModelObstracles(const QModelIndex &index)
         QList<QStandardItem *> items;
         QVariantList fields = obstracles.at(i);
 
-        items.append(new QStandardItem());
-        for (int j = 0; j < fields.size(); j++) {
+        QStandardItem *item = new QStandardItem();
+        item->setData(fields.last().toString(), Qt::UserRole + 1);      // set tags for obstracles to first column
+        items.append(item);
+        for (int j = 0; j < fields.size() - 1; j++) {       // last value is list tags
             items.append(new QStandardItem(fields.at(j).toString()));
         }
         obstraclesModel->appendRow(items);

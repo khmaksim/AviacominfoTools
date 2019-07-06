@@ -2,6 +2,7 @@
 #define SIDEBAR_H
 
 #include <QWidget>
+#include <QVariant>
 
 namespace Ui {
     class SideBar;
@@ -52,12 +53,12 @@ class SideBar : public QWidget
         void setRadius();
         void resetFilter();
         void changeArrow();
-        void filterTag();
+        void checkBoxTagsChanged();
         void setTagForObstracles(bool);
 
     signals:
         void searchTextChanged(QString);
-        void toggled(QString, bool);
+        void changedFilterProperty(QString, QVariant);
         void filterRadius();
 };
 

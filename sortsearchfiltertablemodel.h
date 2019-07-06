@@ -13,13 +13,14 @@ class SortSearchFilterTableModel : public QSortFilterProxyModel
         void setFilterRadius(float, float, int);
 
     public slots:
-        void setFilterProperty(QString, bool);
+        void setFilterProperty(QString, QVariant);
 
     protected:
         bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
         bool lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const;
 
     private:
+        QStringList tags;
         bool markingDay;
         bool nightMarking;
         float lat;

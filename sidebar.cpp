@@ -93,7 +93,7 @@ void SideBar::updateTags()
 
 void SideBar::checkBoxChanged(bool f)
 {
-    emit toggled(sender()->objectName(), f);
+    emit changedFilterProperty(sender()->objectName(), QVariant(f));
 }
 
 void SideBar::updateLabelValueRadius(int value)
@@ -147,7 +147,7 @@ void SideBar::addTagToScrollArea(const QString &nameTag)
 {
     QCheckBox *tag = new QCheckBox(nameTag, ui->scrollAreaWidgetContents);
     connect(tag, SIGNAL(clicked(bool)), this, SLOT(setTagForObstracles(bool)));
-    connect(tag, SIGNAL(clicked(bool)), this, SLOT(filterTag()));
+    connect(tag, SIGNAL(clicked(bool)), this, SLOT(checkBoxTagsChanged()));
     ui->scrollAreaWidgetContents->layout()->addWidget(tag);
     ui->scrollAreaWidgetContents->adjustSize();
 }
@@ -215,6 +215,13 @@ void SideBar::setTagForObstracles(bool checked)
     DatabaseAccess::getInstance()->setTag(selectedTag->text(), idObstracles);
 }
 
-void SideBar::filterTag()
+void SideBar::checkBoxTagsChanged()
 {
+    QStringList tags;
+    QList<QCheckBox*> tagsCheckBox = ui->scrollAreaWidgetContents->findChildren<QCheckBox*>();
+    for (QList<QCheckBox*>::iterator it = tagsCheckBox.begin(); it != tagsCheckBox.end(); ++it) {
+        if ((*it)->isChecked())
+            tags << (*it)->text();
+    }
+    emit changedFilterProperty(sender()->objectName(), QVariant(tags));
 }
