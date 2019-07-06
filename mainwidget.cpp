@@ -2,7 +2,7 @@
 #include "ui_mainwidget.h"
 #include "obstraclesform.h"
 #include "obstracleshandler.h"
-#include "database.h"
+#include "databaseaccess.h"
 #include <QDebug>
 #include <QSettings>
 
@@ -11,7 +11,6 @@ MainWidget::MainWidget(QWidget *parent) :
     ui(new Ui::MainWidget)
 {
     ui->setupUi(this);
-    db = new Database(this);
     obstraclesHandler = new ObstraclesHandler(this);
 
     readSettings();
@@ -19,7 +18,7 @@ MainWidget::MainWidget(QWidget *parent) :
     ObstraclesForm *form = new ObstraclesForm(this);
     ui->stackedWidget->addWidget(form);
 
-    connect(obstraclesHandler, SIGNAL(finished(Airfield,QVector<QVector<QString> >&)), db, SLOT(update(Airfield,QVector<QVector<QString> >&)));
+    connect(obstraclesHandler, SIGNAL(finished(Airfield,QVector<QVector<QString> >&)), DatabaseAccess::getInstance(), SLOT(update(Airfield,QVector<QVector<QString> >&)));
     connect(ui->obstracleButton, SIGNAL(clicked(bool)), this, SLOT(showObstracles()));
     connect(ui->pushButton, SIGNAL(clicked(bool)), obstraclesHandler, SLOT(checkUpdates()));
 }

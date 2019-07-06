@@ -17,7 +17,7 @@
 #include "waitingspinnerwidget.h"
 #include "qgroupheaderview.h"
 #include "filterpanel.h"
-#include "database.h"
+#include "databaseaccess.h"
 #include "sidebar.h"
 #include "sortsearchfiltertablemodel.h"
 #include "checkboxitemdelegate.h"
@@ -169,7 +169,7 @@ void ObstraclesForm::readSettings()
 
 void ObstraclesForm::updateModelAirfields()
 {
-    QVector<Airfield> airfields = Database::getAirfields();
+    QVector<Airfield> airfields = DatabaseAccess::getInstance()->getAirfields();
 
     for (QVector<Airfield>::iterator it = airfields.begin(); it != airfields.end(); ++it) {
         QStandardItem *item = new QStandardItem;
@@ -185,7 +185,7 @@ void ObstraclesForm::updateModelAirfields()
 void ObstraclesForm::updateModelObstracles(const QModelIndex &index)
 {
     uint idAirfield = searchAirfieldsModel->data(index, ListItemDelegate::IdRole).toUInt();
-    QVector<QVariantList> obstracles = Database::getObstracles(idAirfield);
+    QVector<QVariantList> obstracles = DatabaseAccess::getInstance()->getObstracles(idAirfield);
     // uncheked header
     qobject_cast<QGroupHeaderView*>(ui->tableView->horizontalHeader())->setChecked(false);
     // remove all rows

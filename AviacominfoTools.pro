@@ -32,12 +32,12 @@ SOURCES += \
     tablemodel.cpp \
     searchmodel.cpp \
     qgroupheaderview.cpp \
-    database.cpp \
     filterpanel.cpp \
     sidebar.cpp \
     sortsearchfiltertablemodel.cpp \
     checkboxitemdelegate.cpp \
-    flowlayout.cpp
+    flowlayout.cpp \
+    databaseaccess.cpp
 
 HEADERS += \
         mainwidget.h \
@@ -47,12 +47,12 @@ HEADERS += \
     tablemodel.h \
     searchmodel.h \
     qgroupheaderview.h \
-    database.h \
     filterpanel.h \
     sidebar.h \
     sortsearchfiltertablemodel.h \
     checkboxitemdelegate.h \
-    flowlayout.h
+    flowlayout.h \
+    databaseaccess.h
 
 FORMS += \
         mainwidget.ui \

@@ -1,4 +1,4 @@
-#include "database.h"
+#include "databaseaccess.h"
 #include <QSqlDatabase>
 #include <QFile>
 #include <QDebug>
@@ -8,9 +8,9 @@
 #include <QVariant>
 #include <QSqlRecord>
 
-Database::Database(QObject *parent) : QObject(parent)
+DatabaseAccess::DatabaseAccess(QObject *parent) : QObject(parent)
 {
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    db = QSqlDatabase::addDatabase("QSQLITE");
 
     if (!QFile("AviacominfoTools.db").exists())
         qDebug() << "File database is not found.";
@@ -21,7 +21,13 @@ Database::Database(QObject *parent) : QObject(parent)
         qDebug() << "Can not connected to database.";
 }
 
-QVector<Airfield> Database::getAirfields()
+DatabaseAccess* DatabaseAccess::getInstance()
+{
+    static DatabaseAccess instance;
+    return &instance;
+}
+
+QVector<Airfield> DatabaseAccess::getAirfields()
 {
     QSqlQuery query;
     QVector<Airfield> airfields = QVector<Airfield>();
@@ -37,7 +43,7 @@ QVector<Airfield> Database::getAirfields()
     return airfields;
 }
 
-QVector<QVariantList> Database::getObstracles(uint id)
+QVector<QVariantList> DatabaseAccess::getObstracles(uint id)
 {
     QSqlQuery query;
     QVector<QVariantList> obstracles = QVector<QVariantList>();
@@ -72,7 +78,7 @@ QVector<QVariantList> Database::getObstracles(uint id)
     return obstracles;
 }
 
-void Database::update(Airfield airfield, QVector<QVector<QString> > &obstracles)
+void DatabaseAccess::update(Airfield airfield, QVector<QVector<QString> > &obstracles)
 {
     QSqlQuery query;
 
