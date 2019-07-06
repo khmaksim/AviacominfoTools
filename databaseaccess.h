@@ -19,8 +19,10 @@ class DatabaseAccess : public QObject
         QSqlDatabase db;
 
     public:
+        QVector<QString> getTags();
         QVector<Airfield> getAirfields();
         QVector<QVariantList> getObstracles(uint);
+        bool createTag(const QString&);
 
     public slots:
         void update(Airfield, QVector<QVector<QString> >&);

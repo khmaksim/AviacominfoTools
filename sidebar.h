@@ -41,6 +41,7 @@ class SideBar : public QWidget
         QRect m_geometry;
 
         float convertCoordInDec(QString);
+        void updateTags();
 
     private slots:
         void checkBoxChanged(bool);

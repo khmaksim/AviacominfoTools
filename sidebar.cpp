@@ -7,6 +7,7 @@
 #include <QTimer>
 #include <QBitmap>
 #include "flowlayout.h"
+#include "databaseaccess.h"
 
 SideBar::SideBar(QWidget *parent) :
     QWidget(parent),
@@ -28,6 +29,8 @@ SideBar::SideBar(QWidget *parent) :
     ui->maxRadiusLabel->setNum(ui->radiusSlider->maximum());
 
     ui->scrollAreaWidgetContents->setLayout(new FlowLayout());
+
+    updateTags();
 
     connect(ui->searchLineEdit, SIGNAL(textChanged(QString)), this, SIGNAL(searchTextChanged(QString)));
     connect(ui->markingDayCheckBox, SIGNAL(toggled(bool)), this, SLOT(checkBoxChanged(bool)));
@@ -76,6 +79,20 @@ QSize SideBar::sizeHint()
     return QSize(150, 400);
 }
 
+void SideBar::updateTags()
+{
+    QVector<QString> tags = DatabaseAccess::getInstance()->getTags();
+
+    if (tags.isEmpty())
+        return;
+
+    for (int i = 0; i < tags.size(); i++) {
+        QCheckBox *tag = new QCheckBox(tags.at(i), ui->scrollAreaWidgetContents);
+        ui->scrollAreaWidgetContents->layout()->addWidget(tag);
+        ui->scrollAreaWidgetContents->adjustSize();
+    }
+}
+
 void SideBar::checkBoxChanged(bool f)
 {
     emit toggled(sender()->objectName(), f);
@@ -122,12 +139,11 @@ void SideBar::addTagShow()
     inputDialog->setOkButtonText(tr("Add"));
     inputDialog->setCancelButtonText(tr("Cancel"));
     if (inputDialog->exec() == QInputDialog::Accepted) {
-        QCheckBox *tag = new QCheckBox(inputDialog->textValue(), ui->scrollAreaWidgetContents);
-        //    ui->scrollArea->layout()->addWidget(tag);
-        ui->scrollAreaWidgetContents->layout()->addWidget(tag);
-
-        //    ui->scrollArea->setGeometry(QRect(QPoint(0, 0), ui->scrollArea->sizeHint()));
-        ui->scrollAreaWidgetContents->adjustSize();
+        if (DatabaseAccess::getInstance()->createTag(inputDialog->textValue())) {
+            QCheckBox *tag = new QCheckBox(inputDialog->textValue(), ui->scrollAreaWidgetContents);
+            ui->scrollAreaWidgetContents->layout()->addWidget(tag);
+            ui->scrollAreaWidgetContents->adjustSize();
+        }
     }
 }
 

@@ -27,6 +27,34 @@ DatabaseAccess* DatabaseAccess::getInstance()
     return &instance;
 }
 
+QVector<QString> DatabaseAccess::getTags()
+{
+    QSqlQuery query;
+    QVector<QString> tags = QVector<QString>();
+
+    query.exec("SELECT name FROM tag ORDER BY name");
+    while (query.next())
+        tags.append(query.value(0).toString());
+
+    return tags;
+}
+
+bool DatabaseAccess::createTag(const QString &nameTag)
+{
+    QSqlQuery query;
+
+    query.prepare("INSERT INTO tag (name) SELECT :name WHERE NOT EXISTS(SELECT 1 "
+                  "FROM tag WHERE name = :name)");
+    query.bindValue(":name", nameTag);
+    if (!query.exec()) {
+        qDebug() << query.lastError().text();
+        qDebug() << query.lastQuery();
+        qDebug() << query.boundValues();
+        return false;
+    }
+    return true;
+}
+
 QVector<Airfield> DatabaseAccess::getAirfields()
 {
     QSqlQuery query;
