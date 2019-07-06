@@ -42,11 +42,12 @@ class SideBar : public QWidget
 
         float convertCoordInDec(QString);
         void updateTags();
+        void addTagToScrollArea(const QString&);
 
     private slots:
         void checkBoxChanged(bool);
         void updateLabelValueRadius(int);
-        void addTagShow();
+        void showAddTag();
         void showSelectColorTag();
         void setRadius();
         void resetFilter();

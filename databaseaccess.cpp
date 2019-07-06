@@ -52,7 +52,10 @@ bool DatabaseAccess::createTag(const QString &nameTag)
         qDebug() << query.boundValues();
         return false;
     }
-    return true;
+    if (query.numRowsAffected())
+        return true;
+
+    return false;
 }
 
 QVector<Airfield> DatabaseAccess::getAirfields()

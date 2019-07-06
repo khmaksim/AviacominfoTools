@@ -37,7 +37,7 @@ SideBar::SideBar(QWidget *parent) :
     connect(ui->nightMarkingCheckBox, SIGNAL(toggled(bool)), this, SLOT(checkBoxChanged(bool)));
     connect(ui->radiusSlider, SIGNAL(valueChanged(int)), this, SLOT(updateLabelValueRadius(int)));
     connect(ui->radiusSlider, SIGNAL(valueChanged(int)), this, SIGNAL(filterRadius()));
-    connect(ui->addTagButton, SIGNAL(clicked(bool)), this, SLOT(addTagShow()));
+    connect(ui->addTagButton, SIGNAL(clicked(bool)), this, SLOT(showAddTag()));
     connect(ui->radius1Button, SIGNAL(clicked(bool)), this, SLOT(setRadius()));
     connect(ui->radius2Button, SIGNAL(clicked(bool)), this, SLOT(setRadius()));
     connect(ui->radius3Button, SIGNAL(clicked(bool)), this, SLOT(setRadius()));
@@ -86,11 +86,8 @@ void SideBar::updateTags()
     if (tags.isEmpty())
         return;
 
-    for (int i = 0; i < tags.size(); i++) {
-        QCheckBox *tag = new QCheckBox(tags.at(i), ui->scrollAreaWidgetContents);
-        ui->scrollAreaWidgetContents->layout()->addWidget(tag);
-        ui->scrollAreaWidgetContents->adjustSize();
-    }
+    for (int i = 0; i < tags.size(); i++)
+        addTagToScrollArea(tags.at(i));
 }
 
 void SideBar::checkBoxChanged(bool f)
@@ -130,7 +127,7 @@ float SideBar::convertCoordInDec(QString coordStr)
     return coordDec;
 }
 
-void SideBar::addTagShow()
+void SideBar::showAddTag()
 {
     QInputDialog *inputDialog = new QInputDialog(this, Qt::CustomizeWindowHint | Qt::WindowTitleHint);
     inputDialog->setInputMode(QInputDialog::TextInput);
@@ -140,11 +137,16 @@ void SideBar::addTagShow()
     inputDialog->setCancelButtonText(tr("Cancel"));
     if (inputDialog->exec() == QInputDialog::Accepted) {
         if (DatabaseAccess::getInstance()->createTag(inputDialog->textValue())) {
-            QCheckBox *tag = new QCheckBox(inputDialog->textValue(), ui->scrollAreaWidgetContents);
-            ui->scrollAreaWidgetContents->layout()->addWidget(tag);
-            ui->scrollAreaWidgetContents->adjustSize();
+            addTagToScrollArea(inputDialog->textValue());
         }
     }
+}
+
+void SideBar::addTagToScrollArea(const QString &nameTag)
+{
+    QCheckBox *tag = new QCheckBox(nameTag, ui->scrollAreaWidgetContents);
+    ui->scrollAreaWidgetContents->layout()->addWidget(tag);
+    ui->scrollAreaWidgetContents->adjustSize();
 }
 
 void SideBar::showSelectColorTag()
