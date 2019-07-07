@@ -27,6 +27,9 @@ class DatabaseAccess : public QObject
 
     public slots:
         void update(Airfield, QVector<QVector<QString> >&);
+
+    signals:
+        void updated();
 };
 
 #endif // DATABASEACCESS_H

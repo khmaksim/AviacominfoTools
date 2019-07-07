@@ -2,6 +2,7 @@
 #define OBSTRACLESFORM_H
 
 #include <QWidget>
+#include <QModelIndex>
 #include "obstracleshandler.h"
 
 namespace Ui {
@@ -42,14 +43,13 @@ class ObstraclesForm : public QWidget
 //        WaitingSpinnerWidget *spinner;
         QFrame *filterPanel;
         SideBar *sideBar;
-        QVariantList idSelectedObstracles;
 
         void readSettings();
         void writeSettings();
         void updateModelAirfields();
 
     private slots:
-        void updateModelObstracles(const QModelIndex&);
+        void updateModelObstracles(const QModelIndex &index = QModelIndex());
         void enabledToolButton();
         void exportToFile();
         void showFilterPanel();

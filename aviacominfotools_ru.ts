@@ -37,12 +37,12 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwidget.ui" line="33"/>
+        <location filename="mainwidget.ui" line="45"/>
         <source>Obstracle</source>
         <translation>Препятствие</translation>
     </message>
     <message>
-        <location filename="mainwidget.ui" line="46"/>
+        <location filename="mainwidget.ui" line="58"/>
         <source>Settings</source>
         <translation>Настройки</translation>
     </message>
@@ -71,12 +71,12 @@
         <translation>Препятствия</translation>
     </message>
     <message>
-        <location filename="obstraclesform.cpp" line="31"/>
+        <location filename="obstraclesform.cpp" line="32"/>
         <source>Export</source>
         <translation>Экспорт</translation>
     </message>
     <message>
-        <location filename="obstraclesform.cpp" line="37"/>
+        <location filename="obstraclesform.cpp" line="38"/>
         <source>Filter</source>
         <translation>Фильтр</translation>
     </message>
@@ -255,7 +255,7 @@
 представления</translation>
     </message>
     <message>
-        <location filename="obstraclesform.cpp" line="225"/>
+        <location filename="obstraclesform.cpp" line="224"/>
         <source>Save file</source>
         <translation>Сохранить файл</translation>
     </message>
@@ -263,67 +263,86 @@
 <context>
     <name>SideBar</name>
     <message>
-        <location filename="sidebar.ui" line="14"/>
+        <location filename="sidebar.ui" line="20"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="20"/>
+        <location filename="sidebar.ui" line="251"/>
+        <source>Reset</source>
+        <translatorcomment>Сбросить</translatorcomment>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="sidebar.ui" line="267"/>
         <source>Tags</source>
         <translation>Теги</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="26"/>
         <source>Name tag</source>
-        <translation>Название тега</translation>
+        <translation type="vanished">Название тега</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="36"/>
         <source>...</source>
-        <translation>...</translation>
+        <translation type="vanished">...</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="46"/>
+        <location filename="sidebar.ui" line="276"/>
         <source>Add tag</source>
         <translation>Добавить тег</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="88"/>
+        <location filename="sidebar.ui" line="47"/>
         <source>Search</source>
         <translation>Поиск</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="97"/>
+        <location filename="sidebar.ui" line="56"/>
         <source>Input text...</source>
-        <translation>Введите тексе...</translation>
+        <translation>Введите текст...</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="110"/>
+        <location filename="sidebar.ui" line="69"/>
         <source>Filter</source>
         <translation>Фильтр</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="119"/>
+        <location filename="sidebar.ui" line="129"/>
+        <source>46 km</source>
+        <translation>46 км</translation>
+    </message>
+    <message>
+        <location filename="sidebar.ui" line="198"/>
+        <source>50 km</source>
+        <translation>50 км</translation>
+    </message>
+    <message>
+        <location filename="sidebar.ui" line="221"/>
+        <source>55 km</source>
+        <translation>55 км</translation>
+    </message>
+    <message>
+        <location filename="sidebar.ui" line="231"/>
         <source>Marking day</source>
         <translation>Маркировка дневная</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="126"/>
+        <location filename="sidebar.ui" line="238"/>
         <source>Night marking</source>
         <translation>Маркировка ночная</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="142"/>
+        <location filename="sidebar.ui" line="81"/>
         <source>Radius</source>
         <translation>Радиус</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="176"/>
+        <location filename="sidebar.ui" line="106"/>
         <source>lon (e050 20 20.10)</source>
         <translation>долгота (в050 20 20.10)</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="186"/>
+        <location filename="sidebar.ui" line="139"/>
         <source>lat (n50 30 00)</source>
         <translation>широта (c50 30 00)</translation>
     </message>
@@ -336,16 +355,48 @@
         <translation type="vanished">широта</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="193"/>
-        <location filename="sidebar.ui" line="200"/>
-        <location filename="sidebar.ui" line="210"/>
+        <location filename="sidebar.ui" line="96"/>
+        <location filename="sidebar.ui" line="165"/>
+        <location filename="sidebar.ui" line="172"/>
         <source>TextLabel</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="sidebar.cpp" line="48"/>
         <source> km</source>
+        <translation type="vanished">км</translation>
+    </message>
+    <message>
+        <location filename="sidebar.cpp" line="101"/>
+        <source>km</source>
         <translation>км</translation>
+    </message>
+    <message>
+        <location filename="sidebar.cpp" line="135"/>
+        <source>Name tag:</source>
+        <translation>Название тега:</translation>
+    </message>
+    <message>
+        <location filename="sidebar.cpp" line="136"/>
+        <source>Create tag</source>
+        <translation>Создать тег</translation>
+    </message>
+    <message>
+        <location filename="sidebar.cpp" line="137"/>
+        <source>Create</source>
+        <translation>Создать</translation>
+    </message>
+    <message>
+        <source>Input name tag</source>
+        <translation type="vanished">Введите название тега</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation type="vanished">Добавить</translation>
+    </message>
+    <message>
+        <location filename="sidebar.cpp" line="138"/>
+        <source>Cancel</source>
+        <translation>Отмена</translation>
     </message>
 </context>
 </TS>

@@ -133,6 +133,7 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     connect(groupHeaderView, SIGNAL(clickedCheckBox(bool)), this, SLOT(setCheckedAllRowTable(bool)));
     connect(sideBar, SIGNAL(filterRadius()), this, SLOT(setFilterRadius()));
     connect(ui->tableView, SIGNAL(clicked(QModelIndex)), this, SLOT(showTags(QModelIndex)));
+    connect(DatabaseAccess::getInstance(), SIGNAL(updated()), this, SLOT(updateModelObstracles()));
 }
 
 ObstraclesForm::~ObstraclesForm()
@@ -185,7 +186,12 @@ void ObstraclesForm::updateModelAirfields()
 
 void ObstraclesForm::updateModelObstracles(const QModelIndex &index)
 {
-    uint idAirfield = searchAirfieldsModel->data(index, ListItemDelegate::IdRole).toUInt();
+    uint idAirfield = 0;
+    if (index.isValid())
+        idAirfield = searchAirfieldsModel->data(index, ListItemDelegate::IdRole).toUInt();
+    else
+        idAirfield = searchAirfieldsModel->data(ui->listView->currentIndex(), ListItemDelegate::IdRole).toUInt();
+
     QVector<QVariantList> obstracles = DatabaseAccess::getInstance()->getObstracles(idAirfield);
     // uncheked header
     qobject_cast<QGroupHeaderView*>(ui->tableView->horizontalHeader())->setChecked(false);
@@ -210,12 +216,14 @@ void ObstraclesForm::updateModelObstracles(const QModelIndex &index)
 
 void ObstraclesForm::enabledToolButton()
 {
-    idSelectedObstracles.clear();
+    bool isEnable = false;
     for (int row = 0; row < obstraclesModel->rowCount(); row++) {
-        if (obstraclesModel->item(row)->data(Qt::UserRole).toBool())
-            idSelectedObstracles.append(obstraclesModel->item(row, 1)->data(Qt::DisplayRole).toString());    // remember id obstracle
+        if (obstraclesModel->item(row)->data(Qt::UserRole).toBool()) {
+            isEnable = true;
+            break;
+        }
     }
-    exportButton->setEnabled(idSelectedObstracles.size() > 0);
+    exportButton->setEnabled(isEnable);
     return;
 }
 
@@ -275,6 +283,12 @@ void ObstraclesForm::setFilterRadius()
 
 QVariantList ObstraclesForm::getCheckedObstralcles()
 {
+    QVariantList idSelectedObstracles;
+
+    for (int row = 0; row < obstraclesModel->rowCount(); row++) {
+        if (obstraclesModel->item(row)->data(Qt::UserRole).toBool())
+            idSelectedObstracles.append(obstraclesModel->item(row, 1)->data(Qt::DisplayRole).toString());
+    }
     return idSelectedObstracles;
 }
 

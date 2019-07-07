@@ -133,8 +133,8 @@ void SideBar::showAddTag()
     QInputDialog *inputDialog = new QInputDialog(this, Qt::CustomizeWindowHint | Qt::WindowTitleHint);
     inputDialog->setInputMode(QInputDialog::TextInput);
     inputDialog->setLabelText(tr("Name tag:"));
-    inputDialog->setWindowTitle(tr("Input name tag"));
-    inputDialog->setOkButtonText(tr("Add"));
+    inputDialog->setWindowTitle(tr("Create tag"));
+    inputDialog->setOkButtonText(tr("Create"));
     inputDialog->setCancelButtonText(tr("Cancel"));
     if (inputDialog->exec() == QInputDialog::Accepted) {
         if (DatabaseAccess::getInstance()->createTag(inputDialog->textValue())) {

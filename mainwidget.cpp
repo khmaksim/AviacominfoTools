@@ -5,6 +5,7 @@
 #include "databaseaccess.h"
 #include <QDebug>
 #include <QSettings>
+#include <QDateTime>
 
 MainWidget::MainWidget(QWidget *parent) :
     QWidget(parent),
@@ -50,5 +51,11 @@ void MainWidget::readSettings()
     settings.beginGroup("geometry");
     if (settings.value("maximized").toBool())
         this->showMaximized();
+    settings.endGroup();
+    settings.beginGroup("database");
+    if (settings.value("datetime_updated").toDateTime().addDays(1) < QDateTime::currentDateTime()) {
+        obstraclesHandler->checkUpdates();
+        settings.setValue("datetime_updated", QDateTime::currentDateTime());
+    }
     settings.endGroup();
 }
