@@ -55,7 +55,7 @@ void MainWidget::readSettings()
     settings.beginGroup("database");
     if (settings.value("datetime_updated").toDateTime().addDays(1) < QDateTime::currentDateTime()) {
         obstraclesHandler->checkUpdates();
-//        settings.setValue("datetime_updated", QDateTime::currentDateTime());
+        settings.setValue("datetime_updated", QDateTime::currentDateTime());
     }
     settings.endGroup();
 }

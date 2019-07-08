@@ -38,7 +38,8 @@ SOURCES += \
     checkboxitemdelegate.cpp \
     flowlayout.cpp \
     databaseaccess.cpp \
-    htmlparser.cpp
+    htmlparser.cpp \
+    obstraclestyleditemdelegate.cpp
 
 HEADERS += \
         mainwidget.h \
@@ -54,7 +55,8 @@ HEADERS += \
     checkboxitemdelegate.h \
     flowlayout.h \
     databaseaccess.h \
-    htmlparser.h
+    htmlparser.h \
+    obstraclestyleditemdelegate.h
 
 FORMS += \
         mainwidget.ui \

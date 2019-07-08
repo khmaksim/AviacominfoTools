@@ -21,6 +21,7 @@
 #include "sidebar.h"
 #include "sortsearchfiltertablemodel.h"
 #include "checkboxitemdelegate.h"
+#include "obstraclestyleditemdelegate.h"
 
 ObstraclesForm::ObstraclesForm(QWidget *parent) :
     QWidget(parent),
@@ -107,6 +108,7 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     ui->tableView->horizontalHeader()->setSortIndicatorShown(true);
     ui->tableView->horizontalHeader()->setSectionsClickable(true);
     ui->tableView->setItemDelegateForColumn(0, new CheckboxItemDelegate(this));
+    ui->tableView->setItemDelegate(new ObstracleStyledItemDelegate(this));
 
     updateModelAirfields();
 //    spinner = new WaitingSpinnerWidget(this);
@@ -205,9 +207,10 @@ void ObstraclesForm::updateModelObstracles(const QModelIndex &index)
         QVariantList fields = obstracles.at(i);
 
         QStandardItem *item = new QStandardItem();
-        item->setData(fields.last().toString(), Qt::UserRole + 1);      // set tags for obstracles to first column
+        item->setData(fields.takeLast().toString(), Qt::UserRole + 1);      // set tags for obstracles to first column
+        item->setData(fields.takeLast().toString(), Qt::UserRole + 2);      // set datetime last updated
         items.append(item);
-        for (int j = 0; j < fields.size() - 1; j++) {       // last value is list tags
+        for (int j = 0; j < fields.size(); j++) {
             items.append(new QStandardItem(fields.at(j).toString()));
         }
         obstraclesModel->appendRow(items);

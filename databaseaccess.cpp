@@ -120,7 +120,7 @@ QVector<QVariantList> DatabaseAccess::getObstracles(uint id)
                   "ob.orthometric_height, ob.relative_height, ob.vertical_precision, tm.name, fg.name, "
                   "ob.marking_daytime, ob.marking_daytime_template, ob.marking_daytime_color, ob.night_marking, "
                   "ob.night_marking_color, ob.night_marking_type_light, ob.night_marking_intensity, "
-                  "ob.night_marking_work_time, ob.accordance_icao, ob.source_data, ob.date_updated, "
+                  "ob.night_marking_work_time, ob.accordance_icao, ob.source_data, ob.date_updated, ob.last_updated, "
                   "GROUP_CONCAT(t.name) "
                   "FROM obstracle ob "
                   "LEFT OUTER JOIN type_configuration_obstracle tc ON tc.id = ob.type_configuration "
@@ -318,7 +318,6 @@ void DatabaseAccess::update(QVector<QVector<QString>> obstracles)
         query.addBindValue(obstracles.at(i).at(25));
         query.addBindValue(obstracles.at(i).at(26));
         query.addBindValue(idAirfield);
-//        query.addBindValue(QDateTime::currentDateTime());
         if (!query.exec()) {
             qDebug() << query.lastError().text() << " " << query.lastQuery();
         }
