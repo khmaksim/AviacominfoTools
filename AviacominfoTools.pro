@@ -37,7 +37,8 @@ SOURCES += \
     sortsearchfiltertablemodel.cpp \
     checkboxitemdelegate.cpp \
     flowlayout.cpp \
-    databaseaccess.cpp
+    databaseaccess.cpp \
+    htmlparser.cpp
 
 HEADERS += \
         mainwidget.h \
@@ -52,7 +53,8 @@ HEADERS += \
     sortsearchfiltertablemodel.h \
     checkboxitemdelegate.h \
     flowlayout.h \
-    databaseaccess.h
+    databaseaccess.h \
+    htmlparser.h
 
 FORMS += \
         mainwidget.ui \

@@ -255,7 +255,7 @@
 представления</translation>
     </message>
     <message>
-        <location filename="obstraclesform.cpp" line="224"/>
+        <location filename="obstraclesform.cpp" line="232"/>
         <source>Save file</source>
         <translation>Сохранить файл</translation>
     </message>

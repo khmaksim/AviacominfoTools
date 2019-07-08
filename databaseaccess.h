@@ -5,11 +5,28 @@
 #include <QSqlDatabase>
 #include "obstracleshandler.h"
 
+struct Airfield {
+    QString name;
+    QString icao;
+    QString href;
+    uint id;
+};
+
 class DatabaseAccess : public QObject
 {
         Q_OBJECT
     public:
         static DatabaseAccess* getInstance();
+
+        void setTag(const QString&, const QVariantList&);
+        QVector<QString> getTags();
+        QVector<Airfield> getAirfields();
+        QVector<QVariantList> getObstracles(uint);
+        bool createTag(const QString&);
+        void addAirfield(Airfield);
+
+    public slots:
+        void update(QVector<QVector<QString>>);
 
     private:
         DatabaseAccess(QObject *parent = nullptr);
@@ -17,16 +34,7 @@ class DatabaseAccess : public QObject
         DatabaseAccess& operator =(const DatabaseAccess);
 
         QSqlDatabase db;
-
-    public:
-        void setTag(const QString&, const QVariantList&);
-        QVector<QString> getTags();
-        QVector<Airfield> getAirfields();
-        QVector<QVariantList> getObstracles(uint);
-        bool createTag(const QString&);
-
-    public slots:
-        void update(Airfield, QVector<QVector<QString> >&);
+        QVector<Airfield> airfields;
 
     signals:
         void updated();

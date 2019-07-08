@@ -2,13 +2,7 @@
 #define OBSTRACLESHANDLER_H
 
 #include <QWidget>
-
-struct Airfield {
-    QString name;
-    QString icao;
-    QString href;
-    uint id;
-};
+#include "htmlparser.h"
 
 class QNetworkReply;
 class QNetworkAccessManager;
@@ -25,17 +19,14 @@ class ObstraclesHandler : public QObject
     private:
         QNetworkAccessManager *manager;
         QNetworkReply *reply;
-        QVector<Airfield> airfields;
 
-        void getListObstracles(const QString&);
         void getListAirfields();
+        void createParser(QByteArray&, HtmlParser::TypeData);
 
     private slots:
         void replyFinished(QNetworkReply*);
         void updateProgress(qint64,qint64);
-
-    signals:
-        void finished(Airfield, QVector<QVector<QString>>&);
+        void getListObstracles(const QString&);
 };
 
 #endif // OBSTRACLESHANDLER_H

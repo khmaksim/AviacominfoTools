@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QVariant>
 #include <QSqlRecord>
+#include <QDateTime>
 
 DatabaseAccess::DatabaseAccess(QObject *parent) : QObject(parent)
 {
@@ -149,11 +150,12 @@ QVector<QVariantList> DatabaseAccess::getObstracles(uint id)
     return obstracles;
 }
 
-void DatabaseAccess::update(Airfield airfield, QVector<QVector<QString> > &obstracles)
+void DatabaseAccess::update(QVector<QVector<QString>> obstracles)
 {
     QSqlQuery query;
 
     QSqlDatabase::database().transaction();
+    Airfield airfield = airfields.takeFirst();
 
     query.prepare("INSERT INTO airfield (name, code_icao) SELECT :name, :code_icao WHERE NOT EXISTS(SELECT 1 "
                   "FROM airfield WHERE name = :name AND code_icao = :code_icao)");
@@ -177,95 +179,117 @@ void DatabaseAccess::update(Airfield airfield, QVector<QVector<QString> > &obstr
     uint idAirfield = query.value(0).toUInt();
 
     for (int i = 0; i < obstracles.size(); i++) {
-        query.prepare("INSERT INTO coordinate_system (name) SELECT :name WHERE NOT EXISTS(SELECT 1 "
-                      "FROM coordinate_system WHERE name = :name)");
-        query.bindValue(":name", obstracles.at(i).at(4));
-        if (!query.exec()) {
-            qDebug() << query.lastError().text();
-            qDebug() << query.lastQuery();
-            qDebug() << query.boundValues();
+        QVariant idCoordinationSystem = QVariant(QVariant::UInt);
+        QVariant idFragility = QVariant(QVariant::UInt);
+        QVariant idLocality = QVariant(QVariant::UInt);
+        QVariant idTypeConfigurationObstracle = QVariant(QVariant::UInt);
+        QVariant idTypeMaterial = QVariant(QVariant::UInt);
+
+        if (!obstracles.at(i).at(4).isEmpty()) {
+            query.prepare("INSERT INTO coordinate_system (name) SELECT :name WHERE NOT EXISTS(SELECT 1 "
+                          "FROM coordinate_system WHERE name = :name)");
+            query.bindValue(":name", obstracles.at(i).at(4));
+            if (!query.exec()) {
+                qDebug() << query.lastError().text();
+                qDebug() << query.lastQuery();
+                qDebug() << query.boundValues();
+            }
+            else {
+                // get id coordination system
+                query.prepare("SELECT id FROM coordinate_system WHERE name = ?");
+                query.addBindValue(obstracles.at(i).at(4));
+                if (!query.exec()) {
+                    qDebug() << query.lastError().text() << " " << query.lastQuery();
+                }
+                if (query.first())
+                    idCoordinationSystem = query.value(0).toUInt();
+            }
         }
-        else {
-            // get id coordination system
-            query.prepare("SELECT id FROM coordinate_system WHERE name = ?");
-            query.addBindValue(obstracles.at(i).at(4));
+
+        if (!obstracles.at(i).at(15).isEmpty()) {
+            query.prepare("INSERT INTO fragility (name) SELECT :name WHERE NOT EXISTS(SELECT 1 \
+                          FROM fragility WHERE name = :name)");
+                    query.bindValue(":name", obstracles.at(i).at(15));
             if (!query.exec()) {
                 qDebug() << query.lastError().text() << " " << query.lastQuery();
             }
+            else {
+                // get id fragility
+                query.prepare("SELECT id FROM fragility WHERE name = ?");
+                query.addBindValue(obstracles.at(i).at(15));
+                if (!query.exec()) {
+                    qDebug() << query.lastError().text() << " " << query.lastQuery();
+                }
+                if (query.first())
+                    idFragility = query.value(0).toUInt();
+            }
         }
-        QVariant idCoordinationSystem = query.first() ? query.value(0).toUInt() : QVariant(QVariant::UInt);
 
-        query.prepare("INSERT INTO fragility (name) SELECT :name WHERE NOT EXISTS(SELECT 1 \
-                      FROM fragility WHERE name = :name)");
-        query.bindValue(":name", obstracles.at(i).at(15));
-        if (!query.exec()) {
-            qDebug() << query.lastError().text() << " " << query.lastQuery();
-        }
-        else {
-            // get id fragility
-            query.prepare("SELECT id FROM fragility WHERE name = ?");
-            query.addBindValue(obstracles.at(i).at(15));
+        if (!obstracles.at(i).at(3).isEmpty()) {
+            query.prepare("INSERT INTO locality (name) SELECT :name WHERE NOT EXISTS(SELECT 1 \
+                          FROM locality WHERE name = :name)");
+                    query.bindValue(":name", obstracles.at(i).at(3));
             if (!query.exec()) {
                 qDebug() << query.lastError().text() << " " << query.lastQuery();
             }
+            else {
+                // get id locality
+                query.prepare("SELECT id FROM locality WHERE name = ?");
+                query.addBindValue(obstracles.at(i).at(3));
+                if (!query.exec()) {
+                    qDebug() << query.lastError().text() << " " << query.lastQuery();
+                }
+                if (query.first())
+                    idLocality = query.value(0).toUInt();
+            }
         }
-        QVariant idFragility = query.first() ? query.value(0).toUInt() : QVariant(QVariant::UInt);
 
-        query.prepare("INSERT INTO locality (name) SELECT :name WHERE NOT EXISTS(SELECT 1 \
-                      FROM locality WHERE name = :name)");
-        query.bindValue(":name", obstracles.at(i).at(3));
-        if (!query.exec()) {
-            qDebug() << query.lastError().text() << " " << query.lastQuery();
-        }
-        else {
-            // get id locality
-            query.prepare("SELECT id FROM locality WHERE name = ?");
-            query.addBindValue(obstracles.at(i).at(3));
+        if (!obstracles.at(i).at(2).isEmpty()) {
+            query.prepare("INSERT INTO type_configuration_obstracle (name) SELECT :name WHERE NOT EXISTS(SELECT 1 \
+                          FROM type_configuration_obstracle WHERE name = :name)");
+                    query.bindValue(":name",  obstracles.at(i).at(2));
             if (!query.exec()) {
                 qDebug() << query.lastError().text() << " " << query.lastQuery();
             }
+            else {
+                // get id type configuration obstracle
+                query.prepare("SELECT id FROM type_configuration_obstracle WHERE name = ?");
+                query.addBindValue(obstracles.at(i).at(2));
+                if (!query.exec()) {
+                    qDebug() << query.lastError().text() << " " << query.lastQuery();
+                }
+                if (query.first())
+                    idTypeConfigurationObstracle = query.value(0).toUInt();
+            }
         }
-        QVariant idLocality = query.first() ? query.value(0).toUInt() : QVariant(QVariant::UInt);
 
-        query.prepare("INSERT INTO type_configuration_obstracle (name) SELECT :name WHERE NOT EXISTS(SELECT 1 \
-                      FROM type_configuration_obstracle WHERE name = :name)");
-        query.bindValue(":name",  obstracles.at(i).at(2));
-        if (!query.exec()) {
-            qDebug() << query.lastError().text() << " " << query.lastQuery();
-        }
-        else {
-            // get id type configuration obstracle
-            query.prepare("SELECT id FROM type_configuration_obstracle WHERE name = ?");
-            query.addBindValue(obstracles.at(i).at(2));
+        if (!obstracles.at(i).at(14).isEmpty()) {
+            query.prepare("INSERT INTO type_material (name) SELECT :name WHERE NOT EXISTS(SELECT 1 \
+                          FROM type_material WHERE name = :name)");
+                    query.bindValue(":name", obstracles.at(i).at(14));
             if (!query.exec()) {
                 qDebug() << query.lastError().text() << " " << query.lastQuery();
             }
-        }
-        QVariant idTypeConfigurationObstracle = query.first() ? query.value(0).toUInt() : QVariant(QVariant::UInt);
-
-        query.prepare("INSERT INTO type_material (name) SELECT :name WHERE NOT EXISTS(SELECT 1 \
-                      FROM type_material WHERE name = :name)");
-        query.bindValue(":name", obstracles.at(i).at(14));
-        if (!query.exec()) {
-            qDebug() << query.lastError().text() << " " << query.lastQuery();
-        }
-        else {
-            // get id type material
-            query.prepare("SELECT id FROM type_material WHERE name = ?");
-            query.addBindValue(obstracles.at(i).at(14));
-            if (!query.exec()) {
-                qDebug() << query.lastError().text() << " " << query.lastQuery();
+            else {
+                // get id type material
+                query.prepare("SELECT id FROM type_material WHERE name = ?");
+                query.addBindValue(obstracles.at(i).at(14));
+                if (!query.exec()) {
+                    qDebug() << query.lastError().text() << " " << query.lastQuery();
+                }
+                if (query.first())
+                    idTypeMaterial = query.value(0).toUInt();
             }
         }
-        QVariant idTypeMaterial = query.first() ? query.value(0).toUInt() : QVariant(QVariant::UInt);
 
-        query.prepare("INSERT OR REPLACE INTO obstracle (id, name, type_configuration, locality, coordinate_system, \
-                        latitude, longitude, latitude_center, longitude_center, radius, horizontal_accuracy, \
-                        orthometric_height, relative_height, vertical_precision, type_material, fragility, \
-                        marking_daytime, marking_daytime_template, marking_daytime_color, night_marking, \
-                        night_marking_color, night_marking_type_light, night_marking_intensity, \
-                        night_marking_work_time, accordance_icao, source_data, date_updated, airfield) \
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        query.prepare("INSERT OR REPLACE INTO obstracle (id, name, type_configuration, locality, coordinate_system, "
+                        "latitude, longitude, latitude_center, longitude_center, radius, horizontal_accuracy, "
+                        "orthometric_height, relative_height, vertical_precision, type_material, fragility, "
+                        "marking_daytime, marking_daytime_template, marking_daytime_color, night_marking, "
+                        "night_marking_color, night_marking_type_light, night_marking_intensity, "
+                        "night_marking_work_time, accordance_icao, source_data, date_updated, airfield, last_updated) "
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
+                        "datetime('now','localtime'))");
         query.addBindValue(obstracles.at(i).at(0));
         query.addBindValue(obstracles.at(i).at(1));
         query.addBindValue(idTypeConfigurationObstracle);
@@ -294,6 +318,7 @@ void DatabaseAccess::update(Airfield airfield, QVector<QVector<QString> > &obstr
         query.addBindValue(obstracles.at(i).at(25));
         query.addBindValue(obstracles.at(i).at(26));
         query.addBindValue(idAirfield);
+//        query.addBindValue(QDateTime::currentDateTime());
         if (!query.exec()) {
             qDebug() << query.lastError().text() << " " << query.lastQuery();
         }
@@ -302,4 +327,9 @@ void DatabaseAccess::update(Airfield airfield, QVector<QVector<QString> > &obstr
         QSqlDatabase::database().rollback();
         qDebug() << "Rollback transaction";
     }
+}
+
+void DatabaseAccess::addAirfield(Airfield airfield)
+{
+    airfields.push_back(airfield);
 }

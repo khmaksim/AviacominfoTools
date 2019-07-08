@@ -1,13 +1,14 @@
 #include "obstracleshandler.h"
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QThread>
+#include "databaseaccess.h"
 
 ObstraclesHandler::ObstraclesHandler(QObject *parent) : QObject(parent)
 {
     manager = new QNetworkAccessManager(this);
 
     connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
-
 }
 
 ObstraclesHandler::~ObstraclesHandler()
@@ -23,61 +24,11 @@ void ObstraclesHandler::replyFinished(QNetworkReply *reply)
     }
     else if (reply->url() == QUrl("http://www.caica.ru/ObstacleList/rus/")) {
         QByteArray data = reply->readAll();
-        int pos = 0;
-        QString startMenu = "<div class=\"menu\">";
-        QRegExp regExp("<a target=\"view_frame\" href=\"([^\"]+)\">([^<]+)<br /><b>([^<]+)</b></a>");
-
-        if ((pos = data.indexOf(startMenu, pos)) > 0) {
-            while ((pos = regExp.indexIn(data, pos)) != -1) {
-                pos += regExp.matchedLength();
-                QString href = regExp.cap(1);
-                Airfield airfield;
-                airfield.name = regExp.cap(2);
-                airfield.icao = regExp.cap(3);
-                airfields << airfield;
-
-                getListObstracles(href);
-            }
-        }
+        createParser(data, HtmlParser::Airfields);
     }
     else {
         QByteArray data = reply->readAll();
-        int pos = 0;
-        QRegExp tableBeginRegExp("<tbody");
-        QRegExp rowBeginRegExp("<tr[^>]*>");
-        QRegExp rowEndRegExp("</tr>");
-        QRegExp colRegExp("<td>([^<]*)</td>");
-        QVector<QVector<QString>> table;
-        QVector<QString> row;
-        int posEndRow = 0;
-
-        data.replace("<td />", "<td></td>");        // fixed syntax error
-        pos = tableBeginRegExp.indexIn(data, pos);      // position begin table body
-
-        if (pos != -1) {
-            while ((pos = rowBeginRegExp.indexIn(data, pos)) != -1) {
-                posEndRow = rowEndRegExp.indexIn(data, pos);
-
-                if (posEndRow == -1)
-                    continue;
-
-                while ((pos = colRegExp.indexIn(data, pos)) != -1) {
-                    pos += colRegExp.matchedLength();
-
-                    if (pos > posEndRow) {
-                        pos = posEndRow;
-                        table << row;
-                        row.clear();
-                        break;
-                    }
-                    row.append(colRegExp.cap(1));
-                }
-                //  add table last row
-                if (!row.isEmpty())
-                    table << row;
-            }
-            emit finished(airfields.takeFirst(), table);
-        }
+        createParser(data, HtmlParser::Obstracles);
     }
     reply->deleteLater();
 }
@@ -110,4 +61,22 @@ void ObstraclesHandler::getListObstracles(const QString &file)
 void ObstraclesHandler::updateProgress(qint64 r, qint64 t)
 {
     qDebug() << r << " " << t;
+}
+
+void ObstraclesHandler::createParser(QByteArray &data, HtmlParser::TypeData type)
+{
+    HtmlParser *parser = new HtmlParser(type);
+    QThread *thread = new QThread;
+    parser->setData(data);
+    parser->moveToThread(thread);
+
+    qRegisterMetaType<QVector<QVector<QString>>>("QVector<QVector<QString>>");
+    connect(thread, SIGNAL(started()), parser, SLOT(process()));
+    connect(parser, SIGNAL(finished()), thread, SLOT(quit()));
+    connect(parser, SIGNAL(parseAirfieldCompleted(QString)), this, SLOT(getListObstracles(QString)));
+    connect(parser, SIGNAL(parseObstraclesCompleted(QVector<QVector<QString>>)), DatabaseAccess::getInstance(), SLOT(update(QVector<QVector<QString>>)));
+    connect(parser, SIGNAL(finished()), parser, SLOT(deleteLater()));
+    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+
+    thread->start();
 }
