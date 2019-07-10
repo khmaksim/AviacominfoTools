@@ -1,15 +1,11 @@
 #include "htmlparser.h"
-#include "databaseaccess.h"
 #include <QDebug>
+#include <QThread>
+#include "databaseaccess.h"
 
 HtmlParser::HtmlParser(TypeData type) : QObject()
 {
     this->type = type;
-}
-
-HtmlParser::~HtmlParser()
-{
-
 }
 
 void HtmlParser::process()
@@ -21,17 +17,17 @@ void HtmlParser::process()
         QRegExp regExp("<a target=\"view_frame\" href=\"([^\"]+)\">([^<]+)<br /><b>([^<]+)</b></a>");
 
         if ((pos = htmlData.indexOf(startMenu, pos)) > 0) {
+            QVector<QMap<QString, QString>> airfields;
             while ((pos = regExp.indexIn(htmlData, pos)) != -1) {
                 pos += regExp.matchedLength();
-                QString href = regExp.cap(1);
-                Airfield airfield;
-                airfield.name = regExp.cap(2);
-                airfield.icao = regExp.cap(3);
+                QMap<QString, QString> airfield;
+                airfield.insert("name", regExp.cap(2));
+                airfield.insert("icao", regExp.cap(3));
+                airfield.insert("href", regExp.cap(1));
 
-                DatabaseAccess::getInstance()->addAirfield(airfield);
-                emit parseAirfieldCompleted(href);
-                break;
+                airfields.append(airfield);
             }
+            emit parseAirfieldsCompleted(airfields);
         }
     }
     else {

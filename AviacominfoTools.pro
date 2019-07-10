@@ -39,7 +39,8 @@ SOURCES += \
     flowlayout.cpp \
     databaseaccess.cpp \
     htmlparser.cpp \
-    obstraclestyleditemdelegate.cpp
+    obstraclestyleditemdelegate.cpp \
+    databaseupdate.cpp
 
 HEADERS += \
         mainwidget.h \
@@ -56,7 +57,8 @@ HEADERS += \
     flowlayout.h \
     databaseaccess.h \
     htmlparser.h \
-    obstraclestyleditemdelegate.h
+    obstraclestyleditemdelegate.h \
+    databaseupdate.h
 
 FORMS += \
         mainwidget.ui \

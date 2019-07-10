@@ -2,6 +2,7 @@
 #define HTMLPARSER_H
 
 #include <QObject>
+#include <QMap>
 
 class HtmlParser : public QObject
 {
@@ -10,7 +11,7 @@ class HtmlParser : public QObject
         enum TypeData { Airfields, Obstracles };
 
         explicit HtmlParser(TypeData);
-        ~HtmlParser();
+        ~HtmlParser() {}
 
         void setData(QByteArray&);
 
@@ -24,7 +25,7 @@ class HtmlParser : public QObject
 
     signals:
         void finished();
-        void parseAirfieldCompleted(const QString&);
+        void parseAirfieldsCompleted(QVector<QMap<QString, QString>>);
         void parseObstraclesCompleted(QVector<QVector<QString>>);
 };
 

@@ -2,6 +2,7 @@
 #define OBSTRACLESHANDLER_H
 
 #include <QWidget>
+#include <QMap>
 #include "htmlparser.h"
 
 class QNetworkReply;
@@ -19,14 +20,24 @@ class ObstraclesHandler : public QObject
     private:
         QNetworkAccessManager *manager;
         QNetworkReply *reply;
+        QVector<QVector<QVector<QString>>> allObstracles;
+        QVector<QMap<QString, QString>> allAirfields;
+        int index;
 
-        void getListAirfields();
-        void createParser(QByteArray&, HtmlParser::TypeData);
+        void getAirfields();
+        void parser(QByteArray&, HtmlParser::TypeData);
+        void getHtmlPage(QUrl);
 
     private slots:
         void replyFinished(QNetworkReply*);
         void updateProgress(qint64,qint64);
-        void getListObstracles(const QString&);
+        void getObstracles();
+        void storeAirfields(QVector<QMap<QString, QString>>);
+        void storeObstracles(QVector<QVector<QString>>);
+        void updateDatabase();
+
+    signals:
+        void updated();
 };
 
 #endif // OBSTRACLESHANDLER_H

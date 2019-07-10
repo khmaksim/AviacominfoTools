@@ -19,6 +19,7 @@ MainWidget::MainWidget(QWidget *parent) :
     ObstraclesForm *form = new ObstraclesForm(this);
     ui->stackedWidget->addWidget(form);
 
+    connect(obstraclesHandler, SIGNAL(updated()), form, SLOT(updateModelAirfields()));
 //    connect(obstraclesHandler, SIGNAL(finished(Airfield,QVector<QVector<QString> >&)), DatabaseAccess::getInstance(), SLOT(update(Airfield,QVector<QVector<QString> >&)));
     connect(ui->obstracleButton, SIGNAL(clicked(bool)), this, SLOT(showObstracles()));
 //    connect(ui->pushButton, SIGNAL(clicked(bool)), obstraclesHandler, SLOT(checkUpdates()));
@@ -54,8 +55,8 @@ void MainWidget::readSettings()
     settings.endGroup();
     settings.beginGroup("database");
     if (settings.value("datetime_updated").toDateTime().addDays(1) < QDateTime::currentDateTime()) {
-        obstraclesHandler->checkUpdates();
         settings.setValue("datetime_updated", QDateTime::currentDateTime());
+        obstraclesHandler->checkUpdates();
     }
     settings.endGroup();
 }

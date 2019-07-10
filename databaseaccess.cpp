@@ -8,10 +8,11 @@
 #include <QVariant>
 #include <QSqlRecord>
 #include <QDateTime>
+#include <QApplication>
 
 DatabaseAccess::DatabaseAccess(QObject *parent) : QObject(parent)
 {
-    db = QSqlDatabase::addDatabase("QSQLITE");
+    db = QSqlDatabase::addDatabase("QSQLITE", "obstracle");
 
     if (!QFile("AviacominfoTools.db").exists())
         qDebug() << "File database is not found.";
@@ -20,6 +21,8 @@ DatabaseAccess::DatabaseAccess(QObject *parent) : QObject(parent)
 
     if (!db.open())
         qDebug() << "Can not connected to database.";
+
+    db.exec("PRAGMA FOREIGN_KEYS=ON");       //set support for foreign keys
 }
 
 DatabaseAccess* DatabaseAccess::getInstance()
@@ -28,9 +31,16 @@ DatabaseAccess* DatabaseAccess::getInstance()
     return &instance;
 }
 
+//DatabaseAccess* DatabaseAccess::getInstance()
+//{
+//    if(databaseAccess == 0)
+//       databaseAccess = new DatabaseAccess;
+//    return databaseAccess;
+//}
+
 QVector<QString> DatabaseAccess::getTags()
 {
-    QSqlQuery query;
+    QSqlQuery query(db);
     QVector<QString> tags = QVector<QString>();
 
     query.exec("SELECT name FROM tag ORDER BY name");
@@ -42,16 +52,13 @@ QVector<QString> DatabaseAccess::getTags()
 
 void DatabaseAccess::setTag(const QString &nameTag, const QVariantList &idObstrales)
 {
-    QSqlQuery query;
+    QSqlQuery query(db);
     uint idTag = 0;
 
     query.prepare("SELECT id FROM tag WHERE name = :name");
     query.bindValue(":name", nameTag);
-    if (!query.exec()) {
-        qDebug() << query.lastError().text();
-        qDebug() << query.lastQuery();
-        qDebug() << query.boundValues();
-    }
+    if (!query.exec())
+        qDebug() << query.lastError().text() << query.lastQuery() << query.boundValues();
     if (query.first()) {
         idTag = query.value(0).toUInt();
     }
@@ -67,25 +74,21 @@ void DatabaseAccess::setTag(const QString &nameTag, const QVariantList &idObstra
     for (int i = 0; i < idObstrales.size(); i++)
         tags << idTag;
     query.bindValue(":id_tag", tags);
-    if (!query.execBatch()) {
-        qDebug() << query.lastError().text();
-        qDebug() << query.lastQuery();
-        qDebug() << query.boundValues();
-    }
+    if (!query.execBatch())
+        qDebug() << query.lastError().text() << query.lastQuery() << query.boundValues();
+
     emit updated();
 }
 
 bool DatabaseAccess::createTag(const QString &nameTag)
 {
-    QSqlQuery query;
+    QSqlQuery query(db);
 
     query.prepare("INSERT INTO tag (name) SELECT :name WHERE NOT EXISTS(SELECT 1 "
                   "FROM tag WHERE name = :name)");
     query.bindValue(":name", nameTag);
     if (!query.exec()) {
-        qDebug() << query.lastError().text();
-        qDebug() << query.lastQuery();
-        qDebug() << query.boundValues();
+        qDebug() << query.lastError().text() << query.lastQuery() << query.boundValues();
         return false;
     }
     if (query.numRowsAffected())
@@ -94,25 +97,26 @@ bool DatabaseAccess::createTag(const QString &nameTag)
     return false;
 }
 
-QVector<Airfield> DatabaseAccess::getAirfields()
+QVector<QVariantList> DatabaseAccess::getAirfields()
 {
-    QSqlQuery query;
-    QVector<Airfield> airfields = QVector<Airfield>();
+    QSqlQuery query(db);
+    QVector<QVariantList> airfields = QVector<QVariantList>();
 
     query.exec("SELECT name, code_icao, id FROM airfield ORDER BY name");
     while (query.next()) {
-        Airfield airfield;
-        airfield.name = query.value(0).toString();
-        airfield.icao = query.value(1).toString();
-        airfield.id = query.value(2).toUInt();
-        airfields.append(airfield);
+        QSqlRecord record = query.record();
+        QVariantList list = QVariantList();
+        for (int i = 0; i < record.count(); i++)
+            list.append(record.value(i));
+
+        airfields.append(list);
     }
     return airfields;
 }
 
 QVector<QVariantList> DatabaseAccess::getObstracles(uint id)
 {
-    QSqlQuery query;
+    QSqlQuery query(db);
     QVector<QVariantList> obstracles = QVector<QVariantList>();
 
     query.prepare("SELECT ob.id, ob.name, tc.name, lo.name, cs.name, "
@@ -133,9 +137,7 @@ QVector<QVariantList> DatabaseAccess::getObstracles(uint id)
                   "WHERE ob.airfield = ? GROUP BY ob.id");
     query.addBindValue(id);
     if (!query.exec()) {
-        qDebug() << query.lastError().text();
-        qDebug() << query.lastQuery();
-        qDebug() << query.boundValues();
+        qDebug() << query.lastError().text() << query.lastQuery() << query.boundValues();
     }
 
     while (query.next()) {
@@ -150,33 +152,35 @@ QVector<QVariantList> DatabaseAccess::getObstracles(uint id)
     return obstracles;
 }
 
-void DatabaseAccess::update(QVector<QVector<QString>> obstracles)
+void DatabaseAccess::update(QMap<QString, QString> airfield, QVector<QVector<QString>> obstracles)
 {
-    QSqlQuery query;
+    QSqlQuery query(db);
+    int idAirfield = 0;
 
-    QSqlDatabase::database().transaction();
-    Airfield airfield = airfields.takeFirst();
+    query.exec("BEGIN TRANSACTION");
 
     query.prepare("INSERT INTO airfield (name, code_icao) SELECT :name, :code_icao WHERE NOT EXISTS(SELECT 1 "
                   "FROM airfield WHERE name = :name AND code_icao = :code_icao)");
-    query.bindValue(":name", airfield.name);
-    query.bindValue(":code_icao", airfield.icao);
+    query.bindValue(":name", airfield.value("name"));
+    query.bindValue(":code_icao", airfield.value("icao"));
     if (!query.exec()) {
-        qDebug() << query.lastError().text();
-        qDebug() << query.lastQuery();
-        qDebug() << query.boundValues();
+        qDebug() << query.lastError().text() << query.lastQuery() << query.boundValues();
         return;
     }
 
     // get id airfield
     query.prepare("SELECT id FROM airfield WHERE name = ? AND code_icao = ?");
-    query.addBindValue(airfield.name);
-    query.addBindValue(airfield.icao);
+    query.addBindValue(airfield.value("name"));
+    query.addBindValue(airfield.value("icao"));
     if (!query.exec()) {
-        qDebug() << query.lastError().text() << " " << query.lastQuery();
+        qDebug() << query.lastError().text() << query.lastQuery() << query.boundValues();
+        QSqlDatabase::database().rollback();
     }
-    query.first();
-    uint idAirfield = query.value(0).toUInt();
+
+    if (query.first())
+        idAirfield = query.value(0).toUInt();
+    else
+        return;
 
     for (int i = 0; i < obstracles.size(); i++) {
         QVariant idCoordinationSystem = QVariant(QVariant::UInt);
@@ -190,16 +194,14 @@ void DatabaseAccess::update(QVector<QVector<QString>> obstracles)
                           "FROM coordinate_system WHERE name = :name)");
             query.bindValue(":name", obstracles.at(i).at(4));
             if (!query.exec()) {
-                qDebug() << query.lastError().text();
-                qDebug() << query.lastQuery();
-                qDebug() << query.boundValues();
+                qDebug() << query.lastError().text() << query.lastQuery() << query.boundValues();
             }
             else {
                 // get id coordination system
                 query.prepare("SELECT id FROM coordinate_system WHERE name = ?");
                 query.addBindValue(obstracles.at(i).at(4));
                 if (!query.exec()) {
-                    qDebug() << query.lastError().text() << " " << query.lastQuery();
+                    qDebug() << query.lastError().text() << query.lastQuery() << query.boundValues();
                 }
                 if (query.first())
                     idCoordinationSystem = query.value(0).toUInt();
@@ -210,16 +212,14 @@ void DatabaseAccess::update(QVector<QVector<QString>> obstracles)
             query.prepare("INSERT INTO fragility (name) SELECT :name WHERE NOT EXISTS(SELECT 1 \
                           FROM fragility WHERE name = :name)");
                     query.bindValue(":name", obstracles.at(i).at(15));
-            if (!query.exec()) {
-                qDebug() << query.lastError().text() << " " << query.lastQuery();
-            }
+            if (!query.exec())
+                qDebug() << query.lastError().text() << query.lastQuery() << query.boundValues();
             else {
                 // get id fragility
                 query.prepare("SELECT id FROM fragility WHERE name = ?");
                 query.addBindValue(obstracles.at(i).at(15));
-                if (!query.exec()) {
-                    qDebug() << query.lastError().text() << " " << query.lastQuery();
-                }
+                if (!query.exec())
+                    qDebug() << query.lastError().text() << query.lastQuery() << query.boundValues();
                 if (query.first())
                     idFragility = query.value(0).toUInt();
             }
@@ -229,15 +229,14 @@ void DatabaseAccess::update(QVector<QVector<QString>> obstracles)
             query.prepare("INSERT INTO locality (name) SELECT :name WHERE NOT EXISTS(SELECT 1 \
                           FROM locality WHERE name = :name)");
                     query.bindValue(":name", obstracles.at(i).at(3));
-            if (!query.exec()) {
-                qDebug() << query.lastError().text() << " " << query.lastQuery();
-            }
+            if (!query.exec())
+                qDebug() << query.lastError().text() << query.lastQuery() << query.boundValues();
             else {
                 // get id locality
                 query.prepare("SELECT id FROM locality WHERE name = ?");
                 query.addBindValue(obstracles.at(i).at(3));
                 if (!query.exec()) {
-                    qDebug() << query.lastError().text() << " " << query.lastQuery();
+                    qDebug() << query.lastError().text() << query.lastQuery() << query.boundValues();
                 }
                 if (query.first())
                     idLocality = query.value(0).toUInt();
@@ -248,16 +247,14 @@ void DatabaseAccess::update(QVector<QVector<QString>> obstracles)
             query.prepare("INSERT INTO type_configuration_obstracle (name) SELECT :name WHERE NOT EXISTS(SELECT 1 \
                           FROM type_configuration_obstracle WHERE name = :name)");
                     query.bindValue(":name",  obstracles.at(i).at(2));
-            if (!query.exec()) {
-                qDebug() << query.lastError().text() << " " << query.lastQuery();
-            }
+            if (!query.exec())
+                qDebug() << query.lastError().text() << query.lastQuery() << query.boundValues();
             else {
                 // get id type configuration obstracle
                 query.prepare("SELECT id FROM type_configuration_obstracle WHERE name = ?");
                 query.addBindValue(obstracles.at(i).at(2));
-                if (!query.exec()) {
-                    qDebug() << query.lastError().text() << " " << query.lastQuery();
-                }
+                if (!query.exec())
+                    qDebug() << query.lastError().text() << query.lastQuery() << query.boundValues();
                 if (query.first())
                     idTypeConfigurationObstracle = query.value(0).toUInt();
             }
@@ -267,16 +264,14 @@ void DatabaseAccess::update(QVector<QVector<QString>> obstracles)
             query.prepare("INSERT INTO type_material (name) SELECT :name WHERE NOT EXISTS(SELECT 1 \
                           FROM type_material WHERE name = :name)");
                     query.bindValue(":name", obstracles.at(i).at(14));
-            if (!query.exec()) {
-                qDebug() << query.lastError().text() << " " << query.lastQuery();
-            }
+            if (!query.exec())
+                qDebug() << query.lastError().text() << query.lastQuery() << query.boundValues();
             else {
                 // get id type material
                 query.prepare("SELECT id FROM type_material WHERE name = ?");
                 query.addBindValue(obstracles.at(i).at(14));
-                if (!query.exec()) {
-                    qDebug() << query.lastError().text() << " " << query.lastQuery();
-                }
+                if (!query.exec())
+                    qDebug() << query.lastError().text() << query.lastQuery() << query.boundValues();
                 if (query.first())
                     idTypeMaterial = query.value(0).toUInt();
             }
@@ -318,17 +313,12 @@ void DatabaseAccess::update(QVector<QVector<QString>> obstracles)
         query.addBindValue(obstracles.at(i).at(25));
         query.addBindValue(obstracles.at(i).at(26));
         query.addBindValue(idAirfield);
-        if (!query.exec()) {
-            qDebug() << query.lastError().text() << " " << query.lastQuery();
-        }
+        if (!query.exec())
+            qDebug() << query.lastError().text() << query.lastQuery() << query.boundValues();
     }
-    if (!QSqlDatabase::database().commit()) {
-        QSqlDatabase::database().rollback();
-        qDebug() << "Rollback transaction";
-    }
-}
-
-void DatabaseAccess::addAirfield(Airfield airfield)
-{
-    airfields.push_back(airfield);
+    query.exec("COMMIT");
+//    if (!QSqlDatabase::database().commit()) {
+//        QSqlDatabase::database().rollback();
+//        qDebug() << "Rollback transaction";
+//    }
 }

@@ -28,6 +28,9 @@ class ObstraclesForm : public QWidget
 
         QVariantList getCheckedObstralcles();
 
+    public slots:
+        void updateModelAirfields();
+
     protected:
         void resizeEvent(QResizeEvent *event);
 
@@ -40,13 +43,12 @@ class ObstraclesForm : public QWidget
         TableModel *obstraclesModel;
         SearchModel *searchAirfieldsModel;
         SortSearchFilterTableModel *sortSearchFilterTableModel;
-//        WaitingSpinnerWidget *spinner;
+        WaitingSpinnerWidget *spinner;
         QFrame *filterPanel;
         SideBar *sideBar;
 
         void readSettings();
         void writeSettings();
-        void updateModelAirfields();
 
     private slots:
         void updateModelObstracles(const QModelIndex &index = QModelIndex());
