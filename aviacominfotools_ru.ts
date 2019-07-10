@@ -255,7 +255,7 @@
 представления</translation>
     </message>
     <message>
-        <location filename="obstraclesform.cpp" line="232"/>
+        <location filename="obstraclesform.cpp" line="241"/>
         <source>Save file</source>
         <translation>Сохранить файл</translation>
     </message>
@@ -270,8 +270,7 @@
     <message>
         <location filename="sidebar.ui" line="251"/>
         <source>Reset</source>
-        <translatorcomment>Сбросить</translatorcomment>
-        <translation></translation>
+        <translation>Сбросить</translation>
     </message>
     <message>
         <location filename="sidebar.ui" line="267"/>
