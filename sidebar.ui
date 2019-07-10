@@ -225,6 +225,13 @@ QPushButton:pressed {
            </layout>
           </widget>
          </item>
+         <item row="4" column="0">
+          <widget class="QPushButton" name="resetFilterButton">
+           <property name="text">
+            <string>Reset</string>
+           </property>
+          </widget>
+         </item>
          <item row="0" column="0">
           <widget class="QCheckBox" name="markingDayCheckBox">
            <property name="text">
@@ -246,9 +253,9 @@ QPushButton:pressed {
           </widget>
          </item>
          <item row="3" column="0">
-          <widget class="QPushButton" name="resetFilterButton">
+          <widget class="QPushButton" name="displayObstraclesButton">
            <property name="text">
-            <string>Reset</string>
+            <string>Display obstracles</string>
            </property>
           </widget>
          </item>
@@ -306,7 +313,7 @@ QPushButton:pressed {
               <x>0</x>
               <y>0</y>
               <width>195</width>
-              <height>78</height>
+              <height>69</height>
              </rect>
             </property>
            </widget>

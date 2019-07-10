@@ -60,6 +60,7 @@ class SideBar : public QWidget
         void searchTextChanged(QString);
         void changedFilterProperty(QString, QVariant);
         void filterRadius();
+        void displayObstracles();
 };
 
 #endif // SIDEBAR_H

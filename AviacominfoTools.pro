@@ -40,7 +40,8 @@ SOURCES += \
     databaseaccess.cpp \
     htmlparser.cpp \
     obstraclestyleditemdelegate.cpp \
-    databaseupdate.cpp
+    databaseupdate.cpp \
+    obstraclesgraphicsview.cpp
 
 HEADERS += \
         mainwidget.h \
@@ -58,7 +59,8 @@ HEADERS += \
     databaseaccess.h \
     htmlparser.h \
     obstraclestyleditemdelegate.h \
-    databaseupdate.h
+    databaseupdate.h \
+    obstraclesgraphicsview.h
 
 FORMS += \
         mainwidget.ui \

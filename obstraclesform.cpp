@@ -21,6 +21,7 @@
 #include "sortsearchfiltertablemodel.h"
 #include "checkboxitemdelegate.h"
 #include "obstraclestyleditemdelegate.h"
+#include "obstraclesgraphicsview.h"
 
 ObstraclesForm::ObstraclesForm(QWidget *parent) :
     QWidget(parent),
@@ -34,16 +35,16 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     exportButton->setIcon(QIcon(":/images/res/img/filesave.png"));
     exportButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
-    filterButton = new QToolButton(this);
-    filterButton->setText(tr("Filter"));
-    filterButton->setIconSize(QSize(32, 32));
-    filterButton->setIcon(QIcon(":/images/res/img/filter.png"));
-    filterButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    filterButton->setEnabled(false);
+//    filterButton = new QToolButton(this);
+//    filterButton->setText(tr("Filter"));
+//    filterButton->setIconSize(QSize(32, 32));
+//    filterButton->setIcon(QIcon(":/images/res/img/filter.png"));
+//    filterButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+//    filterButton->setEnabled(false);
 
     toolBar = new QToolBar(this);
     toolBar->addWidget(exportButton);
-    toolBar->addWidget(filterButton);
+//    toolBar->addWidget(filterButton);
 
     sideBar = new SideBar(this);
 
@@ -131,11 +132,12 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     connect(ui->listView, SIGNAL(clicked(QModelIndex)), this, SLOT(updateModelObstracles(QModelIndex)));
     connect(sortSearchFilterTableModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this, SLOT(enabledToolButton()));
     connect(exportButton, SIGNAL(clicked(bool)), this, SLOT(exportToFile()));
-    connect(filterButton, SIGNAL(clicked(bool)), this, SLOT(showFilterPanel()));
+//    connect(filterButton, SIGNAL(clicked(bool)), this, SLOT(showFilterPanel()));
     connect(ui->searchLineEdit, SIGNAL(textChanged(QString)), searchAirfieldsModel, SLOT(setFilterRegExp(QString)));
     connect(sideBar, SIGNAL(searchTextChanged(QString)), sortSearchFilterTableModel, SLOT(setFilterRegExp(QString)));
     connect(sideBar, SIGNAL(changedFilterProperty(QString, QVariant)), sortSearchFilterTableModel, SLOT(setFilterProperty(QString, QVariant)));
     connect(sideBar, SIGNAL(filterRadius()), this, SLOT(setFilterRadius()));
+    connect(sideBar, SIGNAL(displayObstracles()), this, SLOT(showObstracles()));
     connect(groupHeaderView, SIGNAL(clickedCheckBox(bool)), this, SLOT(setCheckedAllRowTable(bool)));
     connect(ui->tableView, SIGNAL(clicked(QModelIndex)), this, SLOT(showTags(QModelIndex)));
     connect(DatabaseAccess::getInstance(), SIGNAL(updated()), this, SLOT(updateModelObstracles()));
@@ -303,4 +305,25 @@ QVariantList ObstraclesForm::getCheckedObstralcles()
 
 void ObstraclesForm::showTags(const QModelIndex &index)
 {
+
+}
+
+void ObstraclesForm::showObstracles()
+{
+    view = new ObstraclesGraphicsView(this);
+    view->setWindowFlags(Qt::Dialog | Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowCloseButtonHint);
+
+    QVector<QVector<QString>> coordinateObstracles;
+
+    QVector<QString> coordinate;
+    for (int row = 0; row < obstraclesModel->rowCount(); row++) {
+        if (obstraclesModel->item(row)->data(Qt::UserRole).toBool()) {
+            coordinate.append(obstraclesModel->item(row, 6)->data(Qt::DisplayRole).toString());
+            coordinate.append(obstraclesModel->item(row, 7)->data(Qt::DisplayRole).toString());
+            coordinateObstracles.append(coordinate);
+            coordinate.clear();
+        }
+    }
+    view->setData(coordinateObstracles);
+    view->show();
 }

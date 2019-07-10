@@ -44,6 +44,7 @@ SideBar::SideBar(QWidget *parent) :
     connect(ui->radius3Button, SIGNAL(clicked(bool)), this, SLOT(setRadius()));
     connect(ui->resetFilterButton, SIGNAL(clicked(bool)), this, SLOT(resetFilter()));
     connect(timer, SIGNAL(timeout()), this, SLOT(showHide()));
+    connect(ui->displayObstraclesButton, SIGNAL(clicked(bool)), this, SIGNAL(displayObstracles()));
 
     emit ui->radiusSlider->valueChanged(50);
 }
