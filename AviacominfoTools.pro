@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network sql
+QT       += core gui network sql quick
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -41,7 +41,7 @@ SOURCES += \
     htmlparser.cpp \
     obstraclestyleditemdelegate.cpp \
     databaseupdate.cpp \
-    obstraclesgraphicsview.cpp
+    mapview.cpp
 
 HEADERS += \
         mainwidget.h \
@@ -60,7 +60,7 @@ HEADERS += \
     htmlparser.h \
     obstraclestyleditemdelegate.h \
     databaseupdate.h \
-    obstraclesgraphicsview.h
+    mapview.h
 
 FORMS += \
         mainwidget.ui \

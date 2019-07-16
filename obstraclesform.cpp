@@ -9,7 +9,7 @@
 #include <QSaveFile>
 #include <QSortFilterProxyModel>
 #include <QSettings>
-#include <QPropertyAnimation>
+#include <QtMath>
 #include "listitemdelegate.h"
 #include "tablemodel.h"
 #include "searchmodel.h"
@@ -21,7 +21,7 @@
 #include "sortsearchfiltertablemodel.h"
 #include "checkboxitemdelegate.h"
 #include "obstraclestyleditemdelegate.h"
-#include "obstraclesgraphicsview.h"
+#include "mapview.h"
 
 ObstraclesForm::ObstraclesForm(QWidget *parent) :
     QWidget(parent),
@@ -137,7 +137,7 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     connect(sideBar, SIGNAL(searchTextChanged(QString)), sortSearchFilterTableModel, SLOT(setFilterRegExp(QString)));
     connect(sideBar, SIGNAL(changedFilterProperty(QString, QVariant)), sortSearchFilterTableModel, SLOT(setFilterProperty(QString, QVariant)));
     connect(sideBar, SIGNAL(filterRadius()), this, SLOT(setFilterRadius()));
-    connect(sideBar, SIGNAL(displayObstracles()), this, SLOT(showObstracles()));
+    connect(sideBar, SIGNAL(displayObstracles(QVariant)), this, SLOT(showObstracles(QVariant)));
     connect(groupHeaderView, SIGNAL(clickedCheckBox(bool)), this, SLOT(setCheckedAllRowTable(bool)));
     connect(ui->tableView, SIGNAL(clicked(QModelIndex)), this, SLOT(showTags(QModelIndex)));
     connect(DatabaseAccess::getInstance(), SIGNAL(updated()), this, SLOT(updateModelObstracles()));
@@ -308,22 +308,37 @@ void ObstraclesForm::showTags(const QModelIndex &index)
 
 }
 
-void ObstraclesForm::showObstracles()
+void ObstraclesForm::showObstracles(QVariant coordinate)
 {
-    view = new ObstraclesGraphicsView(this);
-    view->setWindowFlags(Qt::Dialog | Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowCloseButtonHint);
+    qDebug() << "showOBstracle" << coordinate;
+    coordinate = QVariant(QPointF(55.7522, 37.6156));
+    mapView = new MapView(coordinate);
+//    mapView->setWindowFlags(Qt::Dialog | Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowCloseButtonHint);
 
-    QVector<QVector<QString>> coordinateObstracles;
+    QVector<ObstraclePoint> obstracles;
 
-    QVector<QString> coordinate;
+
     for (int row = 0; row < obstraclesModel->rowCount(); row++) {
         if (obstraclesModel->item(row)->data(Qt::UserRole).toBool()) {
-            coordinate.append(obstraclesModel->item(row, 6)->data(Qt::DisplayRole).toString());
-            coordinate.append(obstraclesModel->item(row, 7)->data(Qt::DisplayRole).toString());
-            coordinateObstracles.append(coordinate);
-            coordinate.clear();
+            ObstraclePoint obstraclePoint;
+            obstraclePoint.b= qDegreesToRadians(parserCoordinate(obstraclesModel->item(row, 6)->data(Qt::DisplayRole).toString()));
+            obstraclePoint.l= qDegreesToRadians(parserCoordinate(obstraclesModel->item(row, 7)->data(Qt::DisplayRole).toString()));
+            obstraclePoint.height = obstraclesModel->item(row, 12)->data(Qt::DisplayRole).toInt();
+            obstracles.append(obstraclePoint);
         }
     }
-    view->setData(coordinateObstracles);
-    view->show();
+    mapView->setData(obstracles);
+    mapView->show();
+}
+
+double ObstraclesForm::parserCoordinate(QString str)
+{
+    QRegExp regExp("\\S(\\d{1,3})\\s(\\d{1,2})\\s([\\d\\.]+)");
+    double coord = 0;
+
+    if (regExp.indexIn(str) != -1) {
+        coord = regExp.cap(1).toInt() + regExp.cap(2).toFloat() / 60 + regExp.cap(3).toFloat() / 3600;
+    }
+
+    return coord;
 }

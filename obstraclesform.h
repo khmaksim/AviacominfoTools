@@ -18,7 +18,7 @@ class WaitingSpinnerWidget;
 class QFrame;
 class SortSearchFilterTableModel;
 class SideBar;
-class ObstraclesGraphicsView;
+class MapView;
 class ObstraclesForm : public QWidget
 {
         Q_OBJECT
@@ -47,10 +47,11 @@ class ObstraclesForm : public QWidget
         WaitingSpinnerWidget *spinner;
         QFrame *filterPanel;
         SideBar *sideBar;
-        ObstraclesGraphicsView *view;
+        MapView *mapView;
 
         void readSettings();
         void writeSettings();
+        double parserCoordinate(QString);
 
     private slots:
         void updateModelObstracles(const QModelIndex &index = QModelIndex());
@@ -60,7 +61,7 @@ class ObstraclesForm : public QWidget
         void setCheckedAllRowTable(bool);
         void setFilterRadius();
         void showTags(const QModelIndex&);
-        void showObstracles();
+        void showObstracles(QVariant);
 };
 
 #endif // OBSTRACLESFORM_H

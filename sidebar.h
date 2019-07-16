@@ -55,12 +55,13 @@ class SideBar : public QWidget
         void changeArrow();
         void checkBoxTagsChanged();
         void setTagForObstracles(bool);
+        void clickedDisplayObstraclesButton();
 
     signals:
         void searchTextChanged(QString);
         void changedFilterProperty(QString, QVariant);
         void filterRadius();
-        void displayObstracles();
+        void displayObstracles(QVariant);
 };
 
 #endif // SIDEBAR_H

@@ -44,7 +44,7 @@ SideBar::SideBar(QWidget *parent) :
     connect(ui->radius3Button, SIGNAL(clicked(bool)), this, SLOT(setRadius()));
     connect(ui->resetFilterButton, SIGNAL(clicked(bool)), this, SLOT(resetFilter()));
     connect(timer, SIGNAL(timeout()), this, SLOT(showHide()));
-    connect(ui->displayObstraclesButton, SIGNAL(clicked(bool)), this, SIGNAL(displayObstracles()));
+    connect(ui->displayObstraclesButton, SIGNAL(clicked(bool)), this, SLOT(clickedDisplayObstraclesButton()));
 
     emit ui->radiusSlider->valueChanged(50);
 }
@@ -225,4 +225,10 @@ void SideBar::checkBoxTagsChanged()
             tags << (*it)->text();
     }
     emit changedFilterProperty(sender()->objectName(), QVariant(tags));
+}
+
+void SideBar::clickedDisplayObstraclesButton()
+{
+    emit displayObstracles(QVariant(QPointF(convertCoordInDec(ui->latLineEdit->text()),
+                                            convertCoordInDec(ui->lonLineEdit->text()))));
 }
