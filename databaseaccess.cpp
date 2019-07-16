@@ -50,6 +50,18 @@ QVector<QString> DatabaseAccess::getTags()
     return tags;
 }
 
+QVector<QString> DatabaseAccess::getTypeObstracle()
+{
+    QSqlQuery query(db);
+    QVector<QString> types = QVector<QString>();
+
+    query.exec("SELECT name FROM obstracle GROUP BY name ORDER BY name");
+    while (query.next())
+        types.append(query.value(0).toString());
+
+    return types;
+}
+
 void DatabaseAccess::setTag(const QString &nameTag, const QVariantList &idObstrales)
 {
     QSqlQuery query(db);

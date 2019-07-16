@@ -27,14 +27,10 @@ class SideBar : public QWidget
     protected:
         QSize sizeHint();
         void resizeEvent(QResizeEvent *event);
-//        void mouseMoveEvent(QMouseEvent *event);
-        void leaveEvent(QEvent*);
-        void enterEvent(QEvent*);
+        bool eventFilter(QObject *watched, QEvent *event);
 
     private:
         Ui::SideBar *ui;
-        QTimer *timer;
-
         QWidget *parent;
         QPropertyAnimation *animationSideBar;
 
@@ -43,6 +39,7 @@ class SideBar : public QWidget
 
         float convertCoordInDec(QString);
         void updateTags();
+        void updateTypeObstracle();
         void addTagToScrollArea(const QString&);
 
     private slots:
@@ -54,6 +51,7 @@ class SideBar : public QWidget
         void resetFilter();
         void changeArrow();
         void checkBoxTagsChanged();
+        void checkBoxTypesChanged();
         void setTagForObstracles(bool);
         void clickedDisplayObstraclesButton();
 

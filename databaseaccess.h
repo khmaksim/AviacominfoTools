@@ -13,6 +13,7 @@ class DatabaseAccess : public QObject
 
         void setTag(const QString&, const QVariantList&);
         QVector<QString> getTags();
+        QVector<QString> getTypeObstracle();
         QVector<QVariantList> getAirfields();
         QVector<QVariantList> getObstracles(uint);
         bool createTag(const QString&);

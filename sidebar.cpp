@@ -15,23 +15,26 @@ SideBar::SideBar(QWidget *parent) :
     ui(new Ui::SideBar)
 {
     ui->setupUi(this);
-    setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Expanding);
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
 //    QPalette palette = this->palette();
 //    palette.setBrush(QPalette::Background, QBrush(QColor(128, 128, 128)));
 //    setPalette(palette);
 //    QPixmap maskPix(":/images/res/img/mask.png");
 //    setMask(maskPix.scaled(size()).mask());
 
+    ui->arrow->installEventFilter(this);
     isShown = false;
     this->parent = parent;
-    timer = new QTimer(this);
 
     ui->minRadiusLabel->setNum(ui->radiusSlider->minimum());
     ui->maxRadiusLabel->setNum(ui->radiusSlider->maximum());
 
+    ui->typeObstacleScrollAreaWidgetContents->setLayout(new QVBoxLayout());
     ui->scrollAreaWidgetContents->setLayout(new FlowLayout());
 
     updateTags();
+    updateTypeObstracle();
 
     connect(ui->searchLineEdit, SIGNAL(textChanged(QString)), this, SIGNAL(searchTextChanged(QString)));
     connect(ui->markingDayCheckBox, SIGNAL(toggled(bool)), this, SLOT(checkBoxChanged(bool)));
@@ -43,7 +46,6 @@ SideBar::SideBar(QWidget *parent) :
     connect(ui->radius2Button, SIGNAL(clicked(bool)), this, SLOT(setRadius()));
     connect(ui->radius3Button, SIGNAL(clicked(bool)), this, SLOT(setRadius()));
     connect(ui->resetFilterButton, SIGNAL(clicked(bool)), this, SLOT(resetFilter()));
-    connect(timer, SIGNAL(timeout()), this, SLOT(showHide()));
     connect(ui->displayObstraclesButton, SIGNAL(clicked(bool)), this, SLOT(clickedDisplayObstraclesButton()));
 
     emit ui->radiusSlider->valueChanged(50);
@@ -54,17 +56,12 @@ SideBar::~SideBar()
     delete ui;
 }
 
-void SideBar::enterEvent(QEvent *)
+bool SideBar::eventFilter(QObject *watched, QEvent *event)
 {
-    if (!isShown)
-        showHide();
-    if (timer->isActive())
-        timer->stop();
-}
-
-void SideBar::leaveEvent(QEvent *)
-{
-    timer->start(5000);
+    if (watched == ui->arrow && (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseButtonDblClick)) {
+            showHide();
+    }
+    return QWidget::eventFilter(watched, event);
 }
 
 void SideBar::resizeEvent(QResizeEvent *event)
@@ -73,12 +70,27 @@ void SideBar::resizeEvent(QResizeEvent *event)
     if (isShown)
         showHide();
     QPixmap maskPix(":/images/res/img/mask.png");
-    ui->label->setMask(maskPix.scaled(ui->label->size()).mask());
+    ui->arrow->setMask(maskPix.scaled(ui->arrow->size()).mask());
 }
 
 QSize SideBar::sizeHint()
 {
-    return QSize(150, 400);
+    return QSize(300, 400);
+}
+
+void SideBar::updateTypeObstracle()
+{
+    QVector<QString> types = DatabaseAccess::getInstance()->getTypeObstracle();
+
+    if (types.isEmpty())
+        return;
+
+    for (int i = 0; i < types.size(); i++) {
+        QCheckBox *type = new QCheckBox(types.at(i), ui->typeObstacleScrollAreaWidgetContents);
+        connect(type, SIGNAL(clicked(bool)), this, SLOT(checkBoxTypesChanged()));
+        ui->typeObstacleScrollAreaWidgetContents->layout()->addWidget(type);
+        ui->typeObstacleScrollAreaWidgetContents->adjustSize();
+    }
 }
 
 void SideBar::updateTags()
@@ -194,16 +206,14 @@ void SideBar::showHide()
     QTimer::singleShot(animationSideBar->duration(), this, SLOT(changeArrow()));
 
     isShown = !isShown;
-    if (timer->isActive())
-        timer->stop();
 }
 
 void SideBar::changeArrow()
 {
     if (isShown)
-        ui->label->setPixmap(QPixmap(":/images/res/img/arrow-right.png"));
+        ui->arrow->setPixmap(QPixmap(":/images/res/img/arrow-right.png"));
     else
-        ui->label->setPixmap(QPixmap(":/images/res/img/arrow-left.png"));
+        ui->arrow->setPixmap(QPixmap(":/images/res/img/arrow-left.png"));
 }
 
 void SideBar::setTagForObstracles(bool checked)
@@ -224,6 +234,17 @@ void SideBar::checkBoxTagsChanged()
             tags << (*it)->text();
     }
     emit changedFilterProperty(sender()->objectName(), QVariant(tags));
+}
+
+void SideBar::checkBoxTypesChanged()
+{
+    QStringList types;
+    QList<QCheckBox*> typesCheckBox = ui->typeObstacleScrollAreaWidgetContents->findChildren<QCheckBox*>();
+    for (QList<QCheckBox*>::iterator it = typesCheckBox.begin(); it != typesCheckBox.end(); ++it) {
+        if ((*it)->isChecked())
+            types << (*it)->text();
+    }
+    emit changedFilterProperty(sender()->objectName(), QVariant(types));
 }
 
 void SideBar::clickedDisplayObstraclesButton()
