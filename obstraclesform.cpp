@@ -255,7 +255,7 @@ void ObstraclesForm::exportToFile()
 
     QTextStream out(&file);
     for (int row = 0; row < obstraclesModel->rowCount(); row++) {
-        if (obstraclesModel->item(row)->data(Qt::CheckStateRole).toBool()) {
+        if (obstraclesModel->item(row)->data(Qt::UserRole).toBool()) {
             out << obstraclesModel->item(row, 6)->text().replace("с", "N").remove(QRegExp("[\\s\\.]")) << endl;
             out << obstraclesModel->item(row, 7)->text().replace("в", "E").remove(QRegExp("[\\s\\.]")) << endl;
             out << obstraclesModel->item(row, 12)->text() << endl;
@@ -313,10 +313,8 @@ void ObstraclesForm::showObstracles(QVariant coordinate)
     qDebug() << "showOBstracle" << coordinate;
     coordinate = QVariant(QPointF(55.7522, 37.6156));
     mapView = new MapView(coordinate);
-//    mapView->setWindowFlags(Qt::Dialog | Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowCloseButtonHint);
 
     QVector<ObstraclePoint> obstracles;
-
 
     for (int row = 0; row < obstraclesModel->rowCount(); row++) {
         if (obstraclesModel->item(row)->data(Qt::UserRole).toBool()) {
