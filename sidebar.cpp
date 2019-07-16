@@ -119,13 +119,12 @@ int SideBar::getRadius()
 
 float SideBar::convertCoordInDec(QString coordStr)
 {
-    QRegExp regExp("\\S(\\d{1,3})\\s(\\d{1,2})\\s([\\d\\.]+)");
+    QRegExp regExp("\\D?(\\d{2}|0\\d{2})\\s?(\\d{2})\\s?(\\d{1,2}[\\.\\,]?\\d*)");
     float coordDec = 0;
 
     if (regExp.indexIn(coordStr) != -1) {
-        coordDec = regExp.cap(1).toInt() + regExp.cap(2).toFloat() / 60 + regExp.cap(3).toFloat() / 3600;
+        coordDec = regExp.cap(1).toInt() + regExp.cap(2).toFloat() / 60 + regExp.cap(3).replace(",", ".").toFloat() / 3600;
     }
-
     return coordDec;
 }
 

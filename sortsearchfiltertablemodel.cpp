@@ -108,7 +108,7 @@ void SortSearchFilterTableModel::setFilterRadius(float lat, float lon, int radiu
 
 float SortSearchFilterTableModel::convertCoordInDec(const QString coordStr) const
 {
-    QRegExp regExp("\\S(\\d{1,3})\\s(\\d{1,2})\\s([\\d\\.]+)");
+    QRegExp regExp("\\D?(\\d{2}|0\\d{2})\\s?(\\d{2})\\s?(\\d{1,2}[\\.\\,]?\\d*)");
     float coordDec = 0;
 
     if (regExp.indexIn(coordStr) != -1)

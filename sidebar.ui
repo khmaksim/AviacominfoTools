@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>263</width>
-    <height>477</height>
+    <height>497</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -103,7 +103,7 @@
             <item row="0" column="2" colspan="2">
              <widget class="QLineEdit" name="lonLineEdit">
               <property name="placeholderText">
-               <string>lon (e050 20 20.10)</string>
+               <string>lon</string>
               </property>
              </widget>
             </item>
@@ -136,7 +136,7 @@ QPushButton:pressed {
                <string/>
               </property>
               <property name="placeholderText">
-               <string>lat (n50 30 00)</string>
+               <string>lat</string>
               </property>
              </widget>
             </item>
