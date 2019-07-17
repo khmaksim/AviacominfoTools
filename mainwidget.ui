@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>AviacominfoTools</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="aviacominfotools.qrc">
+    <normaloff>:/images/res/img/logo.png</normaloff>:/images/res/img/logo.png</iconset>
+  </property>
   <layout class="QGridLayout" name="gridLayout">
    <property name="leftMargin">
     <number>0</number>
@@ -45,25 +49,14 @@
         <string>Obstracle</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton">
-       <property name="geometry">
-        <rect>
-         <x>620</x>
-         <y>20</y>
-         <width>75</width>
-         <height>23</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Settings</string>
-       </property>
-      </widget>
      </widget>
     </widget>
    </item>
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="aviacominfotools.qrc"/>
+ </resources>
  <connections/>
 </ui>

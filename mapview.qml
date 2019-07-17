@@ -7,7 +7,6 @@ Item {
     visible: true
     width: 640
     height: 480
-//    title: qsTr("Hello World")
 
     Plugin {
       id: plugin
@@ -19,19 +18,20 @@ Item {
         id: mapItem
         plugin: plugin
         anchors.fill: parent
-
-//        MapQuickItem {
-//            id: marker
-//            anchorPoint.x: image.width/4
-//            anchorPoint.y: image.height
-
-//            sourceItem: Image {
-//                id: image
-//            }
-//        }
     }
 
     function setCenter(lat, lon) {
         mapItem.center = QtPositioning.coordinate(lat, lon);
+    }
+
+    function addMarker(lat, lon, height) {
+        var component = Qt.createComponent("marker.qml");
+        if (component.status === Component.Ready) {
+            console.log("Complited");
+            var marker = component.createObject(parent);
+            marker.coordinate = QtPositioning.coordinate(lat, lon);
+            marker.label = height;
+            mapItem.addMapItem(marker)
+        }
     }
 }

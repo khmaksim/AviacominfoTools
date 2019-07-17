@@ -72,4 +72,10 @@ RESOURCES += \
 
 TRANSLATIONS = aviacominfotools_ru.ts
 
+RC_ICONS = ./res/img/appico.ico
+RC_FILE = app.rc
+
+DISTFILES += app.rc \
+    app.rc
+
 include(../QtWaitingSpinner-master/qtwaitingspinner.pri)

@@ -9,7 +9,6 @@
 #include <QSaveFile>
 #include <QSortFilterProxyModel>
 #include <QSettings>
-#include <QtMath>
 #include "listitemdelegate.h"
 #include "tablemodel.h"
 #include "searchmodel.h"
@@ -310,28 +309,27 @@ void ObstraclesForm::showTags(const QModelIndex &index)
 
 void ObstraclesForm::showObstracles(QVariant coordinate)
 {
-    qDebug() << "showOBstracle" << coordinate;
-    coordinate = QVariant(QPointF(55.7522, 37.6156));
     mapView = new MapView(coordinate);
 
-    QVector<ObstraclePoint> obstracles;
+//    QVector<ObstraclePoint> obstracles;
 
     for (int row = 0; row < obstraclesModel->rowCount(); row++) {
         if (obstraclesModel->item(row)->data(Qt::UserRole).toBool()) {
             ObstraclePoint obstraclePoint;
-            obstraclePoint.b= qDegreesToRadians(parserCoordinate(obstraclesModel->item(row, 6)->data(Qt::DisplayRole).toString()));
-            obstraclePoint.l= qDegreesToRadians(parserCoordinate(obstraclesModel->item(row, 7)->data(Qt::DisplayRole).toString()));
+            obstraclePoint.lat = parserCoordinate(obstraclesModel->item(row, 6)->data(Qt::DisplayRole).toString());
+            obstraclePoint.lon = parserCoordinate(obstraclesModel->item(row, 7)->data(Qt::DisplayRole).toString());
             obstraclePoint.height = obstraclesModel->item(row, 12)->data(Qt::DisplayRole).toInt();
-            obstracles.append(obstraclePoint);
+//            obstracles.append(obstraclePoint);
+            mapView->addObstracle(obstraclePoint);
         }
     }
-    mapView->setData(obstracles);
+//    mapView->setData(obstracles);
     mapView->show();
 }
 
 double ObstraclesForm::parserCoordinate(QString str)
 {
-    QRegExp regExp("\\S(\\d{1,3})\\s(\\d{1,2})\\s([\\d\\.]+)");
+    QRegExp regExp("\\D?(\\d{2}|0\\d{2})\\s?(\\d{2})\\s?(\\d{1,2}[\\.\\,]?\\d*)");
     double coord = 0;
 
     if (regExp.indexIn(str) != -1) {

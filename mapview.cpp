@@ -16,7 +16,10 @@ MapView::MapView(QVariant coordinate) : QQuickView()
                               Q_ARG(QVariant, QVariant(lon)));
 }
 
-void MapView::setData(QVector<ObstraclePoint> obstracles)
+void MapView::addObstracle(ObstraclePoint obstracle)
 {
-    this->obstracles = obstracles;
+    QMetaObject::invokeMethod(rootObject(), "addMarker", Qt::DirectConnection,
+                              Q_ARG(QVariant, QVariant(obstracle.lat)),
+                              Q_ARG(QVariant, QVariant(obstracle.lon)),
+                              Q_ARG(QVariant, QVariant(QString::number(obstracle.height))));
 }

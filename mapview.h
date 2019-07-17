@@ -6,8 +6,8 @@
 #include <QVector>
 
 struct ObstraclePoint {
-    double b;       // geodetic latitude
-    double l;       // geodetic longitude
+    double lat;
+    double lon;
     int height;
 };
 
@@ -19,10 +19,7 @@ class MapView : public QQuickView
         explicit MapView(QVariant);
         ~MapView() {}
 
-        void setData(QVector<ObstraclePoint>);
-
-    private:
-        QVector<ObstraclePoint> obstracles;
+        void addObstracle(ObstraclePoint);
 };
 
 #endif // MAPVIEW_H
