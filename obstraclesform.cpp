@@ -311,19 +311,15 @@ void ObstraclesForm::showObstracles(QVariant coordinate)
 {
     mapView = new MapView(coordinate);
 
-//    QVector<ObstraclePoint> obstracles;
-
     for (int row = 0; row < obstraclesModel->rowCount(); row++) {
         if (obstraclesModel->item(row)->data(Qt::UserRole).toBool()) {
             ObstraclePoint obstraclePoint;
             obstraclePoint.lat = parserCoordinate(obstraclesModel->item(row, 6)->data(Qt::DisplayRole).toString());
             obstraclePoint.lon = parserCoordinate(obstraclesModel->item(row, 7)->data(Qt::DisplayRole).toString());
             obstraclePoint.height = obstraclesModel->item(row, 12)->data(Qt::DisplayRole).toInt();
-//            obstracles.append(obstraclePoint);
             mapView->addObstracle(obstraclePoint);
         }
     }
-//    mapView->setData(obstracles);
     mapView->show();
 }
 

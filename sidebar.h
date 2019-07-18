@@ -54,6 +54,7 @@ class SideBar : public QWidget
         void checkBoxTypesChanged();
         void setTagForObstracles(bool);
         void clickedDisplayObstraclesButton();
+        void heightFilterChanged();
 
     signals:
         void searchTextChanged(QString);

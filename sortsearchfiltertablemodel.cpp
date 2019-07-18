@@ -2,6 +2,7 @@
 #include "listitemdelegate.h"
 #include <QDebug>
 #include <QtMath>
+#include <QString>
 
 SortSearchFilterTableModel::SortSearchFilterTableModel(QObject *parent)
 {
@@ -11,6 +12,8 @@ SortSearchFilterTableModel::SortSearchFilterTableModel(QObject *parent)
     lat = 0;
     lon = 0;
     radius = 0;
+    fromHeight = 0;
+    toHeight = 0;
 }
 
 SortSearchFilterTableModel::~SortSearchFilterTableModel()
@@ -25,6 +28,15 @@ bool SortSearchFilterTableModel::filterAcceptsRow(int sourceRow, const QModelInd
         QModelIndex index = sourceModel()->index(sourceRow, col, sourceParent);
         result |= sourceModel()->data(index).toString().contains(filterRegExp());
     }
+
+    if (fromHeight > 0) {
+        result &= (fromHeight <= sourceModel()->data(sourceModel()->index(sourceRow, 12, sourceParent)).toInt());
+    }
+
+    if (toHeight > 0) {
+        result &= (toHeight >= sourceModel()->data(sourceModel()->index(sourceRow, 12, sourceParent)).toInt());
+    }
+
     if (!tags.isEmpty()) {
         result &= sourceModel()->data(sourceModel()->index(sourceRow, 0, sourceParent), Qt::UserRole + 1)
                   .toString().contains(QRegExp(tags.join("|")));
@@ -96,8 +108,13 @@ void SortSearchFilterTableModel::setFilterProperty(QString objectName, QVariant 
         nightMarking = value.toBool();
     else if (objectName.contains("tag", Qt::CaseInsensitive))
         tags = value.toStringList();
-    else
+    else if (objectName.contains("types", Qt::CaseInsensitive))
         types = value.toStringList();
+    else {
+        fromHeight = value.toList().at(0).toInt();
+        toHeight = value.toList().at(1).toInt();
+    }
+
 
     invalidateFilter();
 }

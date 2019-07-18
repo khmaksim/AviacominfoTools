@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>300</width>
-    <height>473</height>
+    <height>512</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -96,7 +96,7 @@
       <item>
        <widget class="QToolBox" name="toolBox">
         <property name="currentIndex">
-         <number>2</number>
+         <number>1</number>
         </property>
         <property name="tabSpacing">
          <number>0</number>
@@ -107,7 +107,7 @@
            <x>0</x>
            <y>0</y>
            <width>270</width>
-           <height>390</height>
+           <height>429</height>
           </rect>
          </property>
          <attribute name="label">
@@ -145,7 +145,7 @@
            <x>0</x>
            <y>0</y>
            <width>270</width>
-           <height>390</height>
+           <height>429</height>
           </rect>
          </property>
          <attribute name="label">
@@ -174,6 +174,9 @@
               <widget class="QLineEdit" name="lonLineEdit">
                <property name="placeholderText">
                 <string>lon</string>
+               </property>
+               <property name="clearButtonEnabled">
+                <bool>true</bool>
                </property>
               </widget>
              </item>
@@ -243,6 +246,9 @@ QPushButton:pressed {
                </property>
                <property name="placeholderText">
                 <string>lat</string>
+               </property>
+               <property name="clearButtonEnabled">
+                <bool>true</bool>
                </property>
               </widget>
              </item>
@@ -331,7 +337,7 @@ QPushButton:pressed {
                   <x>0</x>
                   <y>0</y>
                   <width>234</width>
-                  <height>105</height>
+                  <height>87</height>
                  </rect>
                 </property>
                </widget>
@@ -367,11 +373,43 @@ QPushButton:pressed {
             </property>
            </widget>
           </item>
-          <item row="5" column="0">
+          <item row="6" column="0">
            <widget class="QPushButton" name="resetFilterButton">
             <property name="text">
              <string>Reset</string>
             </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QGroupBox" name="groupBox">
+            <property name="title">
+             <string>Height</string>
+            </property>
+            <property name="flat">
+             <bool>true</bool>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_4">
+             <item row="0" column="0">
+              <widget class="QLineEdit" name="fromHeightLineEdit">
+               <property name="placeholderText">
+                <string>from</string>
+               </property>
+               <property name="clearButtonEnabled">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLineEdit" name="toHeightLineEdit">
+               <property name="placeholderText">
+                <string>to</string>
+               </property>
+               <property name="clearButtonEnabled">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
          </layout>
@@ -420,7 +458,7 @@ QPushButton:pressed {
                <x>0</x>
                <y>0</y>
                <width>252</width>
-               <height>343</height>
+               <height>382</height>
               </rect>
              </property>
             </widget>

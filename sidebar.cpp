@@ -6,6 +6,7 @@
 #include <QPropertyAnimation>
 #include <QTimer>
 #include <QBitmap>
+#include <QIntValidator>
 #include "flowlayout.h"
 #include "obstraclesform.h"
 #include "databaseaccess.h"
@@ -27,6 +28,8 @@ SideBar::SideBar(QWidget *parent) :
     isShown = false;
     this->parent = parent;
 
+    ui->toHeightLineEdit->setValidator(new QIntValidator());
+    ui->fromHeightLineEdit->setValidator(new QIntValidator());
     ui->minRadiusLabel->setNum(ui->radiusSlider->minimum());
     ui->maxRadiusLabel->setNum(ui->radiusSlider->maximum());
 
@@ -47,6 +50,8 @@ SideBar::SideBar(QWidget *parent) :
     connect(ui->radius3Button, SIGNAL(clicked(bool)), this, SLOT(setRadius()));
     connect(ui->resetFilterButton, SIGNAL(clicked(bool)), this, SLOT(resetFilter()));
     connect(ui->displayObstraclesButton, SIGNAL(clicked(bool)), this, SLOT(clickedDisplayObstraclesButton()));
+    connect(ui->fromHeightLineEdit, SIGNAL(textChanged(QString)), this, SLOT(heightFilterChanged()));
+    connect(ui->toHeightLineEdit, SIGNAL(textChanged(QString)), this, SLOT(heightFilterChanged()));
 
     emit ui->radiusSlider->valueChanged(50);
 }
@@ -183,6 +188,8 @@ void SideBar::resetFilter()
     ui->latLineEdit->clear();
     ui->lonLineEdit->clear();
     ui->radiusSlider->setValue(50);
+    ui->fromHeightLineEdit->clear();
+    ui->toHeightLineEdit->clear();
 }
 
 void SideBar::showHide()
@@ -251,4 +258,9 @@ void SideBar::clickedDisplayObstraclesButton()
 {
     emit displayObstracles(QVariant(QPointF(convertCoordInDec(ui->latLineEdit->text()),
                                             convertCoordInDec(ui->lonLineEdit->text()))));
+}
+
+void SideBar::heightFilterChanged()
+{
+    changedFilterProperty("height", QVariant(QList<QVariant>() << ui->fromHeightLineEdit->text().toInt() << ui->toHeightLineEdit->text().toInt()));
 }

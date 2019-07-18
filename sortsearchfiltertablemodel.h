@@ -22,6 +22,8 @@ class SortSearchFilterTableModel : public QSortFilterProxyModel
     private:
         QStringList tags;
         QStringList types;
+        int fromHeight;
+        int toHeight;
         bool markingDay;
         bool nightMarking;
         float lat;
