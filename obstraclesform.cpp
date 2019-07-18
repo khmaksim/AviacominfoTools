@@ -253,11 +253,11 @@ void ObstraclesForm::exportToFile()
     }
 
     QTextStream out(&file);
-    for (int row = 0; row < obstraclesModel->rowCount(); row++) {
-        if (obstraclesModel->item(row)->data(Qt::UserRole).toBool()) {
-            out << obstraclesModel->item(row, 6)->text().replace("с", "N").remove(QRegExp("[\\s\\.]")) << endl;
-            out << obstraclesModel->item(row, 7)->text().replace("в", "E").remove(QRegExp("[\\s\\.]")) << endl;
-            out << obstraclesModel->item(row, 12)->text() << endl;
+    for (int row = 0; row < sortSearchFilterTableModel->rowCount(); row++) {
+        if (sortSearchFilterTableModel->index(row, 0).data(Qt::UserRole).toBool()) {
+            out << sortSearchFilterTableModel->data(sortSearchFilterTableModel->index(row, 6)).toString().replace("с", "N").remove(QRegExp("[\\s\\.]")).append("0") << endl;
+            out << sortSearchFilterTableModel->data(sortSearchFilterTableModel->index(row, 7)).toString().replace("в", "E").remove(QRegExp("[\\s\\.]")).append("0") << endl;
+            out << sortSearchFilterTableModel->data(sortSearchFilterTableModel->index(row, 12)).toString() << endl;
             out << endl;
             out << "1" << endl;
         }
