@@ -57,6 +57,8 @@ class SideBar : public QWidget
         void setTagForObstracles(bool);
         void clickedDisplayObstraclesButton();
         void heightFilterChanged();
+        void enabledRemoveTagButton();
+        void removeTag();
 
     signals:
         void searchTextChanged(QString);

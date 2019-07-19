@@ -253,7 +253,7 @@
 представления</translation>
     </message>
     <message>
-        <location filename="obstraclesform.cpp" line="242"/>
+        <location filename="obstraclesform.cpp" line="247"/>
         <source>Save file</source>
         <translation>Сохранить файл</translation>
     </message>
@@ -291,9 +291,14 @@
         <translation>до</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="419"/>
+        <location filename="sidebar.ui" line="427"/>
         <source>Tags</source>
         <translation>Теги</translation>
+    </message>
+    <message>
+        <location filename="sidebar.ui" line="481"/>
+        <source>Remove tag</source>
+        <translation>Удалить тег</translation>
     </message>
     <message>
         <source>Name tag</source>
@@ -304,7 +309,7 @@
         <translation type="vanished">...</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="428"/>
+        <location filename="sidebar.ui" line="471"/>
         <source>Add tag</source>
         <translation>Добавить тег</translation>
     </message>
@@ -388,24 +393,44 @@
         <translation type="vanished">км</translation>
     </message>
     <message>
-        <location filename="sidebar.cpp" line="119"/>
+        <location filename="sidebar.cpp" line="150"/>
         <source>km</source>
         <translation>км</translation>
     </message>
     <message>
-        <location filename="sidebar.cpp" line="152"/>
+        <location filename="sidebar.cpp" line="183"/>
         <source>Name tag:</source>
         <translation>Название тега:</translation>
     </message>
     <message>
-        <location filename="sidebar.cpp" line="153"/>
+        <location filename="sidebar.cpp" line="184"/>
         <source>Create tag</source>
         <translation>Создать тег</translation>
     </message>
     <message>
-        <location filename="sidebar.cpp" line="154"/>
+        <location filename="sidebar.cpp" line="185"/>
         <source>Create</source>
         <translation>Создать</translation>
+    </message>
+    <message>
+        <location filename="sidebar.cpp" line="315"/>
+        <source>Confirmation</source>
+        <translation>Подтверждение</translation>
+    </message>
+    <message>
+        <location filename="sidebar.cpp" line="315"/>
+        <source>Are you sure you want to remove these tags?</source>
+        <translation>Вы уверены что хотите удалить эти теги?</translation>
+    </message>
+    <message>
+        <location filename="sidebar.cpp" line="316"/>
+        <source>Yes</source>
+        <translation>Да</translation>
+    </message>
+    <message>
+        <location filename="sidebar.cpp" line="317"/>
+        <source>No</source>
+        <translation>Нет</translation>
     </message>
     <message>
         <source>Input name tag</source>
@@ -416,7 +441,7 @@
         <translation type="vanished">Добавить</translation>
     </message>
     <message>
-        <location filename="sidebar.cpp" line="155"/>
+        <location filename="sidebar.cpp" line="186"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>

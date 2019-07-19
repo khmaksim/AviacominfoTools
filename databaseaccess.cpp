@@ -109,6 +109,19 @@ bool DatabaseAccess::createTag(const QString &nameTag)
     return false;
 }
 
+bool DatabaseAccess::removeTag(const QString &nameTag)
+{
+    QSqlQuery query(db);
+
+    query.prepare("DELETE FROM tag WHERE name = ?");
+    query.addBindValue(nameTag);
+    if (!query.exec()) {
+        qDebug() << query.lastError().text() << query.lastQuery() << query.boundValues();
+        return false;
+    }
+    return true;
+}
+
 QVector<QVariantList> DatabaseAccess::getAirfields()
 {
     QSqlQuery query(db);

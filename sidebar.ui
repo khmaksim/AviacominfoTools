@@ -96,7 +96,7 @@
       <item>
        <widget class="QToolBox" name="toolBox">
         <property name="currentIndex">
-         <number>1</number>
+         <number>2</number>
         </property>
         <property name="tabSpacing">
          <number>0</number>
@@ -336,8 +336,8 @@ QPushButton:pressed {
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>234</width>
-                  <height>87</height>
+                  <width>232</width>
+                  <height>83</height>
                  </rect>
                 </property>
                </widget>
@@ -415,21 +415,19 @@ QPushButton:pressed {
          </layout>
         </widget>
         <widget class="QWidget" name="page">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>270</width>
+           <height>429</height>
+          </rect>
+         </property>
          <attribute name="label">
           <string>Tags</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout_3">
-          <item row="0" column="0">
-           <widget class="QPushButton" name="addTagButton">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>Add tag</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
+          <item row="2" column="0">
            <widget class="QScrollArea" name="scrollArea">
             <property name="autoFillBackground">
              <bool>false</bool>
@@ -458,10 +456,30 @@ QPushButton:pressed {
                <x>0</x>
                <y>0</y>
                <width>252</width>
-               <height>382</height>
+               <height>353</height>
               </rect>
              </property>
             </widget>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QPushButton" name="addTagButton">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>Add tag</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QPushButton" name="removeTagButton">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Remove tag</string>
+            </property>
            </widget>
           </item>
          </layout>

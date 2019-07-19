@@ -17,6 +17,7 @@ class DatabaseAccess : public QObject
         QVector<QVariantList> getAirfields();
         QVector<QVariantList> getObstracles(uint);
         bool createTag(const QString&);
+        bool removeTag(const QString&);
 
     public slots:
         void update(QMap<QString, QString>, QVector<QVector<QString>>);

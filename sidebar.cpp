@@ -8,6 +8,7 @@
 #include <QBitmap>
 #include <QIntValidator>
 #include <QSettings>
+#include <QMessageBox>
 #include "flowlayout.h"
 #include "obstraclesform.h"
 #include "databaseaccess.h"
@@ -43,6 +44,7 @@ SideBar::SideBar(QWidget *parent) :
     connect(ui->radiusSlider, SIGNAL(valueChanged(int)), this, SLOT(updateLabelValueRadius(int)));
     connect(ui->radiusSlider, SIGNAL(valueChanged(int)), this, SIGNAL(filterRadius()));
     connect(ui->addTagButton, SIGNAL(clicked(bool)), this, SLOT(showAddTag()));
+    connect(ui->removeTagButton, SIGNAL(clicked(bool)), this, SLOT(removeTag()));
     connect(ui->radius1Button, SIGNAL(clicked(bool)), this, SLOT(setRadius()));
     connect(ui->radius2Button, SIGNAL(clicked(bool)), this, SLOT(setRadius()));
     connect(ui->radius3Button, SIGNAL(clicked(bool)), this, SLOT(setRadius()));
@@ -194,6 +196,7 @@ void SideBar::addTagToScrollArea(const QString &nameTag)
     QCheckBox *tag = new QCheckBox(nameTag, ui->scrollAreaWidgetContents);
     connect(tag, SIGNAL(clicked(bool)), this, SLOT(setTagForObstracles(bool)));
     connect(tag, SIGNAL(clicked(bool)), this, SLOT(checkBoxTagsChanged()));
+    connect(tag, SIGNAL(clicked(bool)), this, SLOT(enabledRemoveTagButton()));
     ui->scrollAreaWidgetContents->layout()->addWidget(tag);
     ui->scrollAreaWidgetContents->adjustSize();
 }
@@ -292,4 +295,37 @@ void SideBar::clickedDisplayObstraclesButton()
 void SideBar::heightFilterChanged()
 {
     changedFilterProperty("height", QVariant(QList<QVariant>() << ui->fromHeightLineEdit->text().toInt() << ui->toHeightLineEdit->text().toInt()));
+}
+
+void SideBar::enabledRemoveTagButton()
+{
+    bool isEnabled = false;
+    QList<QCheckBox*> tagsCheckBox = ui->scrollAreaWidgetContents->findChildren<QCheckBox*>();
+    for (QList<QCheckBox*>::iterator it = tagsCheckBox.begin(); it != tagsCheckBox.end(); ++it) {
+        if ((*it)->isChecked()) {
+            isEnabled = true;
+            break;
+        }
+    }
+    ui->removeTagButton->setEnabled(isEnabled);
+}
+
+void SideBar::removeTag()
+{
+    QMessageBox messageBox(QMessageBox::Question, tr("Confirmation"), tr("Are you sure you want to remove these tags?"));
+    messageBox.addButton(tr("Yes"), QMessageBox::AcceptRole);
+    QPushButton *noButton = messageBox.addButton(tr("No"), QMessageBox::RejectRole);
+    messageBox.setDefaultButton(noButton);
+
+    if (messageBox.exec() == QMessageBox::AcceptRole) {
+        QList<QCheckBox*> tagsCheckBox = ui->scrollAreaWidgetContents->findChildren<QCheckBox*>();
+        for (QList<QCheckBox*>::iterator it = tagsCheckBox.begin(); it != tagsCheckBox.end(); ++it) {
+            if ((*it)->isChecked())
+                if (DatabaseAccess::getInstance()->removeTag((*it)->text())) {
+                    (*it)->hide();
+                    delete (*it);
+                }
+        }
+        ui->removeTagButton->setEnabled(false);
+    }
 }
