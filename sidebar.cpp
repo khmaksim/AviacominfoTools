@@ -7,6 +7,7 @@
 #include <QTimer>
 #include <QBitmap>
 #include <QIntValidator>
+#include <QSettings>
 #include "flowlayout.h"
 #include "obstraclesform.h"
 #include "databaseaccess.h"
@@ -51,11 +52,33 @@ SideBar::SideBar(QWidget *parent) :
     connect(ui->toHeightLineEdit, SIGNAL(textChanged(QString)), this, SLOT(heightFilterChanged()));
 
     emit ui->radiusSlider->valueChanged(50);
+    readSettings();
 }
 
 SideBar::~SideBar()
 {
+    writeSettings();
     delete ui;
+}
+
+void SideBar::writeSettings()
+{
+    QSettings settings;
+
+    settings.beginGroup("sideBar");
+    settings.setValue(ui->latLineEdit->objectName(), ui->latLineEdit->text());
+    settings.setValue(ui->lonLineEdit->objectName(), ui->lonLineEdit->text());
+    settings.endGroup();
+}
+
+void SideBar::readSettings()
+{
+    QSettings settings;
+
+    settings.beginGroup("sideBar");
+    ui->latLineEdit->setText(settings.value(ui->latLineEdit->objectName()).toString());
+    ui->lonLineEdit->setText(settings.value(ui->lonLineEdit->objectName()).toString());
+    settings.endGroup();
 }
 
 bool SideBar::eventFilter(QObject *watched, QEvent *event)
@@ -191,8 +214,8 @@ void SideBar::resetFilter()
     ui->markingDayCheckBox->setChecked(false);
     ui->nightMarkingCheckBox->setChecked(false);
     ui->radiusGroupBox->setChecked(false);
-    ui->latLineEdit->clear();
-    ui->lonLineEdit->clear();
+//    ui->latLineEdit->clear();
+//    ui->lonLineEdit->clear();
     ui->radiusSlider->setValue(50);
     ui->fromHeightLineEdit->clear();
     ui->toHeightLineEdit->clear();

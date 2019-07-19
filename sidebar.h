@@ -38,6 +38,8 @@ class SideBar : public QWidget
         bool isShown;
         QRect m_geometry;
 
+        void writeSettings();
+        void readSettings();
         float convertCoordInDec(QString);
         void updateTags();
         void addTagToScrollArea(const QString&);
