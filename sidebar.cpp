@@ -32,12 +32,9 @@ SideBar::SideBar(QWidget *parent) :
     ui->fromHeightLineEdit->setValidator(new QIntValidator());
     ui->minRadiusLabel->setNum(ui->radiusSlider->minimum());
     ui->maxRadiusLabel->setNum(ui->radiusSlider->maximum());
-
-    ui->typeObstacleScrollAreaWidgetContents->setLayout(new QVBoxLayout());
     ui->scrollAreaWidgetContents->setLayout(new FlowLayout());
 
     updateTags();
-    updateTypeObstracle();
 
     connect(ui->searchLineEdit, SIGNAL(textChanged(QString)), this, SIGNAL(searchTextChanged(QString)));
     connect(ui->markingDayCheckBox, SIGNAL(toggled(bool)), this, SLOT(checkBoxChanged(bool)));
@@ -83,19 +80,28 @@ QSize SideBar::sizeHint()
     return QSize(300, 400);
 }
 
-void SideBar::updateTypeObstracle()
+void SideBar::updateTypeObstracleFilter(const QStringList types)
 {
-    QVector<QString> types = DatabaseAccess::getInstance()->getTypeObstracle();
-
     if (types.isEmpty())
         return;
 
-    for (int i = 0; i < types.size(); i++) {
-        QCheckBox *type = new QCheckBox(types.at(i), ui->typeObstacleScrollAreaWidgetContents);
-        connect(type, SIGNAL(clicked(bool)), this, SLOT(checkBoxTypesChanged()));
-        ui->typeObstacleScrollAreaWidgetContents->layout()->addWidget(type);
-        ui->typeObstacleScrollAreaWidgetContents->adjustSize();
+    // remove type checkbox in filter
+    QList<QWidget*> typesCheckBox = ui->typeObstracleScrollAreaWidgetContents->findChildren<QWidget*>();
+    for (QList<QWidget*>::iterator it = typesCheckBox.begin(); it != typesCheckBox.end(); ++it) {
+        ui->typeObstracleScrollAreaWidgetContents->layout()->removeWidget(*it);
+        (*it)->hide();
+        delete (*it);
     }
+    delete ui->typeObstracleScrollAreaWidgetContents->layout();
+
+    ui->typeObstracleScrollAreaWidgetContents->setLayout(new QVBoxLayout(ui->typeObstracleScrollAreaWidgetContents));
+    for (int i = 0; i < types.size(); i++) {
+        QCheckBox *type = new QCheckBox(types.at(i), ui->typeObstracleScrollAreaWidgetContents);
+        connect(type, SIGNAL(clicked(bool)), this, SLOT(checkBoxTypesChanged()));
+        ui->typeObstracleScrollAreaWidgetContents->layout()->addWidget(type);
+        ui->typeObstracleScrollAreaWidgetContents->adjustSize();
+    }
+    qobject_cast<QVBoxLayout*>(ui->typeObstracleScrollAreaWidgetContents->layout())->addStretch();
 }
 
 void SideBar::updateTags()
@@ -240,18 +246,18 @@ void SideBar::checkBoxTagsChanged()
         if ((*it)->isChecked())
             tags << (*it)->text();
     }
-    emit changedFilterProperty(sender()->objectName(), QVariant(tags));
+    emit changedFilterProperty("tags", QVariant(tags));
 }
 
 void SideBar::checkBoxTypesChanged()
 {
     QStringList types;
-    QList<QCheckBox*> typesCheckBox = ui->typeObstacleScrollAreaWidgetContents->findChildren<QCheckBox*>();
+    QList<QCheckBox*> typesCheckBox = ui->typeObstracleScrollAreaWidgetContents->findChildren<QCheckBox*>();
     for (QList<QCheckBox*>::iterator it = typesCheckBox.begin(); it != typesCheckBox.end(); ++it) {
         if ((*it)->isChecked())
             types << (*it)->text();
     }
-    emit changedFilterProperty(sender()->objectName(), QVariant(types));
+    emit changedFilterProperty("types", QVariant(types));
 }
 
 void SideBar::clickedDisplayObstraclesButton()

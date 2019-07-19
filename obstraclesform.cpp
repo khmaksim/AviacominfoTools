@@ -209,6 +209,7 @@ void ObstraclesForm::updateModelObstracles(const QModelIndex &index)
         obstraclesModel->removeRow(0);
     }
 
+    QStringList typesObstracle = QStringList();
     for (int i = 0; i < obstracles.size(); i++) {
         QList<QStandardItem *> items;
         QVariantList fields = obstracles.at(i);
@@ -218,10 +219,14 @@ void ObstraclesForm::updateModelObstracles(const QModelIndex &index)
         item->setData(fields.takeLast().toString(), Qt::UserRole + 2);      // set datetime last updated
         items.append(item);
         for (int j = 0; j < fields.size(); j++) {
+            if (j == 1)
+                typesObstracle << fields.at(j).toString();
             items.append(new QStandardItem(fields.at(j).toString()));
         }
         obstraclesModel->appendRow(items);
     }
+    typesObstracle.removeDuplicates();
+    sideBar->updateTypeObstracleFilter(typesObstracle);
 }
 
 void ObstraclesForm::enabledToolButton()

@@ -331,7 +331,7 @@ QPushButton:pressed {
                <property name="alignment">
                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
                </property>
-               <widget class="QWidget" name="typeObstacleScrollAreaWidgetContents">
+               <widget class="QWidget" name="typeObstracleScrollAreaWidgetContents">
                 <property name="geometry">
                  <rect>
                   <x>0</x>

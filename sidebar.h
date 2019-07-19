@@ -20,6 +20,7 @@ class SideBar : public QWidget
         float getLat();
         float getLon();
         int getRadius();
+        void updateTypeObstracleFilter(const QStringList);
 
     public slots:
         void showHide();
@@ -39,7 +40,6 @@ class SideBar : public QWidget
 
         float convertCoordInDec(QString);
         void updateTags();
-        void updateTypeObstracle();
         void addTagToScrollArea(const QString&);
 
     private slots:
