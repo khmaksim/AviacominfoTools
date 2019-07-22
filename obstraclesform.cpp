@@ -357,5 +357,5 @@ void ObstraclesForm::showUpdated()
 {
     updateModelAirfields();
 
-    QMessageBox::information(this, tr("Information"), tr("Obstacle database updated"));
+    QMessageBox::information(this, tr("Information"), tr("Obstacle database updated!"));
 }
