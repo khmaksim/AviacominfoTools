@@ -3,11 +3,19 @@
 #include <QTimer>
 #include <QDebug>
 
-MapView::MapView(QVariant coordinate) : QQuickView()
+MapView::MapView() : QQuickView()
 {
     setResizeMode(QQuickView::SizeRootObjectToView);
-    setSource(QUrl::fromLocalFile(":/qml/mapview.qml"));
+    setSource(QUrl("qrc:/qml/mapview.qml"));
+}
 
+void MapView::clearMap()
+{
+    QMetaObject::invokeMethod(rootObject(), "clearMap", Qt::DirectConnection);
+}
+
+void MapView::setCenter(QVariant coordinate)
+{
     double lat = coordinate.toPointF().x();
     double lon = coordinate.toPointF().y();
 

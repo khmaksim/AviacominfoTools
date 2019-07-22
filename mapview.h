@@ -16,9 +16,11 @@ class MapView : public QQuickView
         Q_OBJECT
 
     public:
-        explicit MapView(QVariant);
+        explicit MapView();
         ~MapView() {}
 
+        void clearMap();
+        void setCenter(QVariant);
         void addObstracle(ObstraclePoint);
 };
 

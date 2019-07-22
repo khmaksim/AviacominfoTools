@@ -20,14 +20,17 @@ Item {
         anchors.fill: parent
     }
 
+    function clearMap() {
+        mapItem.clearMapItems();
+    }
+
     function setCenter(lat, lon) {
         mapItem.center = QtPositioning.coordinate(lat, lon);
     }
 
     function addMarker(lat, lon, height) {
-        var component = Qt.createComponent("marker.qml");
+        var component = Qt.createComponent("qrc:/qml/marker.qml");
         if (component.status === Component.Ready) {
-            console.log("Complited");
             var marker = component.createObject(parent);
             marker.coordinate = QtPositioning.coordinate(lat, lon);
             marker.label = height;

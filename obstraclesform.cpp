@@ -42,6 +42,7 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
 //    filterButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 //    filterButton->setEnabled(false);
 
+    mapView = 0;
     toolBar = new QToolBar(this);
     toolBar->addWidget(exportButton);
 //    toolBar->addWidget(filterButton);
@@ -146,6 +147,8 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
 ObstraclesForm::~ObstraclesForm()
 {
     writeSettings();
+    if (!mapView)
+        mapView->close();
 //    delete obstraclesHandler;
     delete ui;
 }
@@ -315,7 +318,12 @@ void ObstraclesForm::showTags(const QModelIndex &index)
 
 void ObstraclesForm::showObstracles(QVariant coordinate)
 {
-    mapView = new MapView(coordinate);
+    if (!mapView)
+        mapView = new MapView;
+
+    mapView->clearMap();
+
+    QPointF centerMap = coordinate.toPointF();
 
     for (int row = 0; row < obstraclesModel->rowCount(); row++) {
         if (obstraclesModel->item(row)->data(Qt::UserRole).toBool()) {
@@ -324,8 +332,12 @@ void ObstraclesForm::showObstracles(QVariant coordinate)
             obstraclePoint.lon = parserCoordinate(obstraclesModel->item(row, 7)->data(Qt::DisplayRole).toString());
             obstraclePoint.height = obstraclesModel->item(row, 12)->data(Qt::DisplayRole).toInt();
             mapView->addObstracle(obstraclePoint);
+            if (row == 0 && coordinate.toPointF().isNull()) {
+                centerMap = QPointF(obstraclePoint.lat, obstraclePoint.lon);
+            }
         }
     }
+    mapView->setCenter(centerMap);
     mapView->show();
 }
 

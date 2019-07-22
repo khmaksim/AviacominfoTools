@@ -288,8 +288,11 @@ void SideBar::checkBoxTypesChanged()
 
 void SideBar::clickedDisplayObstraclesButton()
 {
-    emit displayObstracles(QVariant(QPointF(convertCoordInDec(ui->latLineEdit->text()),
+    if (ui->radiusGroupBox->isChecked())
+        emit displayObstracles(QVariant(QPointF(convertCoordInDec(ui->latLineEdit->text()),
                                             convertCoordInDec(ui->lonLineEdit->text()))));
+    else
+        emit displayObstracles(QVariant(QPointF()));
 }
 
 void SideBar::heightFilterChanged()
