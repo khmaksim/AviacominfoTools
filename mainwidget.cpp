@@ -21,7 +21,7 @@ MainWidget::MainWidget(QWidget *parent) :
 
     ui->stackedWidget->setCurrentIndex(1);
 
-    connect(obstraclesHandler, SIGNAL(updated()), form, SLOT(updateModelAirfields()));
+    connect(obstraclesHandler, SIGNAL(updated()), form, SLOT(showUpdated()));
 //    connect(obstraclesHandler, SIGNAL(finished(Airfield,QVector<QVector<QString> >&)), DatabaseAccess::getInstance(), SLOT(update(Airfield,QVector<QVector<QString> >&)));
     connect(ui->obstracleButton, SIGNAL(clicked(bool)), this, SLOT(showObstracles()));
 }

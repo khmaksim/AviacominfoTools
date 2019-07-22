@@ -9,6 +9,7 @@
 #include <QSaveFile>
 #include <QSortFilterProxyModel>
 #include <QSettings>
+#include <QMessageBox>
 #include "listitemdelegate.h"
 #include "tablemodel.h"
 #include "searchmodel.h"
@@ -139,7 +140,7 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     connect(sideBar, SIGNAL(displayObstracles(QVariant)), this, SLOT(showObstracles(QVariant)));
     connect(groupHeaderView, SIGNAL(clickedCheckBox(bool)), this, SLOT(setCheckedAllRowTable(bool)));
     connect(ui->tableView, SIGNAL(clicked(QModelIndex)), this, SLOT(showTags(QModelIndex)));
-    connect(DatabaseAccess::getInstance(), SIGNAL(updated()), this, SLOT(updateModelObstracles()));
+    connect(DatabaseAccess::getInstance(), SIGNAL(updatedTags()), this, SLOT(updateModelObstracles()));
 }
 
 ObstraclesForm::~ObstraclesForm()
@@ -338,4 +339,11 @@ double ObstraclesForm::parserCoordinate(QString str)
     }
 
     return coord;
+}
+
+void ObstraclesForm::showUpdated()
+{
+    updateModelAirfields();
+
+    QMessageBox::information(this, tr("Information"), tr("Obstacle database updated"));
 }

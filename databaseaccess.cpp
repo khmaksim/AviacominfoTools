@@ -89,7 +89,7 @@ void DatabaseAccess::setTag(const QString &nameTag, const QVariantList &idObstra
     if (!query.execBatch())
         qDebug() << query.lastError().text() << query.lastQuery() << query.boundValues();
 
-    emit updated();
+    emit updatedTags();
 }
 
 bool DatabaseAccess::createTag(const QString &nameTag)

@@ -31,7 +31,7 @@ class DatabaseAccess : public QObject
         QSqlDatabase db;
 
     signals:
-        void updated();
+        void updatedTags();
 };
 
 #endif // DATABASEACCESS_H

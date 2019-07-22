@@ -30,7 +30,7 @@ class ObstraclesForm : public QWidget
         QVariantList getCheckedObstralcles();
 
     public slots:
-        void updateModelAirfields();
+        void showUpdated();
 
     protected:
         void resizeEvent(QResizeEvent *event);
@@ -52,6 +52,7 @@ class ObstraclesForm : public QWidget
         void readSettings();
         void writeSettings();
         double parserCoordinate(QString);
+        void updateModelAirfields();
 
     private slots:
         void updateModelObstracles(const QModelIndex &index = QModelIndex());
