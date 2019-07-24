@@ -288,11 +288,11 @@ void ObstraclesForm::showFilterPanel()
 
 void ObstraclesForm::setCheckedAllRowTable(bool checked)
 {
-    if (obstraclesModel->rowCount() == 0)
+    if (sortSearchFilterTableModel->rowCount() == 0)
         return;
 
-    for (int row = 0; row < obstraclesModel->rowCount(); row++)
-        obstraclesModel->item(row)->setData(checked, Qt::UserRole);
+    for (int row = 0; row < sortSearchFilterTableModel->rowCount(); row++)
+        sortSearchFilterTableModel->setData(sortSearchFilterTableModel->index(row, 0), checked, Qt::UserRole);
 }
 
 void ObstraclesForm::setFilterRadius()
