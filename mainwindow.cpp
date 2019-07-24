@@ -1,5 +1,5 @@
-#include "mainwidget.h"
-#include "ui_mainwidget.h"
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
 #include "obstraclesform.h"
 #include "obstracleshandler.h"
 #include "databaseaccess.h"
@@ -7,9 +7,9 @@
 #include <QSettings>
 #include <QDateTime>
 
-MainWidget::MainWidget(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::MainWidget)
+MainWindow::MainWindow(QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     obstraclesHandler = new ObstraclesHandler(this);
@@ -26,18 +26,18 @@ MainWidget::MainWidget(QWidget *parent) :
     connect(ui->obstracleButton, SIGNAL(clicked(bool)), this, SLOT(showObstracles()));
 }
 
-MainWidget::~MainWidget()
+MainWindow::~MainWindow()
 {
     writeSettings();
     delete ui;
 }
 
-void MainWidget::showObstracles()
+void MainWindow::showObstracles()
 {
     ui->stackedWidget->setCurrentIndex(1);
 }
 
-void MainWidget::writeSettings()
+void MainWindow::writeSettings()
 {
     QSettings settings;
 
@@ -46,7 +46,7 @@ void MainWidget::writeSettings()
     settings.endGroup();
 }
 
-void MainWidget::readSettings()
+void MainWindow::readSettings()
 {
     QSettings settings;
 

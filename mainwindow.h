@@ -1,27 +1,27 @@
-#ifndef MAINWIDGET_H
-#define MAINWIDGET_H
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
 
-#include <QWidget>
+#include <QMainWindow>
 
 namespace Ui {
-    class MainWidget;
+    class MainWindow;
 }
 
 class Database;
 class ObstraclesHandler;
-class MainWidget : public QWidget
+class MainWindow : public QMainWindow
 {
         Q_OBJECT
 
     public:
-        explicit MainWidget(QWidget *parent = 0);
-        ~MainWidget();
+        explicit MainWindow(QWidget *parent = 0);
+        ~MainWindow();
 
     public slots:
         void showObstracles();
 
     private:
-        Ui::MainWidget *ui;
+        Ui::MainWindow *ui;
 
         ObstraclesHandler *obstraclesHandler;
         Database *db;
@@ -30,4 +30,4 @@ class MainWidget : public QWidget
         void writeSettings();
 };
 
-#endif // MAINWIDGET_H
+#endif // MAINWINDOW_H

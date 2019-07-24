@@ -19,6 +19,7 @@ class QFrame;
 class SortSearchFilterTableModel;
 class SideBar;
 class MapView;
+class QLabel;
 class ObstraclesForm : public QWidget
 {
         Q_OBJECT
@@ -48,6 +49,8 @@ class ObstraclesForm : public QWidget
         QFrame *filterPanel;
         SideBar *sideBar;
         MapView *mapView;
+        QLabel *totalObstraclesLabel;
+        QLabel *selectedObstraclesLabel;
 
         void readSettings();
         void writeSettings();
@@ -61,8 +64,9 @@ class ObstraclesForm : public QWidget
         void showFilterPanel();
         void setCheckedAllRowTable(bool);
         void setFilterRadius();
-        void showTags(const QModelIndex&);
+//        void showTags(const QModelIndex&);
         void showObstracles(QVariant);
+        void updateStatusSelectedObstracles();
 };
 
 #endif // OBSTRACLESFORM_H

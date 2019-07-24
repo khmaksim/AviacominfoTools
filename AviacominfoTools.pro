@@ -25,7 +25,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        mainwidget.cpp \
     obstraclesform.cpp \
     obstracleshandler.cpp \
     listitemdelegate.cpp \
@@ -41,10 +40,10 @@ SOURCES += \
     htmlparser.cpp \
     obstraclestyleditemdelegate.cpp \
     databaseupdate.cpp \
-    mapview.cpp
+    mapview.cpp \
+    mainwindow.cpp
 
 HEADERS += \
-        mainwidget.h \
     obstraclesform.h \
     obstracleshandler.h \
     listitemdelegate.h \
@@ -60,12 +59,13 @@ HEADERS += \
     htmlparser.h \
     obstraclestyleditemdelegate.h \
     databaseupdate.h \
-    mapview.h
+    mapview.h \
+    mainwindow.h
 
 FORMS += \
-        mainwidget.ui \
     obstraclesform.ui \
-    sidebar.ui
+    sidebar.ui \
+    mainwindow.ui
 
 RESOURCES += \
     aviacominfotools.qrc

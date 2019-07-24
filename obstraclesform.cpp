@@ -10,6 +10,9 @@
 #include <QSortFilterProxyModel>
 #include <QSettings>
 #include <QMessageBox>
+#include <QLabel>
+#include <QMainWindow>
+#include <QStatusBar>
 #include "listitemdelegate.h"
 #include "tablemodel.h"
 #include "searchmodel.h"
@@ -48,13 +51,14 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
 //    toolBar->addWidget(filterButton);
 
     sideBar = new SideBar(this);
+    totalObstraclesLabel = new QLabel(tr("Total obstracles: 0"), this);
+    selectedObstraclesLabel = new QLabel(tr("Selected obstacles: 0"), this);
+    qobject_cast<QMainWindow*>(parent)->statusBar()->addWidget(totalObstraclesLabel, 1);
+    qobject_cast<QMainWindow*>(parent)->statusBar()->addWidget(selectedObstraclesLabel, 1);
 
     ui->splitter->setSizes(QList<int>() << 150 << 300);
-
-    QGridLayout *layout = new QGridLayout(this);
-    layout->addWidget(toolBar, 0, 0, 1, 2);
-    layout->addWidget(ui->splitter, 1, 0, 2, 2);
-    setLayout(layout);
+    ui->gridLayout_2->addWidget(toolBar, 0, 0, 1, 2);
+    ui->gridLayout_2->addWidget(ui->splitter, 1, 0, 1, 2);
 
     airfieldsModel = new QStandardItemModel(this);
     searchAirfieldsModel = new SearchModel(this);
@@ -133,6 +137,7 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     connect(ui->listView, SIGNAL(clicked(QModelIndex)), sideBar, SLOT(resetFilter()));
     connect(ui->listView, SIGNAL(clicked(QModelIndex)), this, SLOT(updateModelObstracles(QModelIndex)));
     connect(sortSearchFilterTableModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this, SLOT(enabledToolButton()));
+    connect(sortSearchFilterTableModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this, SLOT(updateStatusSelectedObstracles()));
     connect(exportButton, SIGNAL(clicked(bool)), this, SLOT(exportToFile()));
     connect(ui->searchLineEdit, SIGNAL(textChanged(QString)), searchAirfieldsModel, SLOT(setFilterRegExp(QString)));
     connect(sideBar, SIGNAL(searchTextChanged(QString)), sortSearchFilterTableModel, SLOT(setFilterRegExp(QString)));
@@ -140,7 +145,7 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     connect(sideBar, SIGNAL(filterRadius()), this, SLOT(setFilterRadius()));
     connect(sideBar, SIGNAL(displayObstracles(QVariant)), this, SLOT(showObstracles(QVariant)));
     connect(groupHeaderView, SIGNAL(clickedCheckBox(bool)), this, SLOT(setCheckedAllRowTable(bool)));
-    connect(ui->tableView, SIGNAL(clicked(QModelIndex)), this, SLOT(showTags(QModelIndex)));
+//    connect(ui->tableView, SIGNAL(clicked(QModelIndex)), this, SLOT(showTags(QModelIndex)));
     connect(DatabaseAccess::getInstance(), SIGNAL(updatedTags()), this, SLOT(updateModelObstracles()));
 }
 
@@ -222,6 +227,7 @@ void ObstraclesForm::updateModelObstracles(const QModelIndex &index)
         item->setData(fields.takeLast().toString(), Qt::UserRole + 1);      // set tags for obstracles to first column
         item->setData(fields.takeLast().toString(), Qt::UserRole + 2);      // set datetime last updated
         items.append(item);
+        // get name type obstracles
         for (int j = 0; j < fields.size(); j++) {
             if (j == 1)
                 typesObstracle << fields.at(j).toString();
@@ -229,8 +235,12 @@ void ObstraclesForm::updateModelObstracles(const QModelIndex &index)
         }
         obstraclesModel->appendRow(items);
     }
+    // set list type obstracles for filter in side bar
     typesObstracle.removeDuplicates();
     sideBar->updateTypeObstracleFilter(typesObstracle);
+
+    // update number obstracle in model for status bar
+    totalObstraclesLabel->setText(totalObstraclesLabel->text().replace(QRegExp("\\d+"), QString::number(sortSearchFilterTableModel->rowCount())));
 }
 
 void ObstraclesForm::enabledToolButton()
@@ -311,10 +321,10 @@ QVariantList ObstraclesForm::getCheckedObstralcles()
     return idSelectedObstracles;
 }
 
-void ObstraclesForm::showTags(const QModelIndex &index)
-{
+//void ObstraclesForm::showTags(const QModelIndex &index)
+//{
 
-}
+//}
 
 void ObstraclesForm::showObstracles(QVariant coordinate)
 {
@@ -358,4 +368,11 @@ void ObstraclesForm::showUpdated()
     updateModelAirfields();
 
     QMessageBox::information(this, tr("Information"), tr("Obstacle database updated!"));
+}
+
+void ObstraclesForm::updateStatusSelectedObstracles()
+{
+    int numSelected = getCheckedObstralcles().size();
+    if (numSelected >= 0)
+        selectedObstraclesLabel->setText(selectedObstraclesLabel->text().replace(QRegExp("\\d+"), QString::number(numSelected)));
 }
