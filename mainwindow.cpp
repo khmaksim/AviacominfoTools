@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QSettings>
 #include <QDateTime>
+#include "waitingspinnerwidget.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -14,16 +15,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     obstraclesHandler = new ObstraclesHandler(this);
 
-    readSettings();
-
     ObstraclesForm *form = new ObstraclesForm(this);
     ui->stackedWidget->addWidget(form);
-
     ui->stackedWidget->setCurrentIndex(1);
 
     connect(obstraclesHandler, SIGNAL(updated()), form, SLOT(showUpdated()));
 //    connect(obstraclesHandler, SIGNAL(finished(Airfield,QVector<QVector<QString> >&)), DatabaseAccess::getInstance(), SLOT(update(Airfield,QVector<QVector<QString> >&)));
     connect(ui->obstracleButton, SIGNAL(clicked(bool)), this, SLOT(showObstracles()));
+    readSettings();
 }
 
 MainWindow::~MainWindow()
@@ -58,6 +57,7 @@ void MainWindow::readSettings()
     if (settings.value("datetime_updated").toDateTime().addDays(1) < QDateTime::currentDateTime()) {
         settings.setValue("datetime_updated", QDateTime::currentDateTime());
         obstraclesHandler->checkUpdates();
+        qobject_cast<ObstraclesForm*>(ui->stackedWidget->widget(1))->spinner->start();
     }
     settings.endGroup();
 }

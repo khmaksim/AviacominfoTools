@@ -85,8 +85,9 @@ void SideBar::readSettings()
 
 bool SideBar::eventFilter(QObject *watched, QEvent *event)
 {
-    if (watched == ui->arrow && (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseButtonDblClick)) {
-            showHide();
+    if (watched == ui->arrow && (event->type() == QEvent::MouseButtonPress ||
+                                 event->type() == QEvent::MouseButtonDblClick)) {
+        showHide();
     }
     return QWidget::eventFilter(watched, event);
 }
@@ -94,8 +95,6 @@ bool SideBar::eventFilter(QObject *watched, QEvent *event)
 void SideBar::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
-    if (isShown)
-        showHide();
     QPixmap maskPix(":/images/res/img/mask.png");
     ui->arrow->setMask(maskPix.scaled(ui->arrow->size()).mask());
 }
@@ -229,8 +228,10 @@ void SideBar::showHide()
     animationSideBar = new QPropertyAnimation(this, "geometry");
     animationSideBar->setDuration(300);
 
-    QRect startRect(parent->width() - 20, y(), width(), height());
-    QRect endRect(parent->width() - width(), y(), width(), height());
+//    QRect startRect(parent->width() - 20, y(), width(), height());
+//    QRect endRect(parent->width() - width(), y(), width(), height());
+    QRect startRect(0 - width() + 20, y(), width(), height());
+    QRect endRect(0, y(), width(), height());
 
     if (!isShown) {
         animationSideBar->setStartValue(startRect);
@@ -240,7 +241,6 @@ void SideBar::showHide()
         animationSideBar->setStartValue(endRect);
         animationSideBar->setEndValue(startRect);
     }
-
     animationSideBar->start();
     QTimer::singleShot(animationSideBar->duration(), this, SLOT(changeArrow()));
 
@@ -250,9 +250,10 @@ void SideBar::showHide()
 void SideBar::changeArrow()
 {
     if (isShown)
-        ui->arrow->setPixmap(QPixmap(":/images/res/img/arrow-right.png"));
-    else
         ui->arrow->setPixmap(QPixmap(":/images/res/img/arrow-left.png"));
+    else
+        ui->arrow->setPixmap(QPixmap(":/images/res/img/arrow-right.png"));
+
 }
 
 void SideBar::setTagForObstracles(bool checked)
@@ -331,4 +332,10 @@ void SideBar::removeTag()
         }
         ui->removeTagButton->setEnabled(false);
     }
+}
+
+void SideBar::reset()
+{
+    isShown = false;
+    changeArrow();
 }

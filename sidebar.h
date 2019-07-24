@@ -25,6 +25,7 @@ class SideBar : public QWidget
     public slots:
         void showHide();
         void resetFilter();
+        void reset();
 
     protected:
         QSize sizeHint();

@@ -29,6 +29,7 @@ class ObstraclesForm : public QWidget
         ~ObstraclesForm();
 
         QVariantList getCheckedObstralcles();
+        WaitingSpinnerWidget *spinner;
 
     public slots:
         void showUpdated();
@@ -45,7 +46,6 @@ class ObstraclesForm : public QWidget
         TableModel *obstraclesModel;
         SearchModel *searchAirfieldsModel;
         SortSearchFilterTableModel *sortSearchFilterTableModel;
-        WaitingSpinnerWidget *spinner;
         QFrame *filterPanel;
         SideBar *sideBar;
         MapView *mapView;
@@ -61,7 +61,7 @@ class ObstraclesForm : public QWidget
         void updateModelObstracles(const QModelIndex &index = QModelIndex());
         void enabledToolButton();
         void exportToFile();
-        void showFilterPanel();
+//        void showFilterPanel();
         void setCheckedAllRowTable(bool);
         void setFilterRadius();
 //        void showTags(const QModelIndex&);

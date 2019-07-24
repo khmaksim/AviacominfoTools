@@ -117,20 +117,19 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
 
     updateModelAirfields();
 
-    if (airfieldsModel->rowCount() == 0) {
-        spinner = new WaitingSpinnerWidget(this);
-        spinner->setRoundness(70.0);
-        spinner->setMinimumTrailOpacity(15.0);
-        spinner->setTrailFadePercentage(70.0);
-        spinner->setNumberOfLines(12);
-        spinner->setLineLength(15);
-        spinner->setLineWidth(4);
-        spinner->setInnerRadius(10);
-        spinner->setRevolutionsPerSecond(1);
-        spinner->setColor(QColor(81, 4, 71));
-        spinner->start();
-        connect(airfieldsModel, SIGNAL(modelReset()), spinner, SLOT(stop()));
-    }
+//    if (airfieldsModel->rowCount() == 0) {
+    spinner = new WaitingSpinnerWidget(this);
+    spinner->setRoundness(70.0);
+    spinner->setMinimumTrailOpacity(15.0);
+    spinner->setTrailFadePercentage(70.0);
+    spinner->setNumberOfLines(12);
+    spinner->setLineLength(15);
+    spinner->setLineWidth(3);
+    spinner->setInnerRadius(10);
+    spinner->setRevolutionsPerSecond(1);
+    spinner->setColor(QColor(93, 93, 93));
+    connect(airfieldsModel, SIGNAL(modelReset()), spinner, SLOT(stop()));
+    //    }
 
     readSettings();
 
@@ -154,14 +153,19 @@ ObstraclesForm::~ObstraclesForm()
     writeSettings();
     if (mapView)
         mapView->close();
-//    delete obstraclesHandler;
     delete ui;
 }
 
 void ObstraclesForm::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
-    sideBar->setGeometry(width() - 20, toolBar->height(), sideBar->size().width(), height() - toolBar->height());
+//    sideBar->setGeometry(width() - 20, toolBar->height(), sideBar->size().width(), height() - toolBar->height());
+
+    sideBar->setGeometry(0 - sideBar->size().width() + 20,
+                         toolBar->height() + ui->searchLineEdit->height() + ui->listView->sizeHintForRow(0),
+                         sideBar->size().width(),
+                         height() - toolBar->height() - ui->searchLineEdit->height() - ui->listView->sizeHintForRow(0));
+    sideBar->reset();
 }
 
 void ObstraclesForm::writeSettings()
@@ -284,17 +288,17 @@ void ObstraclesForm::exportToFile()
     file.commit();
 }
 
-void ObstraclesForm::showFilterPanel()
-{
-    FilterPanel *filterPanel = new FilterPanel(this);
-    QPoint pos = ui->tableView->mapToGlobal(QPoint(0, 0));
-    int widthTableView = ui->tableView->geometry().width();
-    int heightTableView = ui->tableView->geometry().height();
+//void ObstraclesForm::showFilterPanel()
+//{
+//    FilterPanel *filterPanel = new FilterPanel(this);
+//    QPoint pos = ui->tableView->mapToGlobal(QPoint(0, 0));
+//    int widthTableView = ui->tableView->geometry().width();
+//    int heightTableView = ui->tableView->geometry().height();
 
-    filterPanel->setGeometry(pos.x() + widthTableView / 2, pos.y() + heightTableView / 2,
-                             filterPanel->width(), filterPanel->height());
-    filterPanel->show();
-}
+//    filterPanel->setGeometry(pos.x() + widthTableView / 2, pos.y() + heightTableView / 2,
+//                             filterPanel->width(), filterPanel->height());
+//    filterPanel->show();
+//}
 
 void ObstraclesForm::setCheckedAllRowTable(bool checked)
 {
