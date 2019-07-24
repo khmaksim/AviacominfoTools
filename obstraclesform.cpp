@@ -133,7 +133,6 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     connect(ui->listView, SIGNAL(clicked(QModelIndex)), this, SLOT(updateModelObstracles(QModelIndex)));
     connect(sortSearchFilterTableModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this, SLOT(enabledToolButton()));
     connect(exportButton, SIGNAL(clicked(bool)), this, SLOT(exportToFile()));
-//    connect(filterButton, SIGNAL(clicked(bool)), this, SLOT(showFilterPanel()));
     connect(ui->searchLineEdit, SIGNAL(textChanged(QString)), searchAirfieldsModel, SLOT(setFilterRegExp(QString)));
     connect(sideBar, SIGNAL(searchTextChanged(QString)), sortSearchFilterTableModel, SLOT(setFilterRegExp(QString)));
     connect(sideBar, SIGNAL(changedFilterProperty(QString, QVariant)), sortSearchFilterTableModel, SLOT(setFilterProperty(QString, QVariant)));
@@ -150,6 +149,7 @@ ObstraclesForm::~ObstraclesForm()
     if (!mapView)
         mapView->close();
 //    delete obstraclesHandler;
+    delete sideBar;
     delete ui;
 }
 

@@ -54,13 +54,17 @@ bool SortSearchFilterTableModel::filterAcceptsRow(int sourceRow, const QModelInd
                   .toString().contains(QRegExp("да|есть"));
 
     if (lat > 0 && lon > 0 && radius > 0) {
-        float latObstracle = convertCoordInDec(sourceModel()->data(sourceModel()->index(sourceRow, 6, sourceParent)).toString());
-        float lonObstracle = convertCoordInDec(sourceModel()->data(sourceModel()->index(sourceRow, 7, sourceParent)).toString());
+        double latObstracle = convertCoordInDec(sourceModel()->data(sourceModel()->index(sourceRow, 6, sourceParent)).toString());
+        double lonObstracle = convertCoordInDec(sourceModel()->data(sourceModel()->index(sourceRow, 7, sourceParent)).toString());
 
         if (latObstracle > 0 && lonObstracle > 0) {
 //            double d = 2 * qAcos(qSin(lat) * qSin(latObstracle) + qCos(lat) * qCos(latObstracle) * qCos(lon - lonObstracle));
-            double d = 2 * qAsin(qSqrt(qPow(qSin((latObstracle - lat) / 2), 2) + qCos(lat) * qCos(latObstracle) * qPow(qSin((lon - lonObstracle) / 2), 2)));
-            if ((d * 6372795) <= (radius * 1000))
+            // 6371 - radius Earth
+            double d = 6371 * 2 * qAsin(qSqrt(qPow(qSin(qDegreesToRadians((latObstracle - lat) / 2)), 2) +
+                                                 qCos(qDegreesToRadians(lat)) *
+                                                 qCos(qDegreesToRadians(latObstracle)) *
+                                                 qPow(qSin(qDegreesToRadians(qAbs(lonObstracle - lon) / 2)), 2)));
+            if (d <= radius)
                 result &= true;
             else
                 result &= false;

@@ -66,8 +66,9 @@ SideBar::~SideBar()
 void SideBar::writeSettings()
 {
     QSettings settings;
-
+    qDebug() << "asdasd";
     settings.beginGroup("sideBar");
+    qDebug() << ui->latLineEdit->text() << ui->lonLineEdit->text();
     settings.setValue(ui->latLineEdit->objectName(), ui->latLineEdit->text());
     settings.setValue(ui->lonLineEdit->objectName(), ui->lonLineEdit->text());
     settings.endGroup();

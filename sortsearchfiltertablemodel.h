@@ -26,8 +26,8 @@ class SortSearchFilterTableModel : public QSortFilterProxyModel
         int toHeight;
         bool markingDay;
         bool nightMarking;
-        float lat;
-        float lon;
+        double lat;
+        double lon;
         int radius;
 
         float convertCoordInDec(const QString) const;
