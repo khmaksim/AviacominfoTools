@@ -24,6 +24,7 @@ class SideBar : public QWidget
 
     public slots:
         void showHide();
+        void resetFilter();
 
     protected:
         QSize sizeHint();
@@ -50,7 +51,6 @@ class SideBar : public QWidget
         void showAddTag();
         void showSelectColorTag();
         void setRadius();
-        void resetFilter();
         void changeArrow();
         void checkBoxTagsChanged();
         void checkBoxTypesChanged();
