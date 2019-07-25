@@ -1,13 +1,14 @@
 <RCC>
     <qresource prefix="/images">
         <file>res/img/filesave.png</file>
-        <file>res/img/filter.png</file>
         <file>res/img/arrow-left.png</file>
         <file>res/img/arrow-right.png</file>
         <file>res/img/mask.png</file>
         <file>res/img/logo.png</file>
         <file>res/img/A.png</file>
         <file>res/img/W.png</file>
+        <file>res/img/icons8-map-marker-48.png</file>
+        <file>res/img/icons8-save-48.png</file>
     </qresource>
     <qresource prefix="/translations">
         <file>res/translations/aviacominfotools_ru.qm</file>

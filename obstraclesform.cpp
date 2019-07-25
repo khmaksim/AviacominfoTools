@@ -35,20 +35,26 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     exportButton->setEnabled(false);
     exportButton->setText(tr("Export"));
     exportButton->setIconSize(QSize(32, 32));
-    exportButton->setIcon(QIcon(":/images/res/img/filesave.png"));
+    exportButton->setIcon(QIcon(":/images/res/img/icons8-save-48.png"));
     exportButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
+    displayOnMapButton = new QToolButton(this);
+    displayOnMapButton->setEnabled(false);
+    displayOnMapButton->setText(tr("On map"));
+    displayOnMapButton->setIconSize(QSize(32, 32));
+    displayOnMapButton->setIcon(QIcon(":/images/res/img/icons8-map-marker-48.png"));
+    displayOnMapButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 //    filterButton = new QToolButton(this);
 //    filterButton->setText(tr("Filter"));
 //    filterButton->setIconSize(QSize(32, 32));
-//    filterButton->setIcon(QIcon(":/images/res/img/filter.png"));
+//    filterButton->setIcon(QIcon(""));
 //    filterButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 //    filterButton->setEnabled(false);
 
     mapView = 0;
     toolBar = new QToolBar(this);
     toolBar->addWidget(exportButton);
-//    toolBar->addWidget(filterButton);
+    toolBar->addWidget(displayOnMapButton);
 
     sideBar = new SideBar(this);
     totalObstraclesLabel = new QLabel(tr("Total obstracles: 0"), this);
@@ -138,6 +144,7 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     connect(sortSearchFilterTableModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this, SLOT(enabledToolButton()));
     connect(sortSearchFilterTableModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this, SLOT(updateStatusSelectedObstracles()));
     connect(exportButton, SIGNAL(clicked(bool)), this, SLOT(exportToFile()));
+    connect(displayOnMapButton, SIGNAL(clicked(bool)), this, SLOT(showObstracles()));
     connect(ui->searchLineEdit, SIGNAL(textChanged(QString)), searchAirfieldsModel, SLOT(setFilterRegExp(QString)));
     connect(sideBar, SIGNAL(searchTextChanged(QString)), sortSearchFilterTableModel, SLOT(setFilterRegExp(QString)));
     connect(sideBar, SIGNAL(changedFilterProperty(QString, QVariant)), sortSearchFilterTableModel, SLOT(setFilterProperty(QString, QVariant)));
@@ -257,6 +264,7 @@ void ObstraclesForm::enabledToolButton()
         }
     }
     exportButton->setEnabled(isEnable);
+    displayOnMapButton->setEnabled(isEnable);
     return;
 }
 
