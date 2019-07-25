@@ -130,7 +130,7 @@ void ObstraclesHandler::updateDatabase()
 {
     DatabaseUpdate *update = new DatabaseUpdate;
     QThread *thread = new QThread;
-    qDebug() << "Num obstracles: " << obstraclesAirfield.size();
+
     update->setData(allAirfields.takeFirst(), obstraclesAirfield);
     update->moveToThread(thread);
 

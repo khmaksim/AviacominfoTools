@@ -184,7 +184,6 @@ void DatabaseAccess::update(QMap<QString, QString> airfield, QVector<QVector<QSt
 
     query.exec("BEGIN TRANSACTION");
 
-    qDebug() << airfield.value("name") << airfield.value("icao");
     query.prepare("INSERT INTO airfield (name, code_icao) SELECT :name, :code_icao WHERE NOT EXISTS(SELECT 1 "
                   "FROM airfield WHERE name = :name AND code_icao = :code_icao)");
     query.bindValue(":name", airfield.value("name"));
@@ -277,7 +276,6 @@ void DatabaseAccess::update(QMap<QString, QString> airfield, QVector<QVector<QSt
                 qDebug() << query.lastError().text() << query.lastQuery() << query.boundValues();
             else {
                 // get id type configuration obstracle
-                qDebug() << obstracles.at(i).at(2);
                 query.prepare("SELECT id FROM type_configuration_obstracle WHERE name = ?");
                 query.addBindValue(obstracles.at(i).at(2));
                 if (!query.exec())

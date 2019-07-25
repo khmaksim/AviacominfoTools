@@ -2,17 +2,17 @@ import QtQuick 2.0
 import QtLocation 5.9
 
 MapQuickItem {
-    id: marker
     anchorPoint.x: image.width/4
     anchorPoint.y: image.height
-    property alias label: labelHeight.text
+    property alias heightObstracle: labelHeight.text
+    property bool marker: false
 
     sourceItem: Row {
         Image {
             id: image
-            source: "qrc:/images/res/img/A.png"
+            source: marker ? "qrc:/images/res/img/W.png" : "qrc:/images/res/img/A.png"
             width: 20
-            height: 20
+            height: 30
         }
         Text {
             id: labelHeight

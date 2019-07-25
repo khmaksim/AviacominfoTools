@@ -28,13 +28,15 @@ Item {
         mapItem.center = QtPositioning.coordinate(lat, lon);
     }
 
-    function addMarker(lat, lon, height) {
-        var component = Qt.createComponent("qrc:/qml/marker.qml");
+    function addMarker(lat, lon, height, marker) {
+        var component = Qt.createComponent("qrc:/qml/sign.qml");
+        console.log(component.errorString());
         if (component.status === Component.Ready) {
-            var marker = component.createObject(parent);
-            marker.coordinate = QtPositioning.coordinate(lat, lon);
-            marker.label = height;
-            mapItem.addMapItem(marker)
+            var sign = component.createObject(parent);
+            sign.coordinate = QtPositioning.coordinate(lat, lon);
+            sign.heightObstracle = height;
+            sign.marker = marker;
+            mapItem.addMapItem(sign);
         }
     }
 }

@@ -58,7 +58,6 @@ bool SortSearchFilterTableModel::filterAcceptsRow(int sourceRow, const QModelInd
         double lonObstracle = convertCoordInDec(sourceModel()->data(sourceModel()->index(sourceRow, 7, sourceParent)).toString());
 
         if (latObstracle > 0 && lonObstracle > 0) {
-//            double d = 2 * qAcos(qSin(lat) * qSin(latObstracle) + qCos(lat) * qCos(latObstracle) * qCos(lon - lonObstracle));
             // 6371 - radius Earth
             double d = 6371 * 2 * qAsin(qSqrt(qPow(qSin(qDegreesToRadians((latObstracle - lat) / 2)), 2) +
                                                  qCos(qDegreesToRadians(lat)) *
