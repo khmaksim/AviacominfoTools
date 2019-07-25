@@ -346,6 +346,7 @@ void ObstraclesForm::showObstracles(QVariant coordinate)
             obstraclePoint.lon = parserCoordinate(obstraclesModel->item(row, 7)->data(Qt::DisplayRole).toString());
             obstraclePoint.height = obstraclesModel->item(row, 12)->data(Qt::DisplayRole).toInt();
             obstraclePoint.marker = obstraclesModel->item(row, 17)->data(Qt::DisplayRole).toString().contains(QRegExp("да|есть"));
+            obstraclePoint.id = obstraclesModel->item(row, 1)->data(Qt::DisplayRole).toString();
             mapView->addObstracle(obstraclePoint);
             if (row == 0 && coordinate.toPointF().isNull()) {
                 centerMap = QPointF(obstraclePoint.lat, obstraclePoint.lon);

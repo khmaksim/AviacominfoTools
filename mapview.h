@@ -6,10 +6,11 @@
 #include <QVector>
 
 struct ObstraclePoint {
-    double lat;
-    double lon;
-    int height;
-    bool marker;
+        QString id;
+        double lat;
+        double lon;
+        int height;
+        bool marker;
 };
 
 class MapView : public QQuickView

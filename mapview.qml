@@ -28,7 +28,7 @@ Item {
         mapItem.center = QtPositioning.coordinate(lat, lon);
     }
 
-    function addMarker(lat, lon, height, marker) {
+    function addMarker(lat, lon, height, marker, id) {
         var component = Qt.createComponent("qrc:/qml/sign.qml");
         console.log(component.errorString());
         if (component.status === Component.Ready) {
@@ -36,6 +36,7 @@ Item {
             sign.coordinate = QtPositioning.coordinate(lat, lon);
             sign.heightObstracle = height;
             sign.marker = marker;
+            sign.idObstracle = id;
             mapItem.addMapItem(sign);
         }
     }
