@@ -8,8 +8,8 @@
 
 ObstraclesHandler::ObstraclesHandler(QObject *parent) : QObject(parent)
 {
+    lastPage = false;
     manager = new QNetworkAccessManager(this);
-    index = 0;
     connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
 }
 
@@ -57,6 +57,20 @@ void ObstraclesHandler::getAirfields()
 
 void ObstraclesHandler::getObstracles()
 {
+    if (!hrefPages.isEmpty()) {
+        getHtmlPage(QUrl("http://www.caica.ru/ObstacleList/rus/").resolved(QUrl(hrefPages.takeFirst())));
+        if (hrefPages.isEmpty())
+            lastPage = true;
+        return;
+    }
+    lastPage = false;
+
+    if (obstraclesAirfield.size() > 0) {
+        updateDatabase();
+        obstraclesAirfield.clear();
+        return;
+    }
+
     if (allAirfields.isEmpty()) {
         emit updated();
         return;
@@ -83,14 +97,24 @@ void ObstraclesHandler::parser(QByteArray &data, HtmlParser::TypeData type)
     qRegisterMetaType<QVector<QVector<QString>>>();
     connect(thread, SIGNAL(started()), parser, SLOT(process()));
     connect(parser, SIGNAL(finished()), thread, SLOT(quit()));
-    connect(parser, SIGNAL(parseAirfieldsCompleted(QVector<QMap<QString, QString>>)), this, SLOT(storeAirfields(QVector<QMap<QString, QString>>)));
-    connect(parser, SIGNAL(parseAirfieldsCompleted(QVector<QMap<QString, QString>>)), this, SLOT(getObstracles()));
-    connect(parser, SIGNAL(parseObstraclesCompleted(QVector<QVector<QString>>)), this, SLOT(storeObstracles(QVector<QVector<QString>>)));
+    connect(parser, SIGNAL(parsedAirfields(QVector<QMap<QString, QString>>)), this, SLOT(storeAirfields(QVector<QMap<QString, QString>>)));
+    connect(parser, SIGNAL(parsedAirfields(QVector<QMap<QString, QString>>)), this, SLOT(getObstracles()));
+    connect(parser, SIGNAL(parsedPagins(QStringList)), this, SLOT(storeHrefPages(QStringList)));
+    connect(parser, SIGNAL(parsedObstracles(QVector<QVector<QString>>)), this, SLOT(storeObstracles(QVector<QVector<QString>>)));
+    connect(parser, SIGNAL(parsedObstracles(QVector<QVector<QString>>)), this, SLOT(getObstracles()));
     connect(parser, SIGNAL(finished()), parser, SLOT(deleteLater()));
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
 
     thread->start();
 }
+
+void ObstraclesHandler::storeHrefPages(QStringList hrefPages)
+{
+    if (!this->hrefPages.isEmpty() || lastPage)
+        return;
+    this->hrefPages = hrefPages;
+}
+
 
 void ObstraclesHandler::storeAirfields(QVector<QMap<QString, QString>> airfields)
 {
@@ -99,16 +123,15 @@ void ObstraclesHandler::storeAirfields(QVector<QMap<QString, QString>> airfields
 
 void ObstraclesHandler::storeObstracles(QVector<QVector<QString>> obstracles)
 {
-    allObstracles.push_back(obstracles);
-
-    updateDatabase();
+    obstraclesAirfield += obstracles;
 }
 
 void ObstraclesHandler::updateDatabase()
 {
     DatabaseUpdate *update = new DatabaseUpdate;
     QThread *thread = new QThread;
-    update->setData(allAirfields.takeFirst(), allObstracles.takeFirst());
+    qDebug() << "Num obstracles: " << obstraclesAirfield.size();
+    update->setData(allAirfields.takeFirst(), obstraclesAirfield);
     update->moveToThread(thread);
 
     connect(thread, SIGNAL(started()), update, SLOT(process()));

@@ -27,7 +27,7 @@ void HtmlParser::process()
 
                 airfields.append(airfield);
             }
-            emit parseAirfieldsCompleted(airfields);
+            emit parsedAirfields(airfields);
         }
     }
     else {
@@ -64,8 +64,20 @@ void HtmlParser::process()
                 if (!obstracle.isEmpty())
                     obstracles << obstracle;
             }
-            emit parseObstraclesCompleted(obstracles);
         }
+        QStringList hrefPages = QStringList();
+        QRegExp pagingRegExp("<option value=\"([^\"]+)\">");
+        pos = 0;
+
+        while ((pos = pagingRegExp.indexIn(htmlData, pos)) != -1) {
+            pos += pagingRegExp.matchedLength();
+            hrefPages << pagingRegExp.cap(1);
+        }
+        if (!hrefPages.isEmpty())
+            emit parsedPagins(hrefPages);
+
+        if (obstracles.size() > 0)
+            emit parsedObstracles(obstracles);
     }
     emit finished();
     return;

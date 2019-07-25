@@ -25,8 +25,9 @@ class HtmlParser : public QObject
 
     signals:
         void finished();
-        void parseAirfieldsCompleted(QVector<QMap<QString, QString>>);
-        void parseObstraclesCompleted(QVector<QVector<QString>>);
+        void parsedAirfields(QVector<QMap<QString, QString>>);
+        void parsedObstracles(QVector<QVector<QString>>);
+        void parsedPagins(QStringList);
 };
 
 #endif // HTMLPARSER_H
