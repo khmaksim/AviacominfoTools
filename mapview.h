@@ -9,7 +9,7 @@ struct ObstraclePoint {
         QString id;
         double lat;
         double lon;
-        int height;
+        QString height;
         bool marker;
 };
 

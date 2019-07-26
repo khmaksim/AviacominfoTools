@@ -158,8 +158,10 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
 ObstraclesForm::~ObstraclesForm()
 {
     writeSettings();
-    if (mapView)
+    if (mapView) {
         mapView->close();
+        delete mapView;
+    }
     delete ui;
 }
 
@@ -352,7 +354,7 @@ void ObstraclesForm::showObstracles(QVariant coordinate)
             ObstraclePoint obstraclePoint;
             obstraclePoint.lat = parserCoordinate(obstraclesModel->item(row, 6)->data(Qt::DisplayRole).toString());
             obstraclePoint.lon = parserCoordinate(obstraclesModel->item(row, 7)->data(Qt::DisplayRole).toString());
-            obstraclePoint.height = obstraclesModel->item(row, 12)->data(Qt::DisplayRole).toInt();
+            obstraclePoint.height = obstraclesModel->item(row, 12)->data(Qt::DisplayRole).toString();
             obstraclePoint.marker = obstraclesModel->item(row, 17)->data(Qt::DisplayRole).toString().contains(QRegExp("да|есть"));
             obstraclePoint.id = obstraclesModel->item(row, 1)->data(Qt::DisplayRole).toString();
             mapView->addObstracle(obstraclePoint);

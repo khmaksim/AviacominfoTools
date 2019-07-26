@@ -30,7 +30,6 @@ Item {
 
     function addMarker(lat, lon, height, marker, id) {
         var component = Qt.createComponent("qrc:/qml/sign.qml");
-        console.log(component.errorString());
         if (component.status === Component.Ready) {
             var sign = component.createObject(parent);
             sign.coordinate = QtPositioning.coordinate(lat, lon);

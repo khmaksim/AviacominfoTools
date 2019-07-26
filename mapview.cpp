@@ -29,7 +29,7 @@ void MapView::addObstracle(ObstraclePoint obstracle)
     QMetaObject::invokeMethod(rootObject(), "addMarker", Qt::DirectConnection,
                               Q_ARG(QVariant, QVariant(obstracle.lat)),
                               Q_ARG(QVariant, QVariant(obstracle.lon)),
-                              Q_ARG(QVariant, QVariant(QString::number(obstracle.height))),
+                              Q_ARG(QVariant, QVariant(obstracle.height)),
                               Q_ARG(QVariant, QVariant(obstracle.marker)),
                               Q_ARG(QVariant, QVariant(obstracle.id)));
 }
