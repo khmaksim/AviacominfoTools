@@ -121,20 +121,18 @@ void QGroupHeaderView::paintHeader(QPainter *p, int logicalIndex, const QRect &r
         state |= QStyle::State_Enabled;
     if (window()->isActiveWindow())
         state |= QStyle::State_Active;
-    if (isSortIndicatorShown() && sortIndicatorSection() == logicalIndex)
+    if (isSortIndicatorShown() && sortIndicatorSection() == logicalIndex) {
         opt.sortIndicator = (sortIndicatorOrder() == Qt::AscendingOrder)
                             ? QStyleOptionHeader::SortDown : QStyleOptionHeader::SortUp;
+    }
     // setup the style options structure
-    QVariant textAlignment = model()->headerData(logicalIndex, orientation(),
-                                                  Qt::TextAlignmentRole);
+    QVariant textAlignment = model()->headerData(logicalIndex, orientation(), Qt::TextAlignmentRole);
     opt.section = logicalIndex;
     opt.state |= state;
-    opt.textAlignment = Qt::Alignment(textAlignment.isValid()
-                                      ? Qt::Alignment(textAlignment.toInt())
-                                      : defaultAlignment());
-
+    opt.textAlignment = Qt::Alignment(textAlignment.isValid() ? Qt::Alignment(textAlignment.toInt()) : defaultAlignment());
     opt.iconAlignment = Qt::AlignVCenter;
     opt.text = model()->headerData(logicalIndex, orientation(), Qt::DisplayRole).toString();
+
     if (textElideMode() != Qt::ElideNone)
         opt.text = opt.fontMetrics.elidedText(opt.text, textElideMode(), rect.width() - 4);
 
@@ -142,6 +140,7 @@ void QGroupHeaderView::paintHeader(QPainter *p, int logicalIndex, const QRect &r
     opt.icon = qvariant_cast<QIcon>(variant);
     if (opt.icon.isNull())
         opt.icon = qvariant_cast<QPixmap>(variant);
+
     QVariant foregroundBrush = model()->headerData(logicalIndex, orientation(), Qt::ForegroundRole);
     if (foregroundBrush.canConvert<QBrush>())
         opt.palette.setBrush(QPalette::ButtonText, qvariant_cast<QBrush>(foregroundBrush));
@@ -269,12 +268,23 @@ void QGroupHeaderView::mousePressEvent(QMouseEvent *event)
 {
     // if mouse press on first column
     if (event->pos().x() <= sectionSize(0)) {
-        if (isChecked())
-            checked = false;
-        else
-            checked = true;
+        int height = sizeHint().height();
+        int width = sectionSize(0);
 
-        emit clickedCheckBox(checked);
+        QStyleOptionButton option;
+        QRect cr = qApp->style()->subElementRect(QStyle::SE_ViewItemCheckIndicator, &option);
+        int deltaX = (width - cr.width()) / 2;
+        int deltaY = (height - cr.height()) / 2;
+        option.rect = QRect(deltaX, deltaY, cr.width(), cr.height());
+        if (option.rect.contains(event->pos())) {
+            //    if (event->pos().x() <= sectionSize(0)) {
+            if (isChecked())
+                checked = false;
+            else
+                checked = true;
+
+            emit clickedCheckBox(checked);
+        }
     }
     QHeaderView::mousePressEvent(event);
 }

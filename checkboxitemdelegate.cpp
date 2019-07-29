@@ -16,7 +16,7 @@ void CheckboxItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
     drawFocus(painter, opt, opt.rect);
     opt.rect = checkRect(option, option.rect);
     opt.state = opt.state & ~QStyle::State_HasFocus;
-    opt.state|=(index.data(Qt::UserRole).toBool() ? QStyle::State_On : QStyle::State_Off);
+    opt.state|=(index.data(Qt::CheckStateRole).toBool() ? QStyle::State_On : QStyle::State_Off);
     qApp->style()->drawPrimitive(QStyle::PE_IndicatorViewItemCheck, &opt, painter);
 }
 
@@ -65,6 +65,6 @@ bool CheckboxItemDelegate::editorEvent(QEvent *event, QAbstractItemModel *model,
         default: return false;
     }
 
-    int value = (index.data(Qt::UserRole).toBool() ? false : true);
-    return model->setData(index, value, Qt::UserRole);
+    int value = (index.data(Qt::CheckStateRole).toBool() ? false : true);
+    return model->setData(index, value, Qt::CheckStateRole);
 }

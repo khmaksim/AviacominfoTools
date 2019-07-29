@@ -14,14 +14,13 @@
 #include <QMainWindow>
 #include <QStatusBar>
 #include "listitemdelegate.h"
-#include "tablemodel.h"
 #include "searchmodel.h"
 #include "waitingspinnerwidget.h"
 #include "qgroupheaderview.h"
 #include "filterpanel.h"
 #include "databaseaccess.h"
 #include "sidebar.h"
-#include "sortsearchfiltertablemodel.h"
+#include "sortsearchfilterobstraclemodel.h"
 #include "checkboxitemdelegate.h"
 #include "obstraclestyleditemdelegate.h"
 #include "mapview.h"
@@ -76,10 +75,10 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
 //    ui->listView->setStyleSheet("QListView::item:selected { background: #66b3ff;color: white; }"
 //                                "QListView::item:hover { background: #e6f2ff;color: black; }");
 
-    obstraclesModel = new TableModel(this);
-    sortSearchFilterTableModel = new SortSearchFilterTableModel(this);
-    sortSearchFilterTableModel->setSourceModel(obstraclesModel);
-    ui->tableView->setModel(sortSearchFilterTableModel);
+    obstraclesModel = new QStandardItemModel(this);
+    sortSearchFilterObstracleModel = new SortSearchFilterObstracleModel(this);
+    sortSearchFilterObstracleModel->setSourceModel(obstraclesModel);
+    ui->tableView->setModel(sortSearchFilterObstracleModel);
 
     QGroupHeaderView *groupHeaderView = new QGroupHeaderView(Qt::Horizontal, ui->tableView);
 //    groupHeaderView->setStyleSheet("QHeaderView::section { color: black;border: 0.5px solid #bfbfbf; }");
@@ -141,17 +140,19 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
 
     connect(ui->listView, SIGNAL(clicked(QModelIndex)), sideBar, SLOT(resetFilter()));
     connect(ui->listView, SIGNAL(clicked(QModelIndex)), this, SLOT(updateModelObstracles(QModelIndex)));
-    connect(sortSearchFilterTableModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this, SLOT(enabledToolButton()));
-    connect(sortSearchFilterTableModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this, SLOT(updateStatusSelectedObstracles()));
+    connect(sortSearchFilterObstracleModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this, SLOT(enabledToolButton()));
+    connect(sortSearchFilterObstracleModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this, SLOT(updateStatusSelectedObstracles()));
     connect(exportButton, SIGNAL(clicked(bool)), this, SLOT(exportToFile()));
     connect(displayOnMapButton, SIGNAL(clicked(bool)), this, SLOT(showObstracles()));
     connect(ui->searchLineEdit, SIGNAL(textChanged(QString)), searchAirfieldsModel, SLOT(setFilterRegExp(QString)));
-    connect(sideBar, SIGNAL(searchTextChanged(QString)), sortSearchFilterTableModel, SLOT(setFilterRegExp(QString)));
-    connect(sideBar, SIGNAL(changedFilterProperty(QString, QVariant)), sortSearchFilterTableModel, SLOT(setFilterProperty(QString, QVariant)));
+    connect(sideBar, SIGNAL(searchTextChanged(QString)), sortSearchFilterObstracleModel, SLOT(setFilterRegExp(QString)));
+    connect(sideBar, SIGNAL(searchTextChanged(QString)), this, SLOT(setCheckedAllRowTable()));
+    connect(sideBar, SIGNAL(changedFilterProperty(QString, QVariant)), sortSearchFilterObstracleModel, SLOT(setFilterProperty(QString, QVariant)));
+    connect(sideBar, SIGNAL(changedFilterProperty(QString, QVariant)), this, SLOT(setCheckedAllRowTable()));
     connect(sideBar, SIGNAL(filterRadius()), this, SLOT(setFilterRadius()));
+    connect(sideBar, SIGNAL(filterRadius()), this, SLOT(setCheckedAllRowTable()));
     connect(sideBar, SIGNAL(displayObstracles(QVariant, QVariant)), this, SLOT(showObstracles(QVariant, QVariant)));
     connect(groupHeaderView, SIGNAL(clickedCheckBox(bool)), this, SLOT(setCheckedAllRowTable(bool)));
-//    connect(ui->tableView, SIGNAL(clicked(QModelIndex)), this, SLOT(showTags(QModelIndex)));
     connect(DatabaseAccess::getInstance(), SIGNAL(updatedTags()), this, SLOT(updateModelObstracles()));
 }
 
@@ -253,14 +254,14 @@ void ObstraclesForm::updateModelObstracles(const QModelIndex &index)
     sideBar->updateTypeObstracleFilter(typesObstracle);
 
     // update number obstracle in model for status bar
-    totalObstraclesLabel->setText(totalObstraclesLabel->text().replace(QRegExp("\\d+"), QString::number(sortSearchFilterTableModel->rowCount())));
+    totalObstraclesLabel->setText(totalObstraclesLabel->text().replace(QRegExp("\\d+"), QString::number(sortSearchFilterObstracleModel->rowCount())));
 }
 
 void ObstraclesForm::enabledToolButton()
 {
     bool isEnable = false;
-    for (int row = 0; row < obstraclesModel->rowCount(); row++) {
-        if (obstraclesModel->item(row)->data(Qt::UserRole).toBool()) {
+    for (int row = 0; row < sortSearchFilterObstracleModel->rowCount(); row++) {
+        if (sortSearchFilterObstracleModel->index(row, 0).data(Qt::CheckStateRole).toBool()) {
             isEnable = true;
             break;
         }
@@ -286,11 +287,11 @@ void ObstraclesForm::exportToFile()
     }
 
     QTextStream out(&file);
-    for (int row = 0; row < sortSearchFilterTableModel->rowCount(); row++) {
-        if (sortSearchFilterTableModel->index(row, 0).data(Qt::UserRole).toBool()) {
-            out << sortSearchFilterTableModel->data(sortSearchFilterTableModel->index(row, 6)).toString().replace("с", "N").remove(QRegExp("[\\s\\.]")).append("0") << endl;
-            out << sortSearchFilterTableModel->data(sortSearchFilterTableModel->index(row, 7)).toString().replace("в", "E").remove(QRegExp("[\\s\\.]")).append("0") << endl;
-            out << sortSearchFilterTableModel->data(sortSearchFilterTableModel->index(row, 12)).toString() << endl;
+    for (int row = 0; row < sortSearchFilterObstracleModel->rowCount(); row++) {
+        if (sortSearchFilterObstracleModel->index(row, 0).data(Qt::CheckStateRole).toBool()) {
+            out << sortSearchFilterObstracleModel->index(row, 6).data().toString().replace("с", "N").remove(QRegExp("[\\s\\.]")).append("0") << endl;
+            out << sortSearchFilterObstracleModel->index(row, 7).data().toString().replace("в", "E").remove(QRegExp("[\\s\\.]")).append("0") << endl;
+            out << sortSearchFilterObstracleModel->index(row, 12).data().toString() << endl;
             out << endl;
             out << "1" << endl;
         }
@@ -315,25 +316,25 @@ void ObstraclesForm::setCheckedAllRowTable(bool checked)
     if (sender() != qobject_cast<QGroupHeaderView*>(ui->tableView->horizontalHeader())) {
         qobject_cast<QGroupHeaderView*>(ui->tableView->horizontalHeader())->setChecked(checked);
     }
-    if (sortSearchFilterTableModel->rowCount() == 0)
+    if (sortSearchFilterObstracleModel->rowCount() == 0)
         return;
 
-    for (int row = 0; row < sortSearchFilterTableModel->rowCount(); row++)
-        sortSearchFilterTableModel->setData(sortSearchFilterTableModel->index(row, 0), checked, Qt::UserRole);
+    for (int row = 0; row < sortSearchFilterObstracleModel->rowCount(); row++)
+        sortSearchFilterObstracleModel->setData(sortSearchFilterObstracleModel->index(row, 0), checked, Qt::CheckStateRole);
 }
 
 void ObstraclesForm::setFilterRadius()
 {
-    sortSearchFilterTableModel->setFilterRadius(sideBar->getLat(), sideBar->getLon(), sideBar->getRadius());
+    sortSearchFilterObstracleModel->setFilterRadius(sideBar->getLat(), sideBar->getLon(), sideBar->getRadius());
 }
 
 QVariantList ObstraclesForm::getCheckedObstralcles()
 {
     QVariantList idSelectedObstracles;
 
-    for (int row = 0; row < obstraclesModel->rowCount(); row++) {
-        if (obstraclesModel->item(row)->data(Qt::UserRole).toBool())
-            idSelectedObstracles.append(obstraclesModel->item(row, 1)->data(Qt::DisplayRole).toString());
+    for (int row = 0; row < sortSearchFilterObstracleModel->rowCount(); row++) {
+        if (sortSearchFilterObstracleModel->index(row, 0).data(Qt::UserRole).toBool())
+            idSelectedObstracles.append(sortSearchFilterObstracleModel->index(row, 1).data(Qt::DisplayRole).toString());
     }
     return idSelectedObstracles;
 }
@@ -348,14 +349,14 @@ void ObstraclesForm::showObstracles(QVariant coordinate, QVariant radius)
     mapView->clearMap();
 
     QPointF centerMap = coordinate.toPointF();
-    for (int row = 0; row < sortSearchFilterTableModel->rowCount(); row++) {
-        if (sortSearchFilterTableModel->data(sortSearchFilterTableModel->index(row, 0), Qt::UserRole).toBool()) {
+    for (int row = 0; row < sortSearchFilterObstracleModel->rowCount(); row++) {
+        if (sortSearchFilterObstracleModel->index(row, 0).data(Qt::CheckStateRole).toBool()) {
             ObstraclePoint obstraclePoint;
-            obstraclePoint.lat = parserCoordinate(sortSearchFilterTableModel->data(sortSearchFilterTableModel->index(row, 6), Qt::DisplayRole).toString());
-            obstraclePoint.lon = parserCoordinate(sortSearchFilterTableModel->data(sortSearchFilterTableModel->index(row, 7), Qt::DisplayRole).toString());
-            obstraclePoint.height = sortSearchFilterTableModel->data(sortSearchFilterTableModel->index(row, 12), Qt::DisplayRole).toString();
-            obstraclePoint.marker = sortSearchFilterTableModel->data(sortSearchFilterTableModel->index(row, 17), Qt::DisplayRole).toString().contains(QRegExp("да|есть"));
-            obstraclePoint.id = sortSearchFilterTableModel->data(sortSearchFilterTableModel->index(row, 1), Qt::DisplayRole).toString();
+            obstraclePoint.lat = parserCoordinate(sortSearchFilterObstracleModel->index(row, 6).data(Qt::DisplayRole).toString());
+            obstraclePoint.lon = parserCoordinate(sortSearchFilterObstracleModel->index(row, 7).data(Qt::DisplayRole).toString());
+            obstraclePoint.height = sortSearchFilterObstracleModel->index(row, 12).data(Qt::DisplayRole).toString();
+            obstraclePoint.marker = sortSearchFilterObstracleModel->index(row, 17).data(Qt::DisplayRole).toString().contains(QRegExp("да|есть"));
+            obstraclePoint.id = sortSearchFilterObstracleModel->index(row, 1).data(Qt::DisplayRole).toString();
             mapView->addObstracle(obstraclePoint);
 
             if (row == 0 && coordinate.toPointF().isNull()) {
@@ -363,7 +364,7 @@ void ObstraclesForm::showObstracles(QVariant coordinate, QVariant radius)
             }
         }
     }
-    setCheckedAllRowTable(false);
+    setCheckedAllRowTable();
     mapView->setCenter(centerMap);
     mapView->setRadius(radius);
     mapView->show();
@@ -397,8 +398,8 @@ void ObstraclesForm::updateStatusSelectedObstracles()
 
 void ObstraclesForm::setCheckedOne(QString id)
 {
-    for (int row = 0; row < sortSearchFilterTableModel->rowCount(); row++)
-        if (sortSearchFilterTableModel->data(sortSearchFilterTableModel->index(row, 1), Qt::DisplayRole).toString().contains(id))
-            sortSearchFilterTableModel->setData(sortSearchFilterTableModel->index(row, 0),
-                                                !sortSearchFilterTableModel->data(sortSearchFilterTableModel->index(row, 0), Qt::UserRole).toBool(), Qt::UserRole);
+    for (int row = 0; row < sortSearchFilterObstracleModel->rowCount(); row++)
+        if (sortSearchFilterObstracleModel->index(row, 1).data(Qt::DisplayRole).toString().contains(id))
+            sortSearchFilterObstracleModel->setData(sortSearchFilterObstracleModel->index(row, 0),
+                                                !sortSearchFilterObstracleModel->index(row, 0).data(Qt::CheckStateRole).toBool(), Qt::CheckStateRole);
 }

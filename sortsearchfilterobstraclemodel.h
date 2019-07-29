@@ -1,14 +1,14 @@
-#ifndef SORTSEARCHMODEL_H
-#define SORTSEARCHMODEL_H
+#ifndef SORTSEARCHFILTEROBSTRACLEMODEL_H
+#define SORTSEARCHFILTEROBSTRACLEMODEL_H
 
 #include <QSortFilterProxyModel>
 
-class SortSearchFilterTableModel : public QSortFilterProxyModel
+class SortSearchFilterObstracleModel : public QSortFilterProxyModel
 {
         Q_OBJECT
     public:
-        explicit SortSearchFilterTableModel(QObject *parent = nullptr);
-        ~SortSearchFilterTableModel();
+        explicit SortSearchFilterObstracleModel(QObject *parent = nullptr);
+        ~SortSearchFilterObstracleModel();
 
         void setFilterRadius(float, float, int);
 
@@ -33,4 +33,4 @@ class SortSearchFilterTableModel : public QSortFilterProxyModel
         float convertCoordInDec(const QString) const;
 };
 
-#endif // SORTSEARCHMODEL_H
+#endif // SORTSEARCHFILTEROBSTRACLEMODEL_H

@@ -28,12 +28,10 @@ SOURCES += \
     obstraclesform.cpp \
     obstracleshandler.cpp \
     listitemdelegate.cpp \
-    tablemodel.cpp \
     searchmodel.cpp \
     qgroupheaderview.cpp \
     filterpanel.cpp \
     sidebar.cpp \
-    sortsearchfiltertablemodel.cpp \
     checkboxitemdelegate.cpp \
     flowlayout.cpp \
     databaseaccess.cpp \
@@ -41,18 +39,17 @@ SOURCES += \
     obstraclestyleditemdelegate.cpp \
     databaseupdate.cpp \
     mapview.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    sortsearchfilterobstraclemodel.cpp
 
 HEADERS += \
     obstraclesform.h \
     obstracleshandler.h \
     listitemdelegate.h \
-    tablemodel.h \
     searchmodel.h \
     qgroupheaderview.h \
     filterpanel.h \
     sidebar.h \
-    sortsearchfiltertablemodel.h \
     checkboxitemdelegate.h \
     flowlayout.h \
     databaseaccess.h \
@@ -60,7 +57,8 @@ HEADERS += \
     obstraclestyleditemdelegate.h \
     databaseupdate.h \
     mapview.h \
-    mainwindow.h
+    mainwindow.h \
+    sortsearchfilterobstraclemodel.h
 
 FORMS += \
     obstraclesform.ui \

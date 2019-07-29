@@ -12,11 +12,10 @@ namespace Ui {
 class QStandardItemModel;
 class QToolBar;
 class QToolButton;
-class TableModel;
 class SearchModel;
 class WaitingSpinnerWidget;
 class QFrame;
-class SortSearchFilterTableModel;
+class SortSearchFilterObstracleModel;
 class SideBar;
 class MapView;
 class QLabel;
@@ -43,9 +42,9 @@ class ObstraclesForm : public QWidget
         QToolButton *exportButton;
         QToolButton *displayOnMapButton;
         QStandardItemModel *airfieldsModel;
-        TableModel *obstraclesModel;
+        QStandardItemModel *obstraclesModel;
         SearchModel *searchAirfieldsModel;
-        SortSearchFilterTableModel *sortSearchFilterTableModel;
+        SortSearchFilterObstracleModel *sortSearchFilterObstracleModel;
         QFrame *filterPanel;
         SideBar *sideBar;
         MapView *mapView;
@@ -62,7 +61,7 @@ class ObstraclesForm : public QWidget
         void enabledToolButton();
         void exportToFile();
 //        void showFilterPanel();
-        void setCheckedAllRowTable(bool);
+        void setCheckedAllRowTable(bool checked = false);
         void setCheckedOne(QString);
         void setFilterRadius();
         void showObstracles(QVariant c = QVariant(), QVariant radius = QVariant(0));

@@ -1,10 +1,10 @@
-#include "sortsearchfiltertablemodel.h"
+#include "sortsearchfilterobstraclemodel.h"
 #include "listitemdelegate.h"
 #include <QDebug>
 #include <QtMath>
 #include <QString>
 
-SortSearchFilterTableModel::SortSearchFilterTableModel(QObject *parent)
+SortSearchFilterObstracleModel::SortSearchFilterObstracleModel(QObject *parent)
 {
     Q_UNUSED(parent)
     markingDay = false;
@@ -16,11 +16,11 @@ SortSearchFilterTableModel::SortSearchFilterTableModel(QObject *parent)
     toHeight = 0;
 }
 
-SortSearchFilterTableModel::~SortSearchFilterTableModel()
+SortSearchFilterObstracleModel::~SortSearchFilterObstracleModel()
 {
 }
 
-bool SortSearchFilterTableModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
+bool SortSearchFilterObstracleModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
     bool result = false;
 
@@ -69,11 +69,10 @@ bool SortSearchFilterTableModel::filterAcceptsRow(int sourceRow, const QModelInd
                 result &= false;
         }
     }
-
     return result;
 }
 
-bool SortSearchFilterTableModel::lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const
+bool SortSearchFilterObstracleModel::lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const
 {
     QVariant leftData = sourceModel()->data(source_left);
     QVariant rightData = sourceModel()->data(source_right);
@@ -103,7 +102,7 @@ bool SortSearchFilterTableModel::lessThan(const QModelIndex &source_left, const 
     return QSortFilterProxyModel::lessThan(source_left, source_right);
 }
 
-void SortSearchFilterTableModel::setFilterProperty(QString objectName, QVariant value)
+void SortSearchFilterObstracleModel::setFilterProperty(QString objectName, QVariant value)
 {
     if (objectName.contains("markingDayCheckBox", Qt::CaseInsensitive))
         markingDay = value.toBool();
@@ -118,11 +117,10 @@ void SortSearchFilterTableModel::setFilterProperty(QString objectName, QVariant 
         toHeight = value.toList().at(1).toInt();
     }
 
-
     invalidateFilter();
 }
 
-void SortSearchFilterTableModel::setFilterRadius(float lat, float lon, int radius)
+void SortSearchFilterObstracleModel::setFilterRadius(float lat, float lon, int radius)
 {
     this->lat = lat;
     this->lon = lon;
@@ -131,7 +129,7 @@ void SortSearchFilterTableModel::setFilterRadius(float lat, float lon, int radiu
     invalidateFilter();
 }
 
-float SortSearchFilterTableModel::convertCoordInDec(const QString coordStr) const
+float SortSearchFilterObstracleModel::convertCoordInDec(const QString coordStr) const
 {
     QRegExp regExp("\\D?(\\d{2}|0\\d{2})\\s?(\\d{2})\\s?(\\d{1,2}[\\.\\,]?\\d*)");
     float coordDec = 0;
