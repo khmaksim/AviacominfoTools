@@ -140,17 +140,18 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
 
     connect(ui->listView, SIGNAL(clicked(QModelIndex)), sideBar, SLOT(resetFilter()));
     connect(ui->listView, SIGNAL(clicked(QModelIndex)), this, SLOT(updateModelObstracles(QModelIndex)));
-    connect(sortSearchFilterObstracleModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this, SLOT(enabledToolButton()));
-    connect(sortSearchFilterObstracleModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this, SLOT(updateStatusSelectedObstracles()));
+    connect(obstraclesModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this, SLOT(enabledToolButton()));
+    connect(obstraclesModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this, SLOT(updateStatusSelectedObstracles()));
+    connect(sortSearchFilterObstracleModel, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(updateStatusSelectedObstracles()));
+    connect(sortSearchFilterObstracleModel, SIGNAL(rowsRemoved(QModelIndex,int,int)), this, SLOT(updateStatusSelectedObstracles()));
+    connect(sortSearchFilterObstracleModel, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(setCheckedAllRowTable()));
+    connect(sortSearchFilterObstracleModel, SIGNAL(rowsRemoved(QModelIndex,int,int)), this, SLOT(setCheckedAllRowTable()));
     connect(exportButton, SIGNAL(clicked(bool)), this, SLOT(exportToFile()));
     connect(displayOnMapButton, SIGNAL(clicked(bool)), this, SLOT(showObstracles()));
     connect(ui->searchLineEdit, SIGNAL(textChanged(QString)), searchAirfieldsModel, SLOT(setFilterRegExp(QString)));
     connect(sideBar, SIGNAL(searchTextChanged(QString)), sortSearchFilterObstracleModel, SLOT(setFilterRegExp(QString)));
-    connect(sideBar, SIGNAL(searchTextChanged(QString)), this, SLOT(setCheckedAllRowTable()));
     connect(sideBar, SIGNAL(changedFilterProperty(QString, QVariant)), sortSearchFilterObstracleModel, SLOT(setFilterProperty(QString, QVariant)));
-    connect(sideBar, SIGNAL(changedFilterProperty(QString, QVariant)), this, SLOT(setCheckedAllRowTable()));
     connect(sideBar, SIGNAL(filterRadius()), this, SLOT(setFilterRadius()));
-    connect(sideBar, SIGNAL(filterRadius()), this, SLOT(setCheckedAllRowTable()));
     connect(sideBar, SIGNAL(displayObstracles(QVariant, QVariant)), this, SLOT(showObstracles(QVariant, QVariant)));
     connect(groupHeaderView, SIGNAL(clickedCheckBox(bool)), this, SLOT(setCheckedAllRowTable(bool)));
     connect(DatabaseAccess::getInstance(), SIGNAL(updatedTags()), this, SLOT(updateModelObstracles()));
@@ -320,7 +321,8 @@ void ObstraclesForm::setCheckedAllRowTable(bool checked)
         return;
 
     for (int row = 0; row < sortSearchFilterObstracleModel->rowCount(); row++)
-        sortSearchFilterObstracleModel->setData(sortSearchFilterObstracleModel->index(row, 0), checked, Qt::CheckStateRole);
+        obstraclesModel->setData(obstraclesModel->index(row, 0), checked, Qt::CheckStateRole);
+//        sortSearchFilterObstracleModel->setData(sortSearchFilterObstracleModel->index(row, 0), checked, Qt::CheckStateRole);
 }
 
 void ObstraclesForm::setFilterRadius()
@@ -333,7 +335,7 @@ QVariantList ObstraclesForm::getCheckedObstralcles()
     QVariantList idSelectedObstracles;
 
     for (int row = 0; row < sortSearchFilterObstracleModel->rowCount(); row++) {
-        if (sortSearchFilterObstracleModel->index(row, 0).data(Qt::UserRole).toBool())
+        if (sortSearchFilterObstracleModel->index(row, 0).data(Qt::CheckStateRole).toBool())
             idSelectedObstracles.append(sortSearchFilterObstracleModel->index(row, 1).data(Qt::DisplayRole).toString());
     }
     return idSelectedObstracles;
@@ -399,7 +401,8 @@ void ObstraclesForm::updateStatusSelectedObstracles()
 void ObstraclesForm::setCheckedOne(QString id)
 {
     for (int row = 0; row < sortSearchFilterObstracleModel->rowCount(); row++)
-        if (sortSearchFilterObstracleModel->index(row, 1).data(Qt::DisplayRole).toString().contains(id))
+        if (sortSearchFilterObstracleModel->index(row, 1).data(Qt::DisplayRole).toString().contains(id)) {
             sortSearchFilterObstracleModel->setData(sortSearchFilterObstracleModel->index(row, 0),
                                                 !sortSearchFilterObstracleModel->index(row, 0).data(Qt::CheckStateRole).toBool(), Qt::CheckStateRole);
+        }
 }

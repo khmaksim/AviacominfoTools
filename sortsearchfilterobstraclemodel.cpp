@@ -77,6 +77,11 @@ bool SortSearchFilterObstracleModel::lessThan(const QModelIndex &source_left, co
     QVariant leftData = sourceModel()->data(source_left);
     QVariant rightData = sourceModel()->data(source_right);
 
+    if (source_left.column() == 0 && source_right.column() == 0) {
+        leftData = sourceModel()->data(source_left, Qt::CheckStateRole);
+        rightData = sourceModel()->data(source_right, Qt::CheckStateRole);
+        return leftData.toBool() > rightData.toBool();
+    }
 //    if (leftData.type() == QVariant::Int) {
     if (leftData.toString().contains(QRegExp("^\\d+\\.?\\d*$")) &&
             rightData.toString().contains(QRegExp("^\\d+\\.?\\d*$"))) {

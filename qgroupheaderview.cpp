@@ -284,6 +284,7 @@ void QGroupHeaderView::mousePressEvent(QMouseEvent *event)
                 checked = true;
 
             emit clickedCheckBox(checked);
+            event->accept();
         }
     }
     QHeaderView::mousePressEvent(event);
