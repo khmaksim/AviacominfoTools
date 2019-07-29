@@ -65,7 +65,6 @@ class ObstraclesForm : public QWidget
         void setCheckedAllRowTable(bool);
         void setCheckedOne(QString);
         void setFilterRadius();
-//        void showTags(const QModelIndex&);
         void showObstracles(QVariant c = QVariant(), QVariant radius = QVariant(0));
         void updateStatusSelectedObstracles();
 };

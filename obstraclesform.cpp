@@ -312,6 +312,9 @@ void ObstraclesForm::exportToFile()
 
 void ObstraclesForm::setCheckedAllRowTable(bool checked)
 {
+    if (sender() != qobject_cast<QGroupHeaderView*>(ui->tableView->horizontalHeader())) {
+        qobject_cast<QGroupHeaderView*>(ui->tableView->horizontalHeader())->setChecked(checked);
+    }
     if (sortSearchFilterTableModel->rowCount() == 0)
         return;
 
@@ -335,11 +338,6 @@ QVariantList ObstraclesForm::getCheckedObstralcles()
     return idSelectedObstracles;
 }
 
-//void ObstraclesForm::showTags(const QModelIndex &index)
-//{
-
-//}
-
 void ObstraclesForm::showObstracles(QVariant coordinate, QVariant radius)
 {
     if (!mapView) {
@@ -350,14 +348,14 @@ void ObstraclesForm::showObstracles(QVariant coordinate, QVariant radius)
     mapView->clearMap();
 
     QPointF centerMap = coordinate.toPointF();
-    for (int row = 0; row < obstraclesModel->rowCount(); row++) {
-        if (obstraclesModel->item(row)->data(Qt::UserRole).toBool()) {
+    for (int row = 0; row < sortSearchFilterTableModel->rowCount(); row++) {
+        if (sortSearchFilterTableModel->data(sortSearchFilterTableModel->index(row, 0), Qt::UserRole).toBool()) {
             ObstraclePoint obstraclePoint;
-            obstraclePoint.lat = parserCoordinate(obstraclesModel->item(row, 6)->data(Qt::DisplayRole).toString());
-            obstraclePoint.lon = parserCoordinate(obstraclesModel->item(row, 7)->data(Qt::DisplayRole).toString());
-            obstraclePoint.height = obstraclesModel->item(row, 12)->data(Qt::DisplayRole).toString();
-            obstraclePoint.marker = obstraclesModel->item(row, 17)->data(Qt::DisplayRole).toString().contains(QRegExp("да|есть"));
-            obstraclePoint.id = obstraclesModel->item(row, 1)->data(Qt::DisplayRole).toString();
+            obstraclePoint.lat = parserCoordinate(sortSearchFilterTableModel->data(sortSearchFilterTableModel->index(row, 6), Qt::DisplayRole).toString());
+            obstraclePoint.lon = parserCoordinate(sortSearchFilterTableModel->data(sortSearchFilterTableModel->index(row, 7), Qt::DisplayRole).toString());
+            obstraclePoint.height = sortSearchFilterTableModel->data(sortSearchFilterTableModel->index(row, 12), Qt::DisplayRole).toString();
+            obstraclePoint.marker = sortSearchFilterTableModel->data(sortSearchFilterTableModel->index(row, 17), Qt::DisplayRole).toString().contains(QRegExp("да|есть"));
+            obstraclePoint.id = sortSearchFilterTableModel->data(sortSearchFilterTableModel->index(row, 1), Qt::DisplayRole).toString();
             mapView->addObstracle(obstraclePoint);
 
             if (row == 0 && coordinate.toPointF().isNull()) {
