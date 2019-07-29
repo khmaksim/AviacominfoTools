@@ -401,5 +401,6 @@ void ObstraclesForm::setCheckedOne(QString id)
 {
     for (int row = 0; row < sortSearchFilterTableModel->rowCount(); row++)
         if (sortSearchFilterTableModel->data(sortSearchFilterTableModel->index(row, 1), Qt::DisplayRole).toString().contains(id))
-            sortSearchFilterTableModel->setData(sortSearchFilterTableModel->index(row, 0), true, Qt::UserRole);
+            sortSearchFilterTableModel->setData(sortSearchFilterTableModel->index(row, 0),
+                                                !sortSearchFilterTableModel->data(sortSearchFilterTableModel->index(row, 0), Qt::UserRole).toBool(), Qt::UserRole);
 }
