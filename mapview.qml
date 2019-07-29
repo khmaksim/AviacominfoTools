@@ -29,19 +29,30 @@ Item {
                 var numItems = mapView.mapItems.length;
 
                 for (var i = 0; i < numItems; i++) {
-                    var coordinateObstracle = mapView.mapItems[i].coordinate;
-                    var d = 6371 * 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(degreesToRadians((coordinate.latitude - coordinateObstracle.latitude) / 2)), 2) +
-                                                           Math.cos(degreesToRadians(coordinateObstracle.latitude)) *
-                                                           Math.cos(degreesToRadians(coordinate.latitude)) *
-                                                           Math.pow(Math.sin(degreesToRadians(Math.abs(coordinate.longitude -
-                                                                                                       coordinateObstracle.longitude) / 2)), 2)));
-                    if (d <= 0.05) {
-                        mapView.mapItems[i].selected = !mapView.mapItems[i].selected;
-                        root.selected(mapView.mapItems[i].idObstracle);
-                        break;
+                    if (mapView.mapItems[i].objectName !== "circle") {
+                        var coordinateObstracle = mapView.mapItems[i].coordinate;
+                        var d = 6371 * 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(degreesToRadians((coordinate.latitude - coordinateObstracle.latitude) / 2)), 2) +
+                                                               Math.cos(degreesToRadians(coordinateObstracle.latitude)) *
+                                                               Math.cos(degreesToRadians(coordinate.latitude)) *
+                                                               Math.pow(Math.sin(degreesToRadians(Math.abs(coordinate.longitude -
+                                                                                                           coordinateObstracle.longitude) / 2)), 2)));
+                        if (d <= 0.05) {
+                            mapView.mapItems[i].selected = !mapView.mapItems[i].selected;
+                            root.selected(mapView.mapItems[i].idObstracle);
+                            break;
+                        }
                     }
                 }
             }
+        }
+    }
+
+    Component {
+        id: mapCircleComponent
+        MapCircle {
+            objectName: "circle"
+            border.width: 1
+            border.color: 'blue'
         }
     }
 
@@ -67,5 +78,10 @@ Item {
             sign.idObstracle = id;
             mapView.addMapItem(sign);
         }
+    }
+
+    function drawRadius(radius) {
+        var circle = mapCircleComponent.createObject(mapView, {"center" : mapView.center, "radius": radius * 1000});
+        mapView.addMapItem(circle);
     }
 }

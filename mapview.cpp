@@ -15,6 +15,12 @@ void MapView::clearMap()
     QMetaObject::invokeMethod(rootObject(), "clearMap", Qt::DirectConnection);
 }
 
+void MapView::setRadius(QVariant radius)
+{
+    QMetaObject::invokeMethod(rootObject(), "drawRadius", Qt::DirectConnection,
+                              Q_ARG(QVariant, QVariant(radius)));
+}
+
 void MapView::setCenter(QVariant coordinate)
 {
     double lat = coordinate.toPointF().x();

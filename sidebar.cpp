@@ -291,9 +291,9 @@ void SideBar::clickedDisplayObstraclesButton()
 {
     if (ui->radiusGroupBox->isChecked())
         emit displayObstracles(QVariant(QPointF(convertCoordInDec(ui->latLineEdit->text()),
-                                            convertCoordInDec(ui->lonLineEdit->text()))));
+                                            convertCoordInDec(ui->lonLineEdit->text()))), QVariant(ui->radiusSlider->value()));
     else
-        emit displayObstracles(QVariant(QPointF()));
+        emit displayObstracles(QVariant(QPointF()), QVariant(ui->radiusSlider->value()));
 }
 
 void SideBar::heightFilterChanged()

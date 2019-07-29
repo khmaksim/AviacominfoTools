@@ -149,7 +149,7 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     connect(sideBar, SIGNAL(searchTextChanged(QString)), sortSearchFilterTableModel, SLOT(setFilterRegExp(QString)));
     connect(sideBar, SIGNAL(changedFilterProperty(QString, QVariant)), sortSearchFilterTableModel, SLOT(setFilterProperty(QString, QVariant)));
     connect(sideBar, SIGNAL(filterRadius()), this, SLOT(setFilterRadius()));
-    connect(sideBar, SIGNAL(displayObstracles(QVariant)), this, SLOT(showObstracles(QVariant)));
+    connect(sideBar, SIGNAL(displayObstracles(QVariant, QVariant)), this, SLOT(showObstracles(QVariant, QVariant)));
     connect(groupHeaderView, SIGNAL(clickedCheckBox(bool)), this, SLOT(setCheckedAllRowTable(bool)));
 //    connect(ui->tableView, SIGNAL(clicked(QModelIndex)), this, SLOT(showTags(QModelIndex)));
     connect(DatabaseAccess::getInstance(), SIGNAL(updatedTags()), this, SLOT(updateModelObstracles()));
@@ -340,7 +340,7 @@ QVariantList ObstraclesForm::getCheckedObstralcles()
 
 //}
 
-void ObstraclesForm::showObstracles(QVariant coordinate)
+void ObstraclesForm::showObstracles(QVariant coordinate, QVariant radius)
 {
     if (!mapView) {
         mapView = new MapView;
@@ -350,7 +350,6 @@ void ObstraclesForm::showObstracles(QVariant coordinate)
     mapView->clearMap();
 
     QPointF centerMap = coordinate.toPointF();
-
     for (int row = 0; row < obstraclesModel->rowCount(); row++) {
         if (obstraclesModel->item(row)->data(Qt::UserRole).toBool()) {
             ObstraclePoint obstraclePoint;
@@ -368,6 +367,7 @@ void ObstraclesForm::showObstracles(QVariant coordinate)
     }
     setCheckedAllRowTable(false);
     mapView->setCenter(centerMap);
+    mapView->setRadius(radius);
     mapView->show();
 }
 
