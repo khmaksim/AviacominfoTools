@@ -342,8 +342,10 @@ QVariantList ObstraclesForm::getCheckedObstralcles()
 
 void ObstraclesForm::showObstracles(QVariant coordinate)
 {
-    if (!mapView)
+    if (!mapView) {
         mapView = new MapView;
+        connect(mapView, SIGNAL(selected(QString)), this, SLOT(setCheckedOne(QString)));
+    }
 
     mapView->clearMap();
 
@@ -358,11 +360,13 @@ void ObstraclesForm::showObstracles(QVariant coordinate)
             obstraclePoint.marker = obstraclesModel->item(row, 17)->data(Qt::DisplayRole).toString().contains(QRegExp("да|есть"));
             obstraclePoint.id = obstraclesModel->item(row, 1)->data(Qt::DisplayRole).toString();
             mapView->addObstracle(obstraclePoint);
+
             if (row == 0 && coordinate.toPointF().isNull()) {
                 centerMap = QPointF(obstraclePoint.lat, obstraclePoint.lon);
             }
         }
     }
+    setCheckedAllRowTable(false);
     mapView->setCenter(centerMap);
     mapView->show();
 }
@@ -391,4 +395,11 @@ void ObstraclesForm::updateStatusSelectedObstracles()
     int numSelected = getCheckedObstralcles().size();
     if (numSelected >= 0)
         selectedObstraclesLabel->setText(selectedObstraclesLabel->text().replace(QRegExp("\\d+"), QString::number(numSelected)));
+}
+
+void ObstraclesForm::setCheckedOne(QString id)
+{
+    for (int row = 0; row < sortSearchFilterTableModel->rowCount(); row++)
+        if (sortSearchFilterTableModel->data(sortSearchFilterTableModel->index(row, 1), Qt::DisplayRole).toString().contains(id))
+            sortSearchFilterTableModel->setData(sortSearchFilterTableModel->index(row, 0), true, Qt::UserRole);
 }

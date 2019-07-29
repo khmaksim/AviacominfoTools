@@ -7,6 +7,7 @@ MapQuickItem {
     property alias heightObstracle: labelHeight.text
     property bool marker: false
     property alias idObstracle: labelId.text
+    property bool selected: false
 
     sourceItem: Column {
         Row {
@@ -22,6 +23,7 @@ MapQuickItem {
         }
         Text {
             id: labelId
+            color: selected ? "red" : "black"
         }
     }
 }

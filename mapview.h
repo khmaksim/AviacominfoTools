@@ -24,6 +24,11 @@ class MapView : public QQuickView
         void clearMap();
         void setCenter(QVariant);
         void addObstracle(ObstraclePoint);
+
+//    public slots:
+//        void
+        signals:
+        void selected(QString);
 };
 
 #endif // MAPVIEW_H

@@ -7,6 +7,7 @@ MapView::MapView() : QQuickView()
 {
     setResizeMode(QQuickView::SizeRootObjectToView);
     setSource(QUrl("qrc:/qml/mapview.qml"));
+    connect(rootObject(), SIGNAL(selected(QString)), SIGNAL(selected(QString)));
 }
 
 void MapView::clearMap()
