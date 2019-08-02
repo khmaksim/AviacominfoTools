@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QtMath>
 #include <QString>
+#include "helper.h"
 
 SortSearchFilterObstracleModel::SortSearchFilterObstracleModel(QObject *parent)
 {
@@ -54,8 +55,8 @@ bool SortSearchFilterObstracleModel::filterAcceptsRow(int sourceRow, const QMode
                   .toString().contains(QRegExp("да|есть"));
 
     if (lat > 0 && lon > 0 && radius > 0) {
-        double latObstracle = convertCoordInDec(sourceModel()->data(sourceModel()->index(sourceRow, 6, sourceParent)).toString());
-        double lonObstracle = convertCoordInDec(sourceModel()->data(sourceModel()->index(sourceRow, 7, sourceParent)).toString());
+        double latObstracle = Helper::convertCoordinateInDec(sourceModel()->data(sourceModel()->index(sourceRow, 6, sourceParent)).toString());
+        double lonObstracle = Helper::convertCoordinateInDec(sourceModel()->data(sourceModel()->index(sourceRow, 7, sourceParent)).toString());
 
         if (latObstracle > 0 && lonObstracle > 0) {
             // 6371 - radius Earth
@@ -125,22 +126,11 @@ void SortSearchFilterObstracleModel::setFilterProperty(QString objectName, QVari
     invalidateFilter();
 }
 
-void SortSearchFilterObstracleModel::setFilterRadius(float lat, float lon, int radius)
+void SortSearchFilterObstracleModel::setFilterRadius(QString lat, QString lon, int radius)
 {
-    this->lat = lat;
-    this->lon = lon;
+    this->lat = Helper::convertCoordinateInDec(lat);
+    this->lon = Helper::convertCoordinateInDec(lon);
     this->radius = radius;
 
     invalidateFilter();
-}
-
-float SortSearchFilterObstracleModel::convertCoordInDec(const QString coordStr) const
-{
-    QRegExp regExp("\\D?(\\d{2}|0\\d{2})\\s?(\\d{2})\\s?(\\d{1,2}[\\.\\,]?\\d*)");
-    float coordDec = 0;
-
-    if (regExp.indexIn(coordStr) != -1)
-        coordDec = regExp.cap(1).toInt() + regExp.cap(2).toFloat() / 60 + regExp.cap(3).toFloat() / 3600;
-
-    return coordDec;
 }

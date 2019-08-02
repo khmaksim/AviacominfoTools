@@ -17,8 +17,8 @@ class SideBar : public QWidget
         explicit SideBar(QWidget *parent = 0);
         ~SideBar();
 
-        float getLat();
-        float getLon();
+        QString getLat();
+        QString getLon();
         int getRadius();
         void updateTypeObstracleFilter(const QStringList);
 

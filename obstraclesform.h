@@ -53,7 +53,6 @@ class ObstraclesForm : public QWidget
 
         void readSettings();
         void writeSettings();
-        double parserCoordinate(QString);
         void updateModelAirfields();
 
     private slots:

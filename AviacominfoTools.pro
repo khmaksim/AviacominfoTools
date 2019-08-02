@@ -58,7 +58,8 @@ HEADERS += \
     databaseupdate.h \
     mapview.h \
     mainwindow.h \
-    sortsearchfilterobstraclemodel.h
+    sortsearchfilterobstraclemodel.h \
+    helper.h
 
 FORMS += \
     obstraclesform.ui \

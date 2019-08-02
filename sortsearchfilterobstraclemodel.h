@@ -10,7 +10,7 @@ class SortSearchFilterObstracleModel : public QSortFilterProxyModel
         explicit SortSearchFilterObstracleModel(QObject *parent = nullptr);
         ~SortSearchFilterObstracleModel();
 
-        void setFilterRadius(float, float, int);
+        void setFilterRadius(QString, QString, int);
 
     public slots:
         void setFilterProperty(QString, QVariant);
@@ -29,8 +29,6 @@ class SortSearchFilterObstracleModel : public QSortFilterProxyModel
         double lat;
         double lon;
         int radius;
-
-        float convertCoordInDec(const QString) const;
 };
 
 #endif // SORTSEARCHFILTEROBSTRACLEMODEL_H

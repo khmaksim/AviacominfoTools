@@ -12,6 +12,7 @@
 #include "flowlayout.h"
 #include "obstraclesform.h"
 #include "databaseaccess.h"
+#include "helper.h"
 
 SideBar::SideBar(QWidget *parent) :
     QWidget(parent),
@@ -149,30 +150,19 @@ void SideBar::updateLabelValueRadius(int value)
     ui->valueRadiusLabel->setText(QString("%1 %2").arg(value).arg(tr("km")));
 }
 
-float SideBar::getLat()
+QString SideBar::getLat()
 {
-    return convertCoordInDec(ui->latLineEdit->text());
+    return ui->latLineEdit->text();
 }
 
-float SideBar::getLon()
+QString SideBar::getLon()
 {
-    return convertCoordInDec(ui->lonLineEdit->text());
+    return ui->lonLineEdit->text();
 }
 
 int SideBar::getRadius()
 {
     return ui->radiusSlider->value();
-}
-
-float SideBar::convertCoordInDec(QString coordStr)
-{
-    QRegExp regExp("\\D?(\\d{2}|0\\d{2})\\s?(\\d{2})\\s?(\\d{1,2}[\\.\\,]?\\d*)");
-    float coordDec = 0;
-
-    if (regExp.indexIn(coordStr) != -1) {
-        coordDec = regExp.cap(1).toInt() + regExp.cap(2).toFloat() / 60 + regExp.cap(3).replace(",", ".").toFloat() / 3600;
-    }
-    return coordDec;
 }
 
 void SideBar::showAddTag()
@@ -290,8 +280,9 @@ void SideBar::checkBoxTypesChanged()
 void SideBar::clickedDisplayObstraclesButton()
 {
     if (ui->radiusGroupBox->isChecked())
-        emit displayObstracles(QVariant(QPointF(convertCoordInDec(ui->latLineEdit->text()),
-                                            convertCoordInDec(ui->lonLineEdit->text()))), QVariant(ui->radiusSlider->value()));
+        emit displayObstracles(QVariant(QPointF(Helper::convertCoordinateInDec(ui->latLineEdit->text()),
+                                                Helper::convertCoordinateInDec(ui->lonLineEdit->text()))),
+                               QVariant(ui->radiusSlider->value()));
     else
         emit displayObstracles(QVariant(QPointF()), QVariant(ui->radiusSlider->value()));
 }

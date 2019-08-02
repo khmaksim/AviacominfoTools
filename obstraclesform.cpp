@@ -24,6 +24,7 @@
 #include "checkboxitemdelegate.h"
 #include "obstraclestyleditemdelegate.h"
 #include "mapview.h"
+#include "helper.h"
 
 ObstraclesForm::ObstraclesForm(QWidget *parent) :
     QWidget(parent),
@@ -354,8 +355,8 @@ void ObstraclesForm::showObstracles(QVariant coordinate, QVariant radius)
     for (int row = 0; row < sortSearchFilterObstracleModel->rowCount(); row++) {
         if (sortSearchFilterObstracleModel->index(row, 0).data(Qt::CheckStateRole).toBool()) {
             ObstraclePoint obstraclePoint;
-            obstraclePoint.lat = parserCoordinate(sortSearchFilterObstracleModel->index(row, 6).data(Qt::DisplayRole).toString());
-            obstraclePoint.lon = parserCoordinate(sortSearchFilterObstracleModel->index(row, 7).data(Qt::DisplayRole).toString());
+            obstraclePoint.lat = Helper::convertCoordinateInDec(sortSearchFilterObstracleModel->index(row, 6).data(Qt::DisplayRole).toString());
+            obstraclePoint.lon = Helper::convertCoordinateInDec(sortSearchFilterObstracleModel->index(row, 7).data(Qt::DisplayRole).toString());
             obstraclePoint.height = sortSearchFilterObstracleModel->index(row, 12).data(Qt::DisplayRole).toString();
             obstraclePoint.marker = sortSearchFilterObstracleModel->index(row, 17).data(Qt::DisplayRole).toString().contains(QRegExp("да|есть"));
             obstraclePoint.id = sortSearchFilterObstracleModel->index(row, 1).data(Qt::DisplayRole).toString();
@@ -370,18 +371,6 @@ void ObstraclesForm::showObstracles(QVariant coordinate, QVariant radius)
     mapView->setCenter(centerMap);
     mapView->setRadius(radius);
     mapView->show();
-}
-
-double ObstraclesForm::parserCoordinate(QString str)
-{
-    QRegExp regExp("\\D?(\\d{2}|0\\d{2})\\s?(\\d{2})\\s?(\\d{1,2}[\\.\\,]?\\d*)");
-    double coord = 0;
-
-    if (regExp.indexIn(str) != -1) {
-        coord = regExp.cap(1).toInt() + regExp.cap(2).toFloat() / 60 + regExp.cap(3).toFloat() / 3600;
-    }
-
-    return coord;
 }
 
 void ObstraclesForm::showUpdated()
