@@ -27,7 +27,7 @@ class MapView : public QQuickView
         void addObstracle(ObstraclePoint);
 
     signals:
-        void selected(QString);
+        void checked(bool, QString);
 };
 
 #endif // MAPVIEW_H

@@ -8,7 +8,7 @@ Item {
     visible: true
     width: 640
     height: 480
-    signal selected(string id);
+    signal checked(bool f, string id);
 
     Plugin {
       id: plugin
@@ -38,7 +38,7 @@ Item {
                                                                                                            coordinateObstracle.longitude) / 2)), 2)));
                         if (d <= 0.05) {
                             mapView.mapItems[i].selected = !mapView.mapItems[i].selected;
-                            root.selected(mapView.mapItems[i].idObstracle);
+                            root.checked(mapView.mapItems[i].selected, mapView.mapItems[i].idObstracle);
                             break;
                         }
                     }

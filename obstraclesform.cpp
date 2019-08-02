@@ -346,7 +346,7 @@ void ObstraclesForm::showObstracles(QVariant coordinate, QVariant radius)
 {
     if (!mapView) {
         mapView = new MapView;
-        connect(mapView, SIGNAL(selected(QString)), this, SLOT(setCheckedOne(QString)));
+        connect(mapView, SIGNAL(checked(bool, QString)), this, SLOT(setChecked(bool, QString)));
     }
 
     mapView->clearMap();
@@ -387,11 +387,10 @@ void ObstraclesForm::updateStatusSelectedObstracles()
         selectedObstraclesLabel->setText(selectedObstraclesLabel->text().replace(QRegExp("\\d+"), QString::number(numSelected)));
 }
 
-void ObstraclesForm::setCheckedOne(QString id)
+void ObstraclesForm::setChecked(bool checked, QString id)
 {
     for (int row = 0; row < sortSearchFilterObstracleModel->rowCount(); row++)
         if (sortSearchFilterObstracleModel->index(row, 1).data(Qt::DisplayRole).toString().contains(id)) {
-            sortSearchFilterObstracleModel->setData(sortSearchFilterObstracleModel->index(row, 0),
-                                                !sortSearchFilterObstracleModel->index(row, 0).data(Qt::CheckStateRole).toBool(), Qt::CheckStateRole);
+            sortSearchFilterObstracleModel->setData(sortSearchFilterObstracleModel->index(row, 0), checked, Qt::CheckStateRole);
         }
 }
