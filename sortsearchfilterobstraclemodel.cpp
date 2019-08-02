@@ -57,6 +57,7 @@ bool SortSearchFilterObstracleModel::filterAcceptsRow(int sourceRow, const QMode
     if (lat > 0 && lon > 0 && radius > 0) {
         double latObstracle = Helper::convertCoordinateInDec(sourceModel()->data(sourceModel()->index(sourceRow, 6, sourceParent)).toString());
         double lonObstracle = Helper::convertCoordinateInDec(sourceModel()->data(sourceModel()->index(sourceRow, 7, sourceParent)).toString());
+        qDebug() << latObstracle << lonObstracle << lat << lon;
 
         if (latObstracle > 0 && lonObstracle > 0) {
             // 6371 - radius Earth

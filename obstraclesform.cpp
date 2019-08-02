@@ -370,6 +370,10 @@ void ObstraclesForm::showObstracles(QVariant coordinate, QVariant radius)
     setCheckedAllRowTable();
     mapView->setCenter(centerMap);
     mapView->setRadius(radius);
+    if (centerMap.isNull()) {
+        QMessageBox::warning(this, tr("Warning"), tr("You must select the obstacles displayed in the table!"));
+        return;
+    }
     mapView->show();
 }
 

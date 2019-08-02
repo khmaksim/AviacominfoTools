@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>300</width>
+    <width>309</width>
     <height>512</height>
    </rect>
   </property>
@@ -59,7 +59,7 @@
       <item>
        <widget class="QToolBox" name="toolBox">
         <property name="currentIndex">
-         <number>2</number>
+         <number>1</number>
         </property>
         <property name="tabSpacing">
          <number>0</number>
@@ -69,7 +69,7 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>270</width>
+           <width>279</width>
            <height>429</height>
           </rect>
          </property>
@@ -107,7 +107,7 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>270</width>
+           <width>279</width>
            <height>429</height>
           </rect>
          </property>
@@ -133,76 +133,7 @@
              <bool>false</bool>
             </property>
             <layout class="QGridLayout" name="gridLayout_2">
-             <item row="0" column="2" colspan="2">
-              <widget class="QLineEdit" name="lonLineEdit">
-               <property name="placeholderText">
-                <string>lon</string>
-               </property>
-               <property name="clearButtonEnabled">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="1" colspan="2">
-              <widget class="QLabel" name="valueRadiusLabel">
-               <property name="text">
-                <string>TextLabel</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0">
-              <widget class="QLabel" name="minRadiusLabel">
-               <property name="text">
-                <string>TextLabel</string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="0">
-              <widget class="QPushButton" name="radius1Button">
-               <property name="styleSheet">
-                <string notr="true">QPushButton {
-background-color: rgb(217, 217, 217);
-    border-radius: 2px;
-	color: rgb(79, 79, 79);
-    min-width: 30px;
-	border: 1px solid;
-	border-color: rgb(135, 135, 135);
-	height: 20px;
-}
-QPushButton:pressed {
-	
-	background-color: rgb(234, 234, 234);
-}
-</string>
-               </property>
-               <property name="text">
-                <string>46 km</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="0" colspan="4">
-              <widget class="QSlider" name="radiusSlider">
-               <property name="maximum">
-                <number>100</number>
-               </property>
-               <property name="value">
-                <number>50</number>
-               </property>
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="invertedAppearance">
-                <bool>false</bool>
-               </property>
-               <property name="invertedControls">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0" colspan="2">
+             <item row="0" column="0">
               <widget class="QLineEdit" name="latLineEdit">
                <property name="text">
                 <string/>
@@ -215,59 +146,98 @@ QPushButton:pressed {
                </property>
               </widget>
              </item>
-             <item row="1" column="3">
-              <widget class="QLabel" name="maxRadiusLabel">
-               <property name="text">
-                <string>TextLabel</string>
+             <item row="0" column="1">
+              <widget class="QLineEdit" name="lonLineEdit">
+               <property name="placeholderText">
+                <string>lon</string>
                </property>
-               <property name="alignment">
-                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="2">
-              <widget class="QPushButton" name="radius3Button">
-               <property name="styleSheet">
-                <string notr="true">QPushButton {
-background-color: rgb(217, 217, 217);
-    border-radius: 2px;
-	color: rgb(79, 79, 79);
-    min-width: 30px;
-	border: 1px solid;
-	border-color: rgb(135, 135, 135);
-	height: 20px;
-}
-QPushButton:pressed {
-	
-	background-color: rgb(234, 234, 234);
-}
-</string>
-               </property>
-               <property name="text">
-                <string>55 km</string>
+               <property name="clearButtonEnabled">
+                <bool>true</bool>
                </property>
               </widget>
              </item>
-             <item row="3" column="1">
-              <widget class="QPushButton" name="radius2Button">
-               <property name="styleSheet">
-                <string notr="true">QPushButton {
-background-color: rgb(217, 217, 217);
-    border-radius: 2px;
-	color: rgb(79, 79, 79);
-    min-width: 30px;
-	border: 1px solid;
-	border-color: rgb(135, 135, 135);
-	height: 20px;
-}
-QPushButton:pressed {
-	
-	background-color: rgb(234, 234, 234);
-}
-</string>
+             <item row="1" column="0" colspan="2">
+              <layout class="QHBoxLayout" name="horizontalLayout">
+               <item>
+                <widget class="QLabel" name="minRadiusLabel">
+                 <property name="text">
+                  <string>TextLabel</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="valueRadiusLabel">
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="maxRadiusLabel">
+                 <property name="text">
+                  <string>TextLabel</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="2" column="0" colspan="2">
+              <widget class="QSlider" name="radiusSlider">
+               <property name="maximum">
+                <number>100</number>
                </property>
+               <property name="value">
+                <number>100</number>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="invertedAppearance">
+                <bool>false</bool>
+               </property>
+               <property name="invertedControls">
+                <bool>false</bool>
+               </property>
+               <property name="tickPosition">
+                <enum>QSlider::NoTicks</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0" colspan="2">
+              <layout class="QHBoxLayout" name="horizontalLayout_2">
+               <item>
+                <widget class="QPushButton" name="pushButton_3">
+                 <property name="text">
+                  <string>46 km</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="pushButton_2">
+                 <property name="text">
+                  <string>50 km</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="pushButton">
+                 <property name="text">
+                  <string>55 km</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="4" column="0" colspan="2">
+              <widget class="QPushButton" name="displayObstraclesButton">
                <property name="text">
-                <string>50 km</string>
+                <string>Display</string>
                </property>
               </widget>
              </item>
@@ -299,21 +269,14 @@ QPushButton:pressed {
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>232</width>
-                  <height>83</height>
+                  <width>241</width>
+                  <height>78</height>
                  </rect>
                 </property>
                </widget>
               </widget>
              </item>
             </layout>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QPushButton" name="displayObstraclesButton">
-            <property name="text">
-             <string>Display obstracles</string>
-            </property>
            </widget>
           </item>
           <item row="0" column="0">
@@ -382,7 +345,7 @@ QPushButton:pressed {
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>270</width>
+           <width>279</width>
            <height>429</height>
           </rect>
          </property>
@@ -418,7 +381,7 @@ QPushButton:pressed {
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>252</width>
+               <width>261</width>
                <height>353</height>
               </rect>
              </property>
@@ -495,13 +458,13 @@ QPushButton:pressed {
   <tabstop>latLineEdit</tabstop>
   <tabstop>lonLineEdit</tabstop>
   <tabstop>radiusSlider</tabstop>
-  <tabstop>radius1Button</tabstop>
-  <tabstop>radius2Button</tabstop>
-  <tabstop>radius3Button</tabstop>
   <tabstop>scrollArea</tabstop>
  </tabstops>
  <resources>
   <include location="aviacominfotools.qrc"/>
  </resources>
  <connections/>
+ <buttongroups>
+  <buttongroup name="buttonGroup"/>
+ </buttongroups>
 </ui>

@@ -46,15 +46,13 @@ SideBar::SideBar(QWidget *parent) :
     connect(ui->radiusSlider, SIGNAL(valueChanged(int)), this, SIGNAL(filterRadius()));
     connect(ui->addTagButton, SIGNAL(clicked(bool)), this, SLOT(showAddTag()));
     connect(ui->removeTagButton, SIGNAL(clicked(bool)), this, SLOT(removeTag()));
-    connect(ui->radius1Button, SIGNAL(clicked(bool)), this, SLOT(setRadius()));
-    connect(ui->radius2Button, SIGNAL(clicked(bool)), this, SLOT(setRadius()));
-    connect(ui->radius3Button, SIGNAL(clicked(bool)), this, SLOT(setRadius()));
+    connect(ui->pushButton, SIGNAL(clicked(bool)), this, SLOT(setRadius()));
+    connect(ui->pushButton_2, SIGNAL(clicked(bool)), this, SLOT(setRadius()));
+    connect(ui->pushButton_3, SIGNAL(clicked(bool)), this, SLOT(setRadius()));
     connect(ui->resetFilterButton, SIGNAL(clicked(bool)), this, SLOT(resetFilter()));
     connect(ui->displayObstraclesButton, SIGNAL(clicked(bool)), this, SLOT(clickedDisplayObstraclesButton()));
     connect(ui->fromHeightLineEdit, SIGNAL(textChanged(QString)), this, SLOT(heightFilterChanged()));
     connect(ui->toHeightLineEdit, SIGNAL(textChanged(QString)), this, SLOT(heightFilterChanged()));
-
-    emit ui->radiusSlider->valueChanged(50);
     readSettings();
 }
 
@@ -148,6 +146,9 @@ void SideBar::checkBoxChanged(bool f)
 void SideBar::updateLabelValueRadius(int value)
 {
     ui->valueRadiusLabel->setText(QString("%1 %2").arg(value).arg(tr("km")));
+    ui->pushButton->setChecked(false);
+    ui->pushButton_2->setChecked(false);
+    ui->pushButton_3->setChecked(false);
 }
 
 QString SideBar::getLat()
