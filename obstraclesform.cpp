@@ -294,6 +294,7 @@ void ObstraclesForm::exportToFile()
             out << sortSearchFilterObstracleModel->index(row, 6).data().toString().replace("с", "N").remove(QRegExp("[\\s\\.]")).append("0") << endl;
             out << sortSearchFilterObstracleModel->index(row, 7).data().toString().replace("в", "E").remove(QRegExp("[\\s\\.]")).append("0") << endl;
             out << sortSearchFilterObstracleModel->index(row, 12).data().toString() << endl;
+            out << (sortSearchFilterObstracleModel->index(row, 17).data().toString().contains(QRegExp("да|есть")) ? "1" : "0") << endl;
             out << endl;
             out << "1" << endl;
         }
