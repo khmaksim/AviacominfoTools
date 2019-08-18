@@ -85,9 +85,10 @@ bool SortSearchFilterObstracleModel::lessThan(const QModelIndex &source_left, co
         return leftData.toBool() > rightData.toBool();
     }
 //    if (leftData.type() == QVariant::Int) {
-    if (leftData.toString().contains(QRegExp("^\\d+\\.?\\d*$")) &&
-            rightData.toString().contains(QRegExp("^\\d+\\.?\\d*$"))) {
-        return leftData.toInt() < rightData.toInt();
+    QString leftStr = leftData.toString().replace(",", ".");
+    QString rightStr = rightData.toString().replace(",", ".");;
+    if (leftStr.contains(QRegExp("^\\d+\\.?\\d*$")) && rightStr.contains(QRegExp("^\\d+\\.?\\d*$"))) {
+        return leftStr.toFloat() < rightStr.toFloat();
     } /*else {
         static const QRegularExpression emailPattern("[\\w\\.]*@[\\w\\.]*");
 
