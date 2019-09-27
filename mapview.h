@@ -11,6 +11,7 @@ struct ObstraclePoint {
         double lon;
         QString height;
         bool marker;
+        bool type;
 };
 
 class MapView : public QQuickView

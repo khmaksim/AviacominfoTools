@@ -358,11 +358,12 @@ void ObstraclesForm::showObstracles(QVariant coordinate, QVariant radius)
             obstraclePoint.lat = Helper::convertCoordinateInDec(sortSearchFilterObstracleModel->index(row, 6).data(Qt::DisplayRole).toString());
             obstraclePoint.lon = Helper::convertCoordinateInDec(sortSearchFilterObstracleModel->index(row, 7).data(Qt::DisplayRole).toString());
             obstraclePoint.height = sortSearchFilterObstracleModel->index(row, 12).data(Qt::DisplayRole).toString();
+            obstraclePoint.type = sortSearchFilterObstracleModel->index(row, 2).data(Qt::DisplayRole).toString().contains("Естественное препятствие");
             obstraclePoint.marker = sortSearchFilterObstracleModel->index(row, 17).data(Qt::DisplayRole).toString().contains(QRegExp("да|есть"));
             obstraclePoint.id = sortSearchFilterObstracleModel->index(row, 1).data(Qt::DisplayRole).toString();
             mapView->addObstracle(obstraclePoint);
 
-            if (row == 0 && coordinate.toPointF().isNull()) {
+            if (coordinate.toPointF().isNull()) {
                 centerMap = QPointF(obstraclePoint.lat, obstraclePoint.lon);
             }
         }

@@ -68,13 +68,14 @@ Item {
         mapView.center = QtPositioning.coordinate(lat, lon);
     }
 
-    function addMarker(lat, lon, height, marker, id) {
+    function addMarker(lat, lon, height, marker, type, id) {
         var component = Qt.createComponent("qrc:/qml/sign.qml");
         if (component.status === Component.Ready) {
             var sign = component.createObject(parent);
             sign.coordinate = QtPositioning.coordinate(lat, lon);
             sign.heightObstracle = height;
             sign.marker = marker;
+            sign.type = type;
             sign.idObstracle = id;
             mapView.addMapItem(sign);
         }

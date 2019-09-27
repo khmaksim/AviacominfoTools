@@ -44,8 +44,8 @@
     <name>MainWindow</name>
     <message>
         <location filename="mainwindow.ui" line="14"/>
-        <source>MainWindow</source>
-        <translation></translation>
+        <source>AviacominfoTools</source>
+        <translation>AviacominfoTools</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="46"/>
@@ -275,17 +275,27 @@
 представления</translation>
     </message>
     <message>
-        <location filename="obstraclesform.cpp" line="273"/>
+        <location filename="obstraclesform.cpp" line="278"/>
         <source>Save file</source>
         <translation>Сохранить файл</translation>
     </message>
     <message>
-        <location filename="obstraclesform.cpp" line="384"/>
+        <location filename="obstraclesform.cpp" line="375"/>
+        <source>Warning</source>
+        <translation>Предупреждение</translation>
+    </message>
+    <message>
+        <location filename="obstraclesform.cpp" line="375"/>
+        <source>You must select the obstacles displayed in the table!</source>
+        <translation>Необходимо выбрать препятствия, отображаемые в таблице!</translation>
+    </message>
+    <message>
+        <location filename="obstraclesform.cpp" line="385"/>
         <source>Information</source>
         <translation>Информация</translation>
     </message>
     <message>
-        <location filename="obstraclesform.cpp" line="384"/>
+        <location filename="obstraclesform.cpp" line="385"/>
         <source>Obstacle database updated!</source>
         <translation>База данных препятствий обновлена!</translation>
     </message>
@@ -298,37 +308,36 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="342"/>
+        <location filename="sidebar.ui" line="305"/>
         <source>Reset</source>
         <translation>Сбросить</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="315"/>
         <source>Display obstracles</source>
-        <translation>Отобразить координаты</translation>
+        <translation type="vanished">Отобразить координаты</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="349"/>
+        <location filename="sidebar.ui" line="312"/>
         <source>Height</source>
         <translation>Высота</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="358"/>
+        <location filename="sidebar.ui" line="321"/>
         <source>from</source>
         <translation>от</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="368"/>
+        <location filename="sidebar.ui" line="331"/>
         <source>to</source>
         <translation>до</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="390"/>
+        <location filename="sidebar.ui" line="353"/>
         <source>Tags</source>
         <translation>Теги</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="444"/>
+        <location filename="sidebar.ui" line="407"/>
         <source>Remove tag</source>
         <translation>Удалить тег</translation>
     </message>
@@ -341,7 +350,7 @@
         <translation type="vanished">...</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="434"/>
+        <location filename="sidebar.ui" line="397"/>
         <source>Add tag</source>
         <translation>Добавить тег</translation>
     </message>
@@ -361,32 +370,37 @@
         <translation>Фильтр</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="182"/>
+        <location filename="sidebar.ui" line="217"/>
         <source>46 km</source>
         <translation>46 км</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="270"/>
+        <location filename="sidebar.ui" line="224"/>
         <source>50 km</source>
         <translation>50 км</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="247"/>
+        <location filename="sidebar.ui" line="231"/>
         <source>55 km</source>
         <translation>55 км</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="280"/>
+        <location filename="sidebar.ui" line="240"/>
+        <source>Display</source>
+        <translation>Отобразить</translation>
+    </message>
+    <message>
+        <location filename="sidebar.ui" line="250"/>
         <source>Type obstracle</source>
         <translation>Тип препятствия</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="322"/>
+        <location filename="sidebar.ui" line="285"/>
         <source>Marking day</source>
         <translation>Маркировка дневная</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="329"/>
+        <location filename="sidebar.ui" line="292"/>
         <source>Night marking</source>
         <translation>Маркировка ночная</translation>
     </message>
@@ -404,19 +418,18 @@
         <translation type="vanished">широта (c50 30 00)</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="139"/>
+        <location filename="sidebar.ui" line="152"/>
         <source>lon</source>
         <translation>долгота</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="211"/>
+        <location filename="sidebar.ui" line="142"/>
         <source>lat</source>
         <translation>широта</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="149"/>
-        <location filename="sidebar.ui" line="159"/>
-        <location filename="sidebar.ui" line="221"/>
+        <location filename="sidebar.ui" line="164"/>
+        <location filename="sidebar.ui" line="181"/>
         <source>TextLabel</source>
         <translation></translation>
     </message>
@@ -425,42 +438,42 @@
         <translation type="vanished">км</translation>
     </message>
     <message>
-        <location filename="sidebar.cpp" line="149"/>
+        <location filename="sidebar.cpp" line="148"/>
         <source>km</source>
         <translation>км</translation>
     </message>
     <message>
-        <location filename="sidebar.cpp" line="182"/>
+        <location filename="sidebar.cpp" line="173"/>
         <source>Name tag:</source>
         <translation>Название тега:</translation>
     </message>
     <message>
-        <location filename="sidebar.cpp" line="183"/>
+        <location filename="sidebar.cpp" line="174"/>
         <source>Create tag</source>
         <translation>Создать тег</translation>
     </message>
     <message>
-        <location filename="sidebar.cpp" line="184"/>
+        <location filename="sidebar.cpp" line="175"/>
         <source>Create</source>
         <translation>Создать</translation>
     </message>
     <message>
-        <location filename="sidebar.cpp" line="319"/>
+        <location filename="sidebar.cpp" line="311"/>
         <source>Confirmation</source>
         <translation>Подтверждение</translation>
     </message>
     <message>
-        <location filename="sidebar.cpp" line="319"/>
+        <location filename="sidebar.cpp" line="311"/>
         <source>Are you sure you want to remove these tags?</source>
         <translation>Вы уверены что хотите удалить эти теги?</translation>
     </message>
     <message>
-        <location filename="sidebar.cpp" line="320"/>
+        <location filename="sidebar.cpp" line="312"/>
         <source>Yes</source>
         <translation>Да</translation>
     </message>
     <message>
-        <location filename="sidebar.cpp" line="321"/>
+        <location filename="sidebar.cpp" line="313"/>
         <source>No</source>
         <translation>Нет</translation>
     </message>
@@ -473,7 +486,7 @@
         <translation type="vanished">Добавить</translation>
     </message>
     <message>
-        <location filename="sidebar.cpp" line="185"/>
+        <location filename="sidebar.cpp" line="176"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>

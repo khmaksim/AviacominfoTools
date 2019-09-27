@@ -20,7 +20,7 @@ class DatabaseAccess : public QObject
         bool removeTag(const QString&);
 
     public slots:
-        void update(QMap<QString, QString>, QVector<QVector<QString>>);
+        void update(const QString&, const QString&, QVector<QVector<QString>> obs = QVector<QVector<QString>>());
 
     private:
         DatabaseAccess(QObject *parent = nullptr);

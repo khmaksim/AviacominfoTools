@@ -12,14 +12,15 @@ class DatabaseUpdate : public QObject
         explicit DatabaseUpdate(QObject *parent = nullptr);
         ~DatabaseUpdate() {}
 
-        void setData(QMap<QString, QString>, QVector<QVector<QString>>);
+        void setData(const QString&, const QString&, QVector<QVector<QString>>&);
 
     public slots:
         void process();
         void stop();
 
     private:
-        QMap<QString, QString> airfield;
+        QString icaoCodeAirfield;
+        QString nameAirfield;
         QVector<QVector<QString>> obstracles;
 
     signals:

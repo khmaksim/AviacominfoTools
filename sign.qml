@@ -6,6 +6,7 @@ MapQuickItem {
     anchorPoint.y: image.height
     property alias heightObstracle: labelHeight.text
     property bool marker: false
+    property bool type: false
     property alias idObstracle: labelId.text
     property bool selected: false
 
@@ -13,9 +14,9 @@ MapQuickItem {
         Row {
             Image {
                 id: image
-                source: marker ? "qrc:/images/res/img/W.png" : "qrc:/images/res/img/A.png"
-                width: 20
-                height: 30
+                source: type ? "qrc:/images/res/img/P.png" : (marker ? "qrc:/images/res/img/W.png" : "qrc:/images/res/img/A.png")
+                width: type ? 5 : 20
+                height: type ? 5 : 30
             }
             Text {
                 id: labelHeight

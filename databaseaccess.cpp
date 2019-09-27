@@ -177,35 +177,37 @@ QVector<QVariantList> DatabaseAccess::getObstracles(uint id)
     return obstracles;
 }
 
-void DatabaseAccess::update(QMap<QString, QString> airfield, QVector<QVector<QString>> obstracles)
+void DatabaseAccess::update(const QString &icaoCodeAirfield, const QString &nameAirfield, QVector<QVector<QString>> obstracles)
 {
     QSqlQuery query(db);
-    int idAirfield = 0;
+    int idAirfield = NULL;
 
     query.exec("BEGIN TRANSACTION");
 
-    query.prepare("INSERT INTO airfield (name, code_icao) SELECT :name, :code_icao WHERE NOT EXISTS(SELECT 1 "
-                  "FROM airfield WHERE name = :name AND code_icao = :code_icao)");
-    query.bindValue(":name", airfield.value("name"));
-    query.bindValue(":code_icao", airfield.value("icao"));
-    if (!query.exec()) {
-        qDebug() << query.lastError().text() << query.lastQuery() << query.boundValues();
-        return;
-    }
+    if (!icaoCodeAirfield.isEmpty() && !nameAirfield.isEmpty()) {
+        query.prepare("INSERT INTO airfield (name, code_icao) SELECT :name, :code_icao WHERE NOT EXISTS(SELECT 1 "
+                      "FROM airfield WHERE name = :name AND code_icao = :code_icao)");
+        query.bindValue(":name", nameAirfield);
+        query.bindValue(":code_icao", icaoCodeAirfield);
+        if (!query.exec()) {
+            qDebug() << query.lastError().text() << query.lastQuery() << query.boundValues();
+            return;
+        }
 
-    // get id airfield
-    query.prepare("SELECT id FROM airfield WHERE name = ? AND code_icao = ?");
-    query.addBindValue(airfield.value("name"));
-    query.addBindValue(airfield.value("icao"));
-    if (!query.exec()) {
-        qDebug() << query.lastError().text() << query.lastQuery() << query.boundValues();
-        QSqlDatabase::database().rollback();
-    }
+        // get id airfield
+        query.prepare("SELECT id FROM airfield WHERE name = ? AND code_icao = ?");
+        query.addBindValue(nameAirfield);
+        query.addBindValue(icaoCodeAirfield);
+        if (!query.exec()) {
+            qDebug() << query.lastError().text() << query.lastQuery() << query.boundValues();
+            QSqlDatabase::database().rollback();
+        }
 
-    if (query.first())
-        idAirfield = query.value(0).toUInt();
-    else
-        return;
+        if (query.first())
+            idAirfield = query.value(0).toUInt();
+        else
+            return;
+    }
 
     for (int i = 0; i < obstracles.size(); i++) {
         QVariant idCoordinationSystem = QVariant(QVariant::UInt);

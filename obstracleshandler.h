@@ -20,8 +20,9 @@ class ObstraclesHandler : public QObject
     private:
         QNetworkAccessManager *manager;
         QNetworkReply *reply;
-        QVector<QVector<QString>> obstraclesAirfield;
-        QVector<QMap<QString, QString>> allAirfields;
+        QVector<QVector<QString>> obstracles;
+        QMap<QString, QString> airfields;
+        QVector<QString> href;
         QStringList hrefPages;
         bool lastPage;
 
@@ -33,7 +34,7 @@ class ObstraclesHandler : public QObject
         void replyFinished(QNetworkReply*);
         void updateProgress(qint64,qint64);
         void getObstracles();
-        void storeAirfields(QVector<QMap<QString, QString>>);
+        void storeAirfields(QMap<QString, QString>, QVector<QString>);
         void storeObstracles(QVector<QVector<QString>>);
         void storeHrefPages(QStringList);
         void updateDatabase();
