@@ -2,7 +2,12 @@
 #define HTMLPARSER_H
 
 #include <QObject>
-#include <QMap>
+
+struct Airfield {
+    QString codeIcao;
+    QString name;
+    QString href;
+};
 
 class HtmlParser : public QObject
 {
@@ -15,6 +20,8 @@ class HtmlParser : public QObject
 
         void setData(QByteArray&);
 
+        QVector<Airfield> getAirfields();
+
     public slots:
         void process();
         void stop();
@@ -22,10 +29,11 @@ class HtmlParser : public QObject
     private:
         QByteArray htmlData;
         TypeData type;
+        QVector<Airfield> airfields;
 
     signals:
         void finished();
-        void parsedAirfields(QMap<QString, QString>, QVector<QString>);
+        void parsedAirfields();
         void parsedObstracles(QVector<QVector<QString>>);
         void parsedPagins(QStringList);
 };

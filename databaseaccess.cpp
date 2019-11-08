@@ -159,7 +159,7 @@ QVector<QVariantList> DatabaseAccess::getObstracles(uint id)
                   "LEFT OUTER JOIN fragility fg ON fg.id = ob.fragility "
                   "LEFT OUTER JOIN obstracle_tag obt ON ob.id = obt.id_obstracle "
                   "LEFT OUTER JOIN tag t ON obt.id_tag = t.id "
-                  "WHERE ob.airfield = ? GROUP BY ob.id");
+                  "WHERE ob.airfield = ? OR ob.airfield IS NULL GROUP BY ob.id");
     query.addBindValue(id);
     if (!query.exec()) {
         qDebug() << query.lastError().text() << query.lastQuery() << query.boundValues();
@@ -180,7 +180,7 @@ QVector<QVariantList> DatabaseAccess::getObstracles(uint id)
 void DatabaseAccess::update(const QString &icaoCodeAirfield, const QString &nameAirfield, QVector<QVector<QString>> obstracles)
 {
     QSqlQuery query(db);
-    int idAirfield = NULL;
+    QVariant idAirfield = QVariant();
 
     query.exec("BEGIN TRANSACTION");
 
@@ -210,11 +210,11 @@ void DatabaseAccess::update(const QString &icaoCodeAirfield, const QString &name
     }
 
     for (int i = 0; i < obstracles.size(); i++) {
-        QVariant idCoordinationSystem = QVariant(QVariant::UInt);
-        QVariant idFragility = QVariant(QVariant::UInt);
-        QVariant idLocality = QVariant(QVariant::UInt);
-        QVariant idTypeConfigurationObstracle = QVariant(QVariant::UInt);
-        QVariant idTypeMaterial = QVariant(QVariant::UInt);
+        QVariant idCoordinationSystem = QVariant();
+        QVariant idFragility = QVariant();
+        QVariant idLocality = QVariant();
+        QVariant idTypeConfigurationObstracle = QVariant();
+        QVariant idTypeMaterial = QVariant();
 
         if (!obstracles.at(i).at(4).isEmpty()) {
             query.prepare("INSERT INTO coordinate_system (name) SELECT :name WHERE NOT EXISTS(SELECT 1 "

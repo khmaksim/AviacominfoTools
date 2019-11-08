@@ -17,14 +17,15 @@ void HtmlParser::process()
         QRegExp regExp("<a target=\"view_frame\" href=\"([^\"]+)\">([^<]+)<br /><b>([^<]+)</b></a>");
 
         if ((pos = htmlData.indexOf(startMenu, pos)) > 0) {
-            QMap<QString, QString> airfields;
-            QVector<QString> href;
             while ((pos = regExp.indexIn(htmlData, pos)) != -1) {
                 pos += regExp.matchedLength();
-                airfields.insert(regExp.cap(3), regExp.cap(2));     // key - code icao, value - name airfield
-                href.append(regExp.cap(1));     // store href for airfield
+                Airfield airfield;
+                airfield.codeIcao = regExp.cap(3);
+                airfield.name = regExp.cap(2);
+                airfield.href = regExp.cap(1);     // store href for airfield
+                airfields.push_back(airfield);
             }
-            emit parsedAirfields(airfields ,href);
+            emit parsedAirfields();
         }
     }
     else {
@@ -88,4 +89,9 @@ void HtmlParser::setData(QByteArray &data)
 void HtmlParser::stop()
 {
     return;
+}
+
+QVector<Airfield> HtmlParser::getAirfields()
+{
+    return airfields;
 }

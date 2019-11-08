@@ -51,7 +51,7 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
 //    filterButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 //    filterButton->setEnabled(false);
 
-    mapView = 0;
+    mapView = nullptr;
     toolBar = new QToolBar(this);
     toolBar->addWidget(exportButton);
     toolBar->addWidget(displayOnMapButton);
@@ -161,7 +161,7 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
 ObstraclesForm::~ObstraclesForm()
 {
     writeSettings();
-    if (mapView) {
+    if (mapView != nullptr) {
         mapView->close();
         delete mapView;
     }
@@ -347,11 +347,10 @@ QVariantList ObstraclesForm::getCheckedObstralcles()
 
 void ObstraclesForm::showObstracles(QVariant coordinate, QVariant radius)
 {
-    if (!mapView) {
+    if (mapView == nullptr) {
         mapView = new MapView;
         connect(mapView, SIGNAL(checked(bool, QString)), this, SLOT(setChecked(bool, QString)));
     }
-
     mapView->clearMap();
 
     QPointF centerMap = coordinate.toPointF();

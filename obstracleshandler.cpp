@@ -71,18 +71,21 @@ void ObstraclesHandler::getObstracles()
         return;
     }
 
+    // update is completed
     if (airfields.isEmpty()) {
         emit updated();
         return;
     }
 
+    airfield = airfields.takeFirst();
     // get first html page from list href
-    getHtmlPage(QUrl("http://www.caica.ru/ObstacleList/rus/").resolved(QUrl(href.first())));
+    getHtmlPage(QUrl("http://www.caica.ru/ObstacleList/rus/").resolved(QUrl(airfield.href)));
 }
 
 void ObstraclesHandler::updateProgress(qint64 r, qint64 t)
 {
-    qDebug() << r << " " << t;
+    if (r > 0 && t > 0)
+        qDebug() << QString("%1% [%2|%3]").arg(r * 100 / t).arg(r).arg(t);
 }
 
 void ObstraclesHandler::parser(QByteArray &data, HtmlParser::TypeData type)
@@ -92,12 +95,12 @@ void ObstraclesHandler::parser(QByteArray &data, HtmlParser::TypeData type)
     parser->setData(data);
     parser->moveToThread(thread);
 
-    qRegisterMetaType<QVector<QMap<QString,QString>>>();
+//    qRegisterMetaType<QVector<QMap<QString,QString>>>();
     qRegisterMetaType<QVector<QVector<QString>>>();
     connect(thread, SIGNAL(started()), parser, SLOT(process()));
     connect(parser, SIGNAL(finished()), thread, SLOT(quit()));
-    connect(parser, SIGNAL(parsedAirfields(QMap<QString, QString>,QVector<QString>)), this, SLOT(storeAirfields(QMap<QString, QString>, QVector<QString>)));
-    connect(parser, SIGNAL(parsedAirfields(QMap<QString, QString>,QVector<QString>)), this, SLOT(getObstracles()));
+    connect(parser, SIGNAL(parsedAirfields()), this, SLOT(storeAirfields()));
+    connect(parser, SIGNAL(parsedAirfields()), this, SLOT(getObstracles()));
     connect(parser, SIGNAL(parsedPagins(QStringList)), this, SLOT(storeHrefPages(QStringList)));
     connect(parser, SIGNAL(parsedObstracles(QVector<QVector<QString>>)), this, SLOT(storeObstracles(QVector<QVector<QString>>)));
     connect(parser, SIGNAL(parsedObstracles(QVector<QVector<QString>>)), this, SLOT(getObstracles()));
@@ -115,12 +118,14 @@ void ObstraclesHandler::storeHrefPages(QStringList hrefPages)
 }
 
 
-void ObstraclesHandler::storeAirfields(QMap<QString, QString> airfields, QVector<QString> href)
+void ObstraclesHandler::storeAirfields()
 {
-    this->airfields = airfields;
+    HtmlParser *parser = qobject_cast<HtmlParser*>(sender());
 
-    href.append("enrt.html");
-    this->href = href;
+    if (parser) {
+        airfields = parser->getAirfields();
+//        href.append("enrt.html");
+    }
 }
 
 void ObstraclesHandler::storeObstracles(QVector<QVector<QString>> obstracles)
@@ -130,11 +135,13 @@ void ObstraclesHandler::storeObstracles(QVector<QVector<QString>> obstracles)
 
 void ObstraclesHandler::updateDatabase()
 {
+    if (airfield.name.isEmpty())
+        return;
+
     DatabaseUpdate *update = new DatabaseUpdate;
     QThread *thread = new QThread;
 
-    QMap<QString, QString>::iterator it = airfields.erase(airfields.begin());
-    update->setData(it.key(), it.value(), obstracles);
+    update->setData(airfield.codeIcao, airfield.name, obstracles);
     update->moveToThread(thread);
 
     connect(thread, SIGNAL(started()), update, SLOT(process()));

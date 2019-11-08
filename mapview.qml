@@ -12,7 +12,7 @@ Item {
 
     Plugin {
       id: plugin
-      preferred: ["osm"]
+      preferred: ["esri"]
       required: Plugin.AnyMappingFeatures | Plugin.AnyGeocodingFeatures
     }
 
