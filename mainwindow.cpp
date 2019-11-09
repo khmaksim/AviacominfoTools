@@ -54,7 +54,8 @@ void MainWindow::readSettings()
         this->showMaximized();
     settings.endGroup();
     settings.beginGroup("database");
-    if (settings.value("datetime_updated").toDateTime().addDays(1) < QDateTime::currentDateTime()) {
+    int updateRate = settings.value("update_rate", 1).toInt();
+    if (settings.value("datetime_updated").toDateTime().addDays(updateRate) < QDateTime::currentDateTime()) {
         settings.setValue("datetime_updated", QDateTime::currentDateTime());
         obstraclesHandler->checkUpdates();
         qobject_cast<ObstraclesForm*>(ui->stackedWidget->widget(1))->spinner->start();

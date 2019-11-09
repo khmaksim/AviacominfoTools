@@ -33,6 +33,7 @@ SOURCES += \
     obstracleshandler.cpp \
     qgroupheaderview.cpp \
     filterpanel.cpp \
+    settingsobstraclesdialog.cpp \
     sidebar.cpp \
     flowlayout.cpp \
     databaseaccess.cpp \
@@ -52,6 +53,7 @@ HEADERS += \
     obstracleshandler.h \
     qgroupheaderview.h \
     filterpanel.h \
+    settingsobstraclesdialog.h \
     sidebar.h \
     flowlayout.h \
     databaseaccess.h \
@@ -69,6 +71,7 @@ HEADERS += \
 
 FORMS += \
     obstraclesform.ui \
+    settingsobstraclesdialog.ui \
     sidebar.ui \
     mainwindow.ui
 

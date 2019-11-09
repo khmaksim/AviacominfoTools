@@ -41,6 +41,7 @@ class ObstraclesForm : public QWidget
         QToolBar *toolBar;
         QToolButton *exportButton;
         QToolButton *displayOnMapButton;
+        QToolButton *settingsButton;
         QStandardItemModel *airfieldsModel;
         QStandardItemModel *obstraclesModel;
         SearchModel *searchAirfieldsModel;
@@ -65,6 +66,7 @@ class ObstraclesForm : public QWidget
         void setFilterRadius();
         void showObstracles(QVariant c = QVariant(), QVariant radius = QVariant(0));
         void updateStatusSelectedObstracles();
+        void showSettings();
 };
 
 #endif // OBSTRACLESFORM_H

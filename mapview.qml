@@ -2,6 +2,8 @@ import QtQuick 2.9
 import QtQuick.Window 2.2
 import QtLocation 5.9
 import QtPositioning 5.8
+import QtQuick.Controls 2.5
+import QtQuick.Layouts 1.13
 
 Item {
     id: root
@@ -10,36 +12,92 @@ Item {
     height: 480
     signal checked(bool f, string id);
 
-    Plugin {
-      id: plugin
-      preferred: ["esri"]
-      required: Plugin.AnyMappingFeatures | Plugin.AnyGeocodingFeatures
+    TabBar {
+        id: toolBar
+        width: parent.width
+        TabButton {
+            text: qsTr("ESRI")
+        }
+        TabButton {
+            text: qsTr("OSM")
+        }
     }
 
-    Map {
-        id: mapView
-        plugin: plugin
-        anchors.fill: parent
+    StackLayout {
+        width: parent.width
+        anchors.top: toolBar.bottom
+        anchors.bottom: parent.bottom
 
-        MouseArea {
-            anchors.fill: parent
+        currentIndex: toolBar.currentIndex
+        Item {
+            id: esriTab
 
-            onDoubleClicked: {
-                var coordinate = mapView.toCoordinate(Qt.point(mouse.x,mouse.y))
-                var numItems = mapView.mapItems.length;
+            Map {
+                id: mapEsriView
+                anchors.fill: parent
+                plugin: Plugin {
+                    preferred: ["esri"]
+                    required: Plugin.AnyMappingFeatures | Plugin.AnyGeocodingFeatures
+                }
 
-                for (var i = 0; i < numItems; i++) {
-                    if (mapView.mapItems[i].objectName !== "circle") {
-                        var coordinateObstracle = mapView.mapItems[i].coordinate;
-                        var d = 6371 * 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(degreesToRadians((coordinate.latitude - coordinateObstracle.latitude) / 2)), 2) +
-                                                               Math.cos(degreesToRadians(coordinateObstracle.latitude)) *
-                                                               Math.cos(degreesToRadians(coordinate.latitude)) *
-                                                               Math.pow(Math.sin(degreesToRadians(Math.abs(coordinate.longitude -
-                                                                                                           coordinateObstracle.longitude) / 2)), 2)));
-                        if (d <= 0.05) {
-                            mapView.mapItems[i].selected = !mapView.mapItems[i].selected;
-                            root.checked(mapView.mapItems[i].selected, mapView.mapItems[i].idObstracle);
-                            break;
+                MouseArea {
+                    anchors.fill: parent
+
+                    onDoubleClicked: {
+                        var coordinate = mapEsriView.toCoordinate(Qt.point(mouse.x,mouse.y))
+                        var numItems = mapEsriView.mapItems.length;
+
+                        for (var i = 0; i < numItems; i++) {
+                            if (mapEsriView.mapItems[i].objectName !== "circle") {
+                                var coordinateObstracle = mapEsriView.mapItems[i].coordinate;
+                                var d = 6371 * 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(degreesToRadians((coordinate.latitude - coordinateObstracle.latitude) / 2)), 2) +
+                                                                       Math.cos(degreesToRadians(coordinateObstracle.latitude)) *
+                                                                       Math.cos(degreesToRadians(coordinate.latitude)) *
+                                                                       Math.pow(Math.sin(degreesToRadians(Math.abs(coordinate.longitude -
+                                                                                                                   coordinateObstracle.longitude) / 2)), 2)));
+                                if (d <= 0.05) {
+                                    mapEsriView.mapItems[i].selected = !mapEsriView.mapItems[i].selected;
+                                    root.checked(mapEsriView.mapItems[i].selected, mapEsriView.mapItems[i].idObstracle);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        Item {
+            id: osmTab
+
+            Map {
+                id: mapOsmView
+                anchors.fill: parent
+                plugin: Plugin {
+                    preferred: ["osm"]
+                    required: Plugin.AnyMappingFeatures | Plugin.AnyGeocodingFeatures
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onDoubleClicked: {
+                        var coordinate = mapOsmView.toCoordinate(Qt.point(mouse.x,mouse.y))
+                        var numItems = mapOsmView.mapItems.length;
+
+                        for (var i = 0; i < numItems; i++) {
+                            if (mapOsmView.mapItems[i].objectName !== "circle") {
+                                var coordinateObstracle = mapOsmView.mapItems[i].coordinate;
+                                var d = 6371 * 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(degreesToRadians((coordinate.latitude - coordinateObstracle.latitude) / 2)), 2) +
+                                                                       Math.cos(degreesToRadians(coordinateObstracle.latitude)) *
+                                                                       Math.cos(degreesToRadians(coordinate.latitude)) *
+                                                                       Math.pow(Math.sin(degreesToRadians(Math.abs(coordinate.longitude -
+                                                                                                                   coordinateObstracle.longitude) / 2)), 2)));
+                                if (d <= 0.05) {
+                                    mapOsmView.mapItems[i].selected = !mapOsmView.mapItems[i].selected;
+                                    root.checked(mapOsmView.mapItems[i].selected, mapOsmView.mapItems[i].idObstracle);
+                                    break;
+                                }
+                            }
                         }
                     }
                 }
@@ -61,11 +119,13 @@ Item {
     }
 
     function clearMap() {
-        mapView.clearMapItems();
+        mapOsmView.clearMapItems();
+        mapEsriView.clearMapItems();
     }
 
     function setCenter(lat, lon) {
-        mapView.center = QtPositioning.coordinate(lat, lon);
+        mapOsmView.center = QtPositioning.coordinate(lat, lon);
+        mapEsriView.center = QtPositioning.coordinate(lat, lon);
     }
 
     function addMarker(lat, lon, height, marker, type, id) {
@@ -77,12 +137,24 @@ Item {
             sign.marker = marker;
             sign.type = type;
             sign.idObstracle = id;
-            mapView.addMapItem(sign);
+            mapEsriView.addMapItem(sign);
+        }
+        component = Qt.createComponent("qrc:/qml/sign.qml");
+        if (component.status === Component.Ready) {
+            sign = component.createObject(parent);
+            sign.coordinate = QtPositioning.coordinate(lat, lon);
+            sign.heightObstracle = height;
+            sign.marker = marker;
+            sign.type = type;
+            sign.idObstracle = id;
+            mapOsmView.addMapItem(sign);
         }
     }
 
     function drawRadius(radius) {
-        var circle = mapCircleComponent.createObject(mapView, {"center" : mapView.center, "radius": radius * 1000});
-        mapView.addMapItem(circle);
+        var circle = mapCircleComponent.createObject(mapOsmView, {"center" : mapOsmView.center, "radius": radius * 1000});
+        mapOsmView.addMapItem(circle);
+        circle = mapCircleComponent.createObject(mapEsriView, {"center" : mapEsriView.center, "radius": radius * 1000});
+        mapEsriView.addMapItem(circle);
     }
 }

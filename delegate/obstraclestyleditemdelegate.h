@@ -8,7 +8,7 @@ class ObstracleStyledItemDelegate : public QStyledItemDelegate
         Q_OBJECT
 
     public:
-        explicit ObstracleStyledItemDelegate(QObject *parent = 0) {}
+        explicit ObstracleStyledItemDelegate(QObject *parent = nullptr) { Q_UNUSED(parent) }
         ~ObstracleStyledItemDelegate() {}
 
     protected:

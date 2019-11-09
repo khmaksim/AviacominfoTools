@@ -13,6 +13,7 @@
 #include <QLabel>
 #include <QMainWindow>
 #include <QStatusBar>
+#include <QSslSocket>
 #include "listitemdelegate.h"
 #include "searchmodel.h"
 #include "waitingspinnerwidget.h"
@@ -25,6 +26,7 @@
 #include "obstraclestyleditemdelegate.h"
 #include "mapview.h"
 #include "helper.h"
+#include "settingsobstraclesdialog.h"
 
 ObstraclesForm::ObstraclesForm(QWidget *parent) :
     QWidget(parent),
@@ -37,14 +39,19 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     exportButton->setIconSize(QSize(32, 32));
     exportButton->setIcon(QIcon(":/images/res/img/icons8-save-48.png"));
     exportButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-
     displayOnMapButton = new QToolButton(this);
     displayOnMapButton->setEnabled(false);
     displayOnMapButton->setText(tr("On map"));
     displayOnMapButton->setIconSize(QSize(32, 32));
     displayOnMapButton->setIcon(QIcon(":/images/res/img/icons8-map-marker-48.png"));
     displayOnMapButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-//    filterButton = new QToolButton(this);
+    settingsButton = new QToolButton(this);
+    settingsButton->setText(tr("On map"));
+    settingsButton->setIconSize(QSize(32, 32));
+    settingsButton->setIcon(QIcon(":/images/res/img/icons8-settings-48.png"));
+    settingsButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+
+    //    filterButton = new QToolButton(this);
 //    filterButton->setText(tr("Filter"));
 //    filterButton->setIconSize(QSize(32, 32));
 //    filterButton->setIcon(QIcon(""));
@@ -55,6 +62,7 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     toolBar = new QToolBar(this);
     toolBar->addWidget(exportButton);
     toolBar->addWidget(displayOnMapButton);
+    toolBar->addWidget(settingsButton);
 
     sideBar = new SideBar(this);
     totalObstraclesLabel = new QLabel(tr("Total obstracles: 0"), this);
@@ -149,6 +157,7 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     connect(sortSearchFilterObstracleModel, SIGNAL(rowsRemoved(QModelIndex,int,int)), this, SLOT(setCheckedAllRowTable()));
     connect(exportButton, SIGNAL(clicked(bool)), this, SLOT(exportToFile()));
     connect(displayOnMapButton, SIGNAL(clicked(bool)), this, SLOT(showObstracles()));
+    connect(settingsButton, SIGNAL(clicked(bool)), this, SLOT(showSettings()));
     connect(ui->searchLineEdit, SIGNAL(textChanged(QString)), searchAirfieldsModel, SLOT(setFilterRegExp(QString)));
     connect(sideBar, SIGNAL(searchTextChanged(QString)), sortSearchFilterObstracleModel, SLOT(setFilterRegExp(QString)));
     connect(sideBar, SIGNAL(changedFilterProperty(QString, QVariant)), sortSearchFilterObstracleModel, SLOT(setFilterProperty(QString, QVariant)));
@@ -347,6 +356,8 @@ QVariantList ObstraclesForm::getCheckedObstralcles()
 
 void ObstraclesForm::showObstracles(QVariant coordinate, QVariant radius)
 {
+//    qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryBuildVersionString() << QSslSocket::sslLibraryVersionString();
+
     if (mapView == nullptr) {
         mapView = new MapView;
         connect(mapView, SIGNAL(checked(bool, QString)), this, SLOT(setChecked(bool, QString)));
@@ -400,4 +411,10 @@ void ObstraclesForm::setChecked(bool checked, QString id)
         if (sortSearchFilterObstracleModel->index(row, 1).data(Qt::DisplayRole).toString().contains(id)) {
             sortSearchFilterObstracleModel->setData(sortSearchFilterObstracleModel->index(row, 0), checked, Qt::CheckStateRole);
         }
+}
+
+void ObstraclesForm::showSettings()
+{
+    SettingsObstraclesDialog settingsObstraclesDialog(this);
+    settingsObstraclesDialog.exec();
 }
