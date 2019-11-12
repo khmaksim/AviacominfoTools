@@ -67,8 +67,10 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     sideBar = new SideBar(this);
     totalObstraclesLabel = new QLabel(tr("Total obstracles: 0"), this);
     selectedObstraclesLabel = new QLabel(tr("Selected obstacles: 0"), this);
+    dateUpdatedLabel = new QLabel(tr("Date updated: "), this);
     qobject_cast<QMainWindow*>(parent)->statusBar()->addWidget(totalObstraclesLabel, 1);
     qobject_cast<QMainWindow*>(parent)->statusBar()->addWidget(selectedObstraclesLabel, 1);
+    qobject_cast<QMainWindow*>(parent)->statusBar()->addWidget(dateUpdatedLabel, 0);
 
     ui->splitter->setSizes(QList<int>() << 150 << 300);
     ui->gridLayout_2->addWidget(toolBar, 0, 0, 1, 2);
@@ -207,6 +209,9 @@ void ObstraclesForm::readSettings()
     ui->splitter->restoreState(settings.value(ui->splitter->objectName()).toByteArray());
     ui->tableView->horizontalHeader()->restoreState(settings.value(ui->tableView->objectName()).toByteArray());
     settings.endGroup();
+    settings.beginGroup("database");
+    dateUpdatedLabel->setText(dateUpdatedLabel->text().append(settings.value("datetime_updated").toDateTime().toString("dd.MM.yyyy")));
+    settings.endGroup();
 }
 
 void ObstraclesForm::updateModelAirfields()
@@ -300,8 +305,8 @@ void ObstraclesForm::exportToFile()
     QTextStream out(&file);
     for (int row = 0; row < sortSearchFilterObstracleModel->rowCount(); row++) {
         if (sortSearchFilterObstracleModel->index(row, 0).data(Qt::CheckStateRole).toBool()) {
-            out << sortSearchFilterObstracleModel->index(row, 6).data().toString().replace("с", "N").remove(QRegExp("[\\s\\.]")).append("0") << endl;
-            out << sortSearchFilterObstracleModel->index(row, 7).data().toString().replace("в", "E").remove(QRegExp("[\\s\\.]")).append("0") << endl;
+            out << sortSearchFilterObstracleModel->index(row, 6).data().toString().replace("с", "N").replace("ю", "S").remove(QRegExp("[\\s\\.]")).append("0") << endl;
+            out << sortSearchFilterObstracleModel->index(row, 7).data().toString().replace("в", "E").replace("з", "W").remove(QRegExp("[\\s\\.]")).append("0") << endl;
             out << sortSearchFilterObstracleModel->index(row, 12).data().toString() << endl;
             if (sortSearchFilterObstracleModel->index(row, 2).data(Qt::DisplayRole).toString().contains("Естественное препятствие"))
                 out << "2" << endl;

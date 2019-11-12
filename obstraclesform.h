@@ -51,6 +51,7 @@ class ObstraclesForm : public QWidget
         MapView *mapView;
         QLabel *totalObstraclesLabel;
         QLabel *selectedObstraclesLabel;
+        QLabel *dateUpdatedLabel;
 
         void readSettings();
         void writeSettings();
