@@ -15,7 +15,7 @@ class ObstraclesHandler : public QObject
         ~ObstraclesHandler();
 
     public slots:
-        void checkUpdates();
+        void update();
 
     private:
         QNetworkAccessManager *manager;
@@ -25,6 +25,7 @@ class ObstraclesHandler : public QObject
         Airfield airfield;
         QStringList hrefPages;
         bool lastPage;
+        bool isProcessUpdate;
 
         void getAirfields();
         void parser(QByteArray&, HtmlParser::TypeData);

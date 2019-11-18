@@ -9,6 +9,7 @@
 ObstraclesHandler::ObstraclesHandler(QObject *parent) : QObject(parent)
 {
     lastPage = false;
+    isProcessUpdate = false;
     manager = new QNetworkAccessManager(this);
     connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
 }
@@ -35,9 +36,12 @@ void ObstraclesHandler::replyFinished(QNetworkReply *reply)
     reply->deleteLater();
 }
 
-void ObstraclesHandler::checkUpdates()
+void ObstraclesHandler::update()
 {
-    getAirfields();
+    if (!isProcessUpdate) {
+        isProcessUpdate = true;
+        getAirfields();
+    }
 }
 
 void ObstraclesHandler::getHtmlPage(QUrl url)

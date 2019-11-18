@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include <QApplication>
 #include <QTranslator>
+#include <QDebug>
+#include <QSslSocket>
 
 int main(int argc, char *argv[])
 {
@@ -9,6 +11,8 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("Aviacominfo");
     QCoreApplication::setOrganizationDomain("aviacominfo.com");
     QCoreApplication::setApplicationName("AviacominfoTools");
+
+//    qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryBuildVersionString() << QSslSocket::sslLibraryVersionString();
 
     QTranslator translator;
     if (translator.load(QLocale(), QLatin1String("aviacominfotools"), QLatin1String("_"), QLatin1String(":/translations/res/translations")))

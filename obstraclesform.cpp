@@ -13,7 +13,7 @@
 #include <QLabel>
 #include <QMainWindow>
 #include <QStatusBar>
-#include <QSslSocket>
+#include <QDateTime>
 #include "listitemdelegate.h"
 #include "searchmodel.h"
 #include "waitingspinnerwidget.h"
@@ -41,28 +41,27 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     exportButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     displayOnMapButton = new QToolButton(this);
     displayOnMapButton->setEnabled(false);
-    displayOnMapButton->setText(tr("On map"));
+    displayOnMapButton->setText(tr("Unhide"));
     displayOnMapButton->setIconSize(QSize(32, 32));
     displayOnMapButton->setIcon(QIcon(":/images/res/img/icons8-map-marker-48.png"));
     displayOnMapButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     settingsButton = new QToolButton(this);
-    settingsButton->setText(tr("On map"));
+    settingsButton->setText(tr("Update setup"));
     settingsButton->setIconSize(QSize(32, 32));
     settingsButton->setIcon(QIcon(":/images/res/img/icons8-settings-48.png"));
     settingsButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-
-    //    filterButton = new QToolButton(this);
-//    filterButton->setText(tr("Filter"));
-//    filterButton->setIconSize(QSize(32, 32));
-//    filterButton->setIcon(QIcon(""));
-//    filterButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-//    filterButton->setEnabled(false);
+    updateButton = new QToolButton(this);
+    updateButton->setText(tr("Forced update"));
+    updateButton->setIconSize(QSize(32, 32));
+    updateButton->setIcon(QIcon(":/images/res/img/icons8-downloading-updates-48.png"));
+    updateButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
     mapView = nullptr;
     toolBar = new QToolBar(this);
     toolBar->addWidget(exportButton);
     toolBar->addWidget(displayOnMapButton);
     toolBar->addWidget(settingsButton);
+    toolBar->addWidget(updateButton);
 
     sideBar = new SideBar(this);
     totalObstraclesLabel = new QLabel(tr("Total obstracles: 0"), this);
@@ -160,6 +159,8 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     connect(exportButton, SIGNAL(clicked(bool)), this, SLOT(exportToFile()));
     connect(displayOnMapButton, SIGNAL(clicked(bool)), this, SLOT(showObstracles()));
     connect(settingsButton, SIGNAL(clicked(bool)), this, SLOT(showSettings()));
+    connect(updateButton, SIGNAL(clicked(bool)), SIGNAL(updated()));
+    connect(updateButton, SIGNAL(clicked(bool)), spinner, SLOT(start()));
     connect(ui->searchLineEdit, SIGNAL(textChanged(QString)), searchAirfieldsModel, SLOT(setFilterRegExp(QString)));
     connect(sideBar, SIGNAL(searchTextChanged(QString)), sortSearchFilterObstracleModel, SLOT(setFilterRegExp(QString)));
     connect(sideBar, SIGNAL(changedFilterProperty(QString, QVariant)), sortSearchFilterObstracleModel, SLOT(setFilterProperty(QString, QVariant)));
@@ -361,8 +362,6 @@ QVariantList ObstraclesForm::getCheckedObstralcles()
 
 void ObstraclesForm::showObstracles(QVariant coordinate, QVariant radius)
 {
-//    qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryBuildVersionString() << QSslSocket::sslLibraryVersionString();
-
     if (mapView == nullptr) {
         mapView = new MapView;
         connect(mapView, SIGNAL(checked(bool, QString)), this, SLOT(setChecked(bool, QString)));
@@ -377,7 +376,8 @@ void ObstraclesForm::showObstracles(QVariant coordinate, QVariant radius)
             obstraclePoint.lon = Helper::convertCoordinateInDec(sortSearchFilterObstracleModel->index(row, 7).data(Qt::DisplayRole).toString());
             obstraclePoint.height = sortSearchFilterObstracleModel->index(row, 12).data(Qt::DisplayRole).toString();
             obstraclePoint.type = sortSearchFilterObstracleModel->index(row, 2).data(Qt::DisplayRole).toString().contains("Естественное препятствие");
-            obstraclePoint.marker = sortSearchFilterObstracleModel->index(row, 17).data(Qt::DisplayRole).toString().contains(QRegExp("да|есть"));
+            obstraclePoint.marker = (sortSearchFilterObstracleModel->index(row, 17).data(Qt::DisplayRole).toString().contains(QRegExp("да|есть")) ||
+                                     sortSearchFilterObstracleModel->index(row, 20).data(Qt::DisplayRole).toString().contains(QRegExp("да|есть")));
             obstraclePoint.id = sortSearchFilterObstracleModel->index(row, 1).data(Qt::DisplayRole).toString();
             mapView->addObstracle(obstraclePoint);
 

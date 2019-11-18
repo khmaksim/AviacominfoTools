@@ -1,7 +1,7 @@
-import QtQuick 2.9
-import QtQuick.Window 2.2
-import QtLocation 5.9
-import QtPositioning 5.8
+import QtQuick 2.13
+import QtQuick.Window 2.13
+import QtLocation 5.13
+import QtPositioning 5.13
 import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.13
 
@@ -20,6 +20,9 @@ Item {
         }
         TabButton {
             text: qsTr("OSM")
+        }
+        TabButton {
+            text: qsTr("Mapbox")
         }
     }
 
@@ -103,6 +106,46 @@ Item {
                 }
             }
         }
+        Item {
+            id: mapboxTab
+
+            Map {
+                id: mapMapboxView
+                anchors.fill: parent
+                plugin: Plugin {
+                    name: "mapbox"
+                    PluginParameter {
+                        name: "mapbox.access_token"
+                        value: "pk.eyJ1IjoibWF4aW1raCIsImEiOiJjazMzaTNoaTIwc2N6M25tajg4ZGhtbXdiIn0.KZ6632nxyVFDhN2i8QYVkw"
+                    }
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onDoubleClicked: {
+                        var coordinate = mapMapboxView.toCoordinate(Qt.point(mouse.x,mouse.y))
+                        var numItems = mapMapboxView.mapItems.length;
+
+                        for (var i = 0; i < numItems; i++) {
+                            if (mapMapboxView.mapItems[i].objectName !== "circle") {
+                                var coordinateObstracle = mapMapboxView.mapItems[i].coordinate;
+                                var d = 6371 * 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(degreesToRadians((coordinate.latitude - coordinateObstracle.latitude) / 2)), 2) +
+                                                                       Math.cos(degreesToRadians(coordinateObstracle.latitude)) *
+                                                                       Math.cos(degreesToRadians(coordinate.latitude)) *
+                                                                       Math.pow(Math.sin(degreesToRadians(Math.abs(coordinate.longitude -
+                                                                                                                   coordinateObstracle.longitude) / 2)), 2)));
+                                if (d <= 0.05) {
+                                    mapMapboxView.mapItems[i].selected = !mapMapboxView.mapItems[i].selected;
+                                    root.checked(mapMapboxView.mapItems[i].selected, mapMapboxView.mapItems[i].idObstracle);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     Component {
@@ -121,11 +164,13 @@ Item {
     function clearMap() {
         mapOsmView.clearMapItems();
         mapEsriView.clearMapItems();
+        mapMapboxView.clearMapItems();
     }
 
     function setCenter(lat, lon) {
         mapOsmView.center = QtPositioning.coordinate(lat, lon);
         mapEsriView.center = QtPositioning.coordinate(lat, lon);
+        mapMapboxView.center = QtPositioning.coordinate(lat, lon);
     }
 
     function addMarker(lat, lon, height, marker, type, id) {
@@ -149,6 +194,16 @@ Item {
             sign.idObstracle = id;
             mapOsmView.addMapItem(sign);
         }
+        component = Qt.createComponent("qrc:/qml/sign.qml");
+        if (component.status === Component.Ready) {
+            sign = component.createObject(parent);
+            sign.coordinate = QtPositioning.coordinate(lat, lon);
+            sign.heightObstracle = height;
+            sign.marker = marker;
+            sign.type = type;
+            sign.idObstracle = id;
+            mapMapboxView.addMapItem(sign);
+        }
     }
 
     function drawRadius(radius) {
@@ -156,5 +211,7 @@ Item {
         mapOsmView.addMapItem(circle);
         circle = mapCircleComponent.createObject(mapEsriView, {"center" : mapEsriView.center, "radius": radius * 1000});
         mapEsriView.addMapItem(circle);
+        circle = mapCircleComponent.createObject(mapMapboxView, {"center" : mapMapboxView.center, "radius": radius * 1000});
+        mapMapboxView.addMapItem(circle);
     }
 }

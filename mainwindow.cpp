@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->stackedWidget->setCurrentIndex(1);
 
     connect(obstraclesHandler, SIGNAL(updated()), form, SLOT(showUpdated()));
+    connect(form, SIGNAL(updated()), obstraclesHandler, SLOT(update()));
 //    connect(obstraclesHandler, SIGNAL(finished(Airfield,QVector<QVector<QString> >&)), DatabaseAccess::getInstance(), SLOT(update(Airfield,QVector<QVector<QString> >&)));
     connect(ui->obstracleButton, SIGNAL(clicked(bool)), this, SLOT(showObstracles()));
     readSettings();
@@ -57,7 +58,7 @@ void MainWindow::readSettings()
     int updateRate = settings.value("update_rate", 1).toInt();
     if (settings.value("datetime_updated").toDateTime().addDays(updateRate) < QDateTime::currentDateTime()) {
         settings.setValue("datetime_updated", QDateTime::currentDateTime());
-        obstraclesHandler->checkUpdates();
+        obstraclesHandler->update();
         qobject_cast<ObstraclesForm*>(ui->stackedWidget->widget(1))->spinner->start();
     }
     settings.endGroup();
