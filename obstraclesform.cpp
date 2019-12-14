@@ -66,10 +66,10 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     sideBar = new SideBar(this);
     totalObstraclesLabel = new QLabel(tr("Total obstracles: 0"), this);
     selectedObstraclesLabel = new QLabel(tr("Selected obstacles: 0"), this);
-    dateUpdatedLabel = new QLabel(tr("Date updated: "), this);
+    dateUpdatedLabel = new QLabel(this);
     qobject_cast<QMainWindow*>(parent)->statusBar()->addWidget(totalObstraclesLabel, 1);
     qobject_cast<QMainWindow*>(parent)->statusBar()->addWidget(selectedObstraclesLabel, 1);
-    qobject_cast<QMainWindow*>(parent)->statusBar()->addWidget(dateUpdatedLabel, 0);
+    qobject_cast<QMainWindow*>(parent)->statusBar()->addWidget(dateUpdatedLabel, 1);
 
     ui->splitter->setSizes(QList<int>() << 150 << 300);
     ui->gridLayout_2->addWidget(toolBar, 0, 0, 1, 2);
@@ -211,7 +211,7 @@ void ObstraclesForm::readSettings()
     ui->tableView->horizontalHeader()->restoreState(settings.value(ui->tableView->objectName()).toByteArray());
     settings.endGroup();
     settings.beginGroup("database");
-    dateUpdatedLabel->setText(dateUpdatedLabel->text().append(settings.value("datetime_updated").toDateTime().toString("dd.MM.yyyy")));
+    dateUpdatedLabel->setText(QString(tr("Date updated: %1").arg(settings.value("datetime_updated").toDateTime().toString("dd.MM.yyyy"))));
     settings.endGroup();
 }
 
@@ -400,6 +400,7 @@ void ObstraclesForm::showUpdated()
 {
     updateModelAirfields();
 
+    dateUpdatedLabel->setText(QString(tr("Date updated: %1")).arg(QDate::currentDate().toString("dd.MM.yyyy")));
     QMessageBox::information(this, tr("Information"), tr("Obstacle database updated!"));
 }
 

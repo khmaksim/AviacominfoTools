@@ -3,6 +3,7 @@
 #include <QTranslator>
 #include <QDebug>
 #include <QSslSocket>
+#include <QStyleFactory>
 
 int main(int argc, char *argv[])
 {
@@ -11,7 +12,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("Aviacominfo");
     QCoreApplication::setOrganizationDomain("aviacominfo.com");
     QCoreApplication::setApplicationName("AviacominfoTools");
-
+    QApplication::setStyle(QStyleFactory::create("windowsvista"));
 //    qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryBuildVersionString() << QSslSocket::sslLibraryVersionString();
 
     QTranslator translator;

@@ -40,7 +40,7 @@ Item {
                 anchors.fill: parent
                 plugin: Plugin {
                     preferred: ["esri"]
-                    required: Plugin.AnyMappingFeatures | Plugin.AnyGeocodingFeatures
+//                    required: Plugin.AnyMappingFeatures | Plugin.AnyGeocodingFeatures
                 }
 
                 MouseArea {
@@ -77,7 +77,7 @@ Item {
                 anchors.fill: parent
                 plugin: Plugin {
                     preferred: ["osm"]
-                    required: Plugin.AnyMappingFeatures | Plugin.AnyGeocodingFeatures
+//                    required: Plugin.AnyMappingFeatures | Plugin.AnyGeocodingFeatures
                 }
 
                 MouseArea {
