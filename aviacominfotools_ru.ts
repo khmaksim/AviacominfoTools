@@ -370,7 +370,7 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="305"/>
+        <location filename="sidebar.ui" line="121"/>
         <source>Reset</source>
         <translation>Сбросить</translation>
     </message>
@@ -394,12 +394,37 @@
         <translation>до</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="353"/>
+        <location filename="sidebar.ui" line="344"/>
+        <source>Zones</source>
+        <translation>Зоны</translation>
+    </message>
+    <message>
+        <location filename="sidebar.ui" line="356"/>
+        <source>1 zone</source>
+        <translation>1 зона</translation>
+    </message>
+    <message>
+        <location filename="sidebar.ui" line="363"/>
+        <source>3 zone</source>
+        <translation>3 зона</translation>
+    </message>
+    <message>
+        <location filename="sidebar.ui" line="370"/>
+        <source>2 zone</source>
+        <translation>2 зона</translation>
+    </message>
+    <message>
+        <location filename="sidebar.ui" line="377"/>
+        <source>4 zone</source>
+        <translation>4 зона</translation>
+    </message>
+    <message>
+        <location filename="sidebar.ui" line="396"/>
         <source>Tags</source>
         <translation>Теги</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="407"/>
+        <location filename="sidebar.ui" line="450"/>
         <source>Remove tag</source>
         <translation>Удалить тег</translation>
     </message>
@@ -412,7 +437,7 @@
         <translation type="vanished">...</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="397"/>
+        <location filename="sidebar.ui" line="440"/>
         <source>Add tag</source>
         <translation>Добавить тег</translation>
     </message>
@@ -432,42 +457,42 @@
         <translation>Фильтр</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="217"/>
+        <location filename="sidebar.ui" line="279"/>
         <source>46 km</source>
         <translation>46 км</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="224"/>
+        <location filename="sidebar.ui" line="286"/>
         <source>50 km</source>
         <translation>50 км</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="231"/>
+        <location filename="sidebar.ui" line="293"/>
         <source>55 km</source>
         <translation>55 км</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="240"/>
+        <location filename="sidebar.ui" line="302"/>
         <source>Display</source>
         <translation>Отобразить</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="250"/>
+        <location filename="sidebar.ui" line="148"/>
         <source>Type obstracle</source>
         <translation>Тип препятствия</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="285"/>
+        <location filename="sidebar.ui" line="141"/>
         <source>Marking day</source>
         <translation>Маркировка дневная</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="292"/>
+        <location filename="sidebar.ui" line="128"/>
         <source>Night marking</source>
         <translation>Маркировка ночная</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="124"/>
+        <location filename="sidebar.ui" line="186"/>
         <source>Radius</source>
         <translation>Радиус</translation>
     </message>
@@ -480,18 +505,18 @@
         <translation type="vanished">широта (c50 30 00)</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="152"/>
+        <location filename="sidebar.ui" line="214"/>
         <source>lon</source>
         <translation>долгота</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="142"/>
+        <location filename="sidebar.ui" line="204"/>
         <source>lat</source>
         <translation>широта</translation>
     </message>
     <message>
-        <location filename="sidebar.ui" line="164"/>
-        <location filename="sidebar.ui" line="181"/>
+        <location filename="sidebar.ui" line="226"/>
+        <location filename="sidebar.ui" line="243"/>
         <source>TextLabel</source>
         <translation></translation>
     </message>
@@ -500,42 +525,42 @@
         <translation type="vanished">км</translation>
     </message>
     <message>
-        <location filename="sidebar.cpp" line="148"/>
+        <location filename="sidebar.cpp" line="152"/>
         <source>km</source>
         <translation>км</translation>
     </message>
     <message>
-        <location filename="sidebar.cpp" line="173"/>
+        <location filename="sidebar.cpp" line="177"/>
         <source>Name tag:</source>
         <translation>Название тега:</translation>
     </message>
     <message>
-        <location filename="sidebar.cpp" line="174"/>
+        <location filename="sidebar.cpp" line="178"/>
         <source>Create tag</source>
         <translation>Создать тег</translation>
     </message>
     <message>
-        <location filename="sidebar.cpp" line="175"/>
+        <location filename="sidebar.cpp" line="179"/>
         <source>Create</source>
         <translation>Создать</translation>
     </message>
     <message>
-        <location filename="sidebar.cpp" line="311"/>
+        <location filename="sidebar.cpp" line="326"/>
         <source>Confirmation</source>
         <translation>Подтверждение</translation>
     </message>
     <message>
-        <location filename="sidebar.cpp" line="311"/>
+        <location filename="sidebar.cpp" line="326"/>
         <source>Are you sure you want to remove these tags?</source>
         <translation>Вы уверены что хотите удалить эти теги?</translation>
     </message>
     <message>
-        <location filename="sidebar.cpp" line="312"/>
+        <location filename="sidebar.cpp" line="327"/>
         <source>Yes</source>
         <translation>Да</translation>
     </message>
     <message>
-        <location filename="sidebar.cpp" line="313"/>
+        <location filename="sidebar.cpp" line="328"/>
         <source>No</source>
         <translation>Нет</translation>
     </message>
@@ -548,7 +573,7 @@
         <translation type="vanished">Добавить</translation>
     </message>
     <message>
-        <location filename="sidebar.cpp" line="176"/>
+        <location filename="sidebar.cpp" line="180"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
@@ -568,7 +593,7 @@
     <message>
         <location filename="mapview.qml" line="25"/>
         <source>Mapbox</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 </TS>

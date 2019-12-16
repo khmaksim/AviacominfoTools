@@ -42,7 +42,7 @@ FilterPanel::FilterPanel(QWidget *parent) : QWidget(parent)
 
 bool FilterPanel::eventFilter(QObject *obj, QEvent *event)
 {
-    if (event->type() == QEvent::FocusIn && this->windowOpacity() != 1) {
+    if (event->type() == QEvent::FocusIn && this->windowOpacity() != 1.0) {
         QPropertyAnimation *animation = new QPropertyAnimation(this, "windowOpacity");
         animation->setStartValue(0.5);
         animation->setEndValue(1);

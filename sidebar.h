@@ -14,7 +14,7 @@ class SideBar : public QWidget
         Q_OBJECT
 
     public:
-        explicit SideBar(QWidget *parent = 0);
+        explicit SideBar(QWidget *parent = nullptr);
         ~SideBar();
 
         QString getLat();
@@ -55,6 +55,7 @@ class SideBar : public QWidget
         void changeArrow();
         void checkBoxTagsChanged();
         void checkBoxTypesChanged();
+        void checkBoxZoneChanged();
         void setTagForObstracles(bool);
         void clickedDisplayObstraclesButton();
         void heightFilterChanged();

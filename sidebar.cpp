@@ -53,6 +53,10 @@ SideBar::SideBar(QWidget *parent) :
     connect(ui->displayObstraclesButton, SIGNAL(clicked(bool)), this, SLOT(clickedDisplayObstraclesButton()));
     connect(ui->fromHeightLineEdit, SIGNAL(textChanged(QString)), this, SLOT(heightFilterChanged()));
     connect(ui->toHeightLineEdit, SIGNAL(textChanged(QString)), this, SLOT(heightFilterChanged()));
+    connect(ui->firstZoneCheckBox, SIGNAL(toggled(bool)), this, SLOT(checkBoxZoneChanged()));
+    connect(ui->secondZoneCheckBox, SIGNAL(toggled(bool)), this, SLOT(checkBoxZoneChanged()));
+    connect(ui->thridZoneCheckBox, SIGNAL(toggled(bool)), this, SLOT(checkBoxZoneChanged()));
+    connect(ui->fourthZoneCheckBox, SIGNAL(toggled(bool)), this, SLOT(checkBoxZoneChanged()));
     readSettings();
 }
 
@@ -276,6 +280,17 @@ void SideBar::checkBoxTypesChanged()
             types << (*it)->text();
     }
     emit changedFilterProperty("types", QVariant(types));
+}
+
+void SideBar::checkBoxZoneChanged()
+{
+    QStringList zones;
+    QList<QCheckBox*> zonesCheckBox = ui->zoneGroupBox->findChildren<QCheckBox*>();
+    for (QList<QCheckBox*>::iterator it = zonesCheckBox.begin(); it != zonesCheckBox.end(); ++it) {
+        if ((*it)->isChecked())
+            zones << (*it)->text().left(1);
+    }
+    emit changedFilterProperty("zones", QVariant(zones));
 }
 
 void SideBar::clickedDisplayObstraclesButton()

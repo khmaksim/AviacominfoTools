@@ -22,12 +22,13 @@ class SortSearchFilterObstracleModel : public QSortFilterProxyModel
     private:
         QStringList tags;
         QStringList types;
+        QStringList zones;
         int fromHeight;
         int toHeight;
         bool markingDay;
         bool nightMarking;
-        double lat;
-        double lon;
+        float lat;
+        float lon;
         int radius;
 };
 
