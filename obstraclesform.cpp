@@ -312,7 +312,7 @@ void ObstraclesForm::exportToFile()
             if (sortSearchFilterObstracleModel->index(row, 2).data(Qt::DisplayRole).toString().contains("Естественное препятствие"))
                 out << "2" << endl;
             else
-                out << (sortSearchFilterObstracleModel->index(row, 17).data().toString().contains(QRegExp("да|есть")) ? "1" : "0") << endl;
+                out << (sortSearchFilterObstracleModel->index(row, 20).data().toString().contains(QRegExp("(да|есть)")) ? "1" : "0") << endl;
 //            out << endl;
             out << "1" << endl;
         }
