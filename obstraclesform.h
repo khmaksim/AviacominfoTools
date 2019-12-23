@@ -43,6 +43,7 @@ class ObstraclesForm : public QWidget
         QToolButton *displayOnMapButton;
         QToolButton *settingsButton;
         QToolButton *updateButton;
+        QToolButton *exportXlsxButton;
         QStandardItemModel *airfieldsModel;
         QStandardItemModel *obstraclesModel;
         SearchModel *searchAirfieldsModel;
@@ -62,6 +63,7 @@ class ObstraclesForm : public QWidget
         void updateModelObstracles(const QModelIndex &index = QModelIndex());
         void enabledToolButton();
         void exportToFile();
+        void exportToXLSXFile();
 //        void showFilterPanel();
         void setCheckedAllRowTable(bool checked = false);
         void setChecked(bool, QString);

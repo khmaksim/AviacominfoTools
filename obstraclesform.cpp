@@ -27,6 +27,13 @@
 #include "mapview.h"
 #include "helper.h"
 #include "settingsobstraclesdialog.h"
+#include "xlsxdocument.h"
+#include "xlsxchartsheet.h"
+#include "xlsxcellrange.h"
+#include "xlsxchart.h"
+#include "xlsxrichstring.h"
+#include "xlsxworkbook.h"
+using namespace QXlsx;
 
 ObstraclesForm::ObstraclesForm(QWidget *parent) :
     QWidget(parent),
@@ -55,6 +62,12 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     updateButton->setIconSize(QSize(32, 32));
     updateButton->setIcon(QIcon(":/images/res/img/icons8-downloading-updates-48.png"));
     updateButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    exportXlsxButton = new QToolButton(this);
+    exportXlsxButton->setEnabled(false);
+    exportXlsxButton->setText(tr("Export to Excel"));
+    exportXlsxButton->setIconSize(QSize(32, 32));
+    exportXlsxButton->setIcon(QIcon(":/images/res/img/icons8-microsoft-excel-48.png"));
+    exportXlsxButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
     mapView = nullptr;
     toolBar = new QToolBar(this);
@@ -62,6 +75,7 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     toolBar->addWidget(displayOnMapButton);
     toolBar->addWidget(settingsButton);
     toolBar->addWidget(updateButton);
+    toolBar->addWidget(exportXlsxButton);
 
     sideBar = new SideBar(this);
     totalObstraclesLabel = new QLabel(tr("Total obstracles: 0"), this);
@@ -161,6 +175,7 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     connect(settingsButton, SIGNAL(clicked(bool)), this, SLOT(showSettings()));
     connect(updateButton, SIGNAL(clicked(bool)), SIGNAL(updated()));
     connect(updateButton, SIGNAL(clicked(bool)), spinner, SLOT(start()));
+    connect(exportXlsxButton, SIGNAL(clicked(bool)), this, SLOT(exportToXLSXFile()));
     connect(ui->searchLineEdit, SIGNAL(textChanged(QString)), searchAirfieldsModel, SLOT(setFilterRegExp(QString)));
     connect(sideBar, SIGNAL(searchTextChanged(QString)), sortSearchFilterObstracleModel, SLOT(setFilterRegExp(QString)));
     connect(sideBar, SIGNAL(changedFilterProperty(QString, QVariant)), sortSearchFilterObstracleModel, SLOT(setFilterProperty(QString, QVariant)));
@@ -285,6 +300,7 @@ void ObstraclesForm::enabledToolButton()
     }
     exportButton->setEnabled(isEnable);
     displayOnMapButton->setEnabled(isEnable);
+    exportXlsxButton->setEnabled(isEnable);
     return;
 }
 
@@ -320,6 +336,26 @@ void ObstraclesForm::exportToFile()
     file.commit();
 }
 
+void ObstraclesForm::exportToXLSXFile()
+{
+    QString nameFile = QFileDialog::getSaveFileName(this, tr("Export to XLSX file"), QDir::currentPath(), tr("Excel format (*.xlsx)"));
+    if (nameFile.isEmpty()) {
+        qDebug() << "Empty name export file";
+        return;
+    }
+
+    Document doc;
+
+    for (int row = 0; row < sortSearchFilterObstracleModel->rowCount(); row++) {
+        if (sortSearchFilterObstracleModel->index(row, 0).data(Qt::CheckStateRole).toBool()) {
+            for (int col = 1; col < sortSearchFilterObstracleModel->columnCount(); col++) {
+                QVariant writeValue = sortSearchFilterObstracleModel->index(row, col).data().toString();
+                doc.write(row + 1, col, writeValue);
+            }
+        }
+    }
+    doc.saveAs(nameFile);
+}
 //void ObstraclesForm::showFilterPanel()
 //{
 //    FilterPanel *filterPanel = new FilterPanel(this);
