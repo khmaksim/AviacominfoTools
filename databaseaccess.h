@@ -15,7 +15,7 @@ class DatabaseAccess : public QObject
         QVector<QString> getTags();
         QVector<QString> getTypeObstracle();
         QVector<QVariantList> getAirfields();
-        QVector<QVariantList> getObstracles(uint);
+        QVector<QVariantList> getObstracles(int id = -1);
         bool createTag(const QString&);
         bool removeTag(const QString&);
 

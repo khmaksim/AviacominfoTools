@@ -139,28 +139,48 @@ QVector<QVariantList> DatabaseAccess::getAirfields()
     return airfields;
 }
 
-QVector<QVariantList> DatabaseAccess::getObstracles(uint id)
+QVector<QVariantList> DatabaseAccess::getObstracles(int id)
 {
     QSqlQuery query(db);
     QVector<QVariantList> obstracles = QVector<QVariantList>();
 
-    query.prepare("SELECT ob.id, ob.name, tc.name, lo.name, cs.name, "
-                  "ob.latitude, ob.longitude, ob.latitude_center, ob.longitude_center, ob.radius, ob.horizontal_accuracy, "
-                  "ob.orthometric_height, ob.relative_height, ob.vertical_precision, tm.name, fg.name, "
-                  "ob.marking_daytime, ob.marking_daytime_template, ob.marking_daytime_color, ob.night_marking, "
-                  "ob.night_marking_color, ob.night_marking_type_light, ob.night_marking_intensity, "
-                  "ob.night_marking_work_time, ob.accordance_icao, ob.source_data, ob.date_updated, ob.last_updated, "
-                  "GROUP_CONCAT(t.name) "
-                  "FROM obstracle ob "
-                  "LEFT OUTER JOIN type_configuration_obstracle tc ON tc.id = ob.type_configuration "
-                  "LEFT OUTER JOIN locality lo ON lo.id = ob.locality "
-                  "LEFT OUTER JOIN coordinate_system cs ON cs.id = ob.coordinate_system "
-                  "LEFT OUTER JOIN type_material tm ON tm.id = ob.type_material "
-                  "LEFT OUTER JOIN fragility fg ON fg.id = ob.fragility "
-                  "LEFT OUTER JOIN obstracle_tag obt ON ob.id = obt.id_obstracle "
-                  "LEFT OUTER JOIN tag t ON obt.id_tag = t.id "
-                  "WHERE ob.airfield = ? OR ob.airfield IS NULL GROUP BY ob.id");
-    query.addBindValue(id);
+    if (id != -1) {
+        query.prepare("SELECT ob.id, ob.name, tc.name, lo.name, cs.name, "
+                      "ob.latitude, ob.longitude, ob.latitude_center, ob.longitude_center, ob.radius, ob.horizontal_accuracy, "
+                      "ob.orthometric_height, ob.relative_height, ob.vertical_precision, tm.name, fg.name, "
+                      "ob.marking_daytime, ob.marking_daytime_template, ob.marking_daytime_color, ob.night_marking, "
+                      "ob.night_marking_color, ob.night_marking_type_light, ob.night_marking_intensity, "
+                      "ob.night_marking_work_time, ob.accordance_icao, ob.source_data, ob.date_updated, ob.last_updated, "
+                      "GROUP_CONCAT(t.name) "
+                      "FROM obstracle ob "
+                      "LEFT OUTER JOIN type_configuration_obstracle tc ON tc.id = ob.type_configuration "
+                      "LEFT OUTER JOIN locality lo ON lo.id = ob.locality "
+                      "LEFT OUTER JOIN coordinate_system cs ON cs.id = ob.coordinate_system "
+                      "LEFT OUTER JOIN type_material tm ON tm.id = ob.type_material "
+                      "LEFT OUTER JOIN fragility fg ON fg.id = ob.fragility "
+                      "LEFT OUTER JOIN obstracle_tag obt ON ob.id = obt.id_obstracle "
+                      "LEFT OUTER JOIN tag t ON obt.id_tag = t.id "
+                      "WHERE ob.airfield = ? OR ob.airfield IS NULL GROUP BY ob.id");
+        query.addBindValue(id);
+    }
+    else {
+        query.prepare("SELECT ob.id, ob.name, tc.name, lo.name, cs.name, "
+                      "ob.latitude, ob.longitude, ob.latitude_center, ob.longitude_center, ob.radius, ob.horizontal_accuracy, "
+                      "ob.orthometric_height, ob.relative_height, ob.vertical_precision, tm.name, fg.name, "
+                      "ob.marking_daytime, ob.marking_daytime_template, ob.marking_daytime_color, ob.night_marking, "
+                      "ob.night_marking_color, ob.night_marking_type_light, ob.night_marking_intensity, "
+                      "ob.night_marking_work_time, ob.accordance_icao, ob.source_data, ob.date_updated, ob.last_updated, "
+                      "GROUP_CONCAT(t.name) "
+                      "FROM obstracle ob "
+                      "LEFT OUTER JOIN type_configuration_obstracle tc ON tc.id = ob.type_configuration "
+                      "LEFT OUTER JOIN locality lo ON lo.id = ob.locality "
+                      "LEFT OUTER JOIN coordinate_system cs ON cs.id = ob.coordinate_system "
+                      "LEFT OUTER JOIN type_material tm ON tm.id = ob.type_material "
+                      "LEFT OUTER JOIN fragility fg ON fg.id = ob.fragility "
+                      "LEFT OUTER JOIN obstracle_tag obt ON ob.id = obt.id_obstracle "
+                      "LEFT OUTER JOIN tag t ON obt.id_tag = t.id "
+                      "GROUP BY ob.id");
+    }
     if (!query.exec()) {
         qDebug() << query.lastError().text() << query.lastQuery() << query.boundValues();
     }

@@ -55,7 +55,7 @@ class SideBar : public QWidget
         void changeArrow();
         void checkBoxTagsChanged();
         void checkBoxTypesChanged();
-        void checkBoxZoneChanged();
+        void checkBoxAreaChanged();
         void setTagForObstracles(bool);
         void clickedDisplayObstraclesButton();
         void heightFilterChanged();

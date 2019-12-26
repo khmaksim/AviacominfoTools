@@ -44,6 +44,7 @@ class ObstraclesForm : public QWidget
         QToolButton *settingsButton;
         QToolButton *updateButton;
         QToolButton *exportXlsxButton;
+        QToolButton *exportDbXlsxButton;
         QStandardItemModel *airfieldsModel;
         QStandardItemModel *obstraclesModel;
         SearchModel *searchAirfieldsModel;

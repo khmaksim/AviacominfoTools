@@ -53,10 +53,10 @@ SideBar::SideBar(QWidget *parent) :
     connect(ui->displayObstraclesButton, SIGNAL(clicked(bool)), this, SLOT(clickedDisplayObstraclesButton()));
     connect(ui->fromHeightLineEdit, SIGNAL(textChanged(QString)), this, SLOT(heightFilterChanged()));
     connect(ui->toHeightLineEdit, SIGNAL(textChanged(QString)), this, SLOT(heightFilterChanged()));
-    connect(ui->firstZoneCheckBox, SIGNAL(toggled(bool)), this, SLOT(checkBoxZoneChanged()));
-    connect(ui->secondZoneCheckBox, SIGNAL(toggled(bool)), this, SLOT(checkBoxZoneChanged()));
-    connect(ui->thridZoneCheckBox, SIGNAL(toggled(bool)), this, SLOT(checkBoxZoneChanged()));
-    connect(ui->fourthZoneCheckBox, SIGNAL(toggled(bool)), this, SLOT(checkBoxZoneChanged()));
+    connect(ui->firstAreaCheckBox, SIGNAL(toggled(bool)), this, SLOT(checkBoxAreaChanged()));
+    connect(ui->secondAreaCheckBox, SIGNAL(toggled(bool)), this, SLOT(checkBoxAreaChanged()));
+    connect(ui->thridAreaCheckBox, SIGNAL(toggled(bool)), this, SLOT(checkBoxAreaChanged()));
+    connect(ui->fourthAreaCheckBox, SIGNAL(toggled(bool)), this, SLOT(checkBoxAreaChanged()));
     readSettings();
 }
 
@@ -282,15 +282,15 @@ void SideBar::checkBoxTypesChanged()
     emit changedFilterProperty("types", QVariant(types));
 }
 
-void SideBar::checkBoxZoneChanged()
+void SideBar::checkBoxAreaChanged()
 {
-    QStringList zones;
-    QList<QCheckBox*> zonesCheckBox = ui->zoneGroupBox->findChildren<QCheckBox*>();
-    for (QList<QCheckBox*>::iterator it = zonesCheckBox.begin(); it != zonesCheckBox.end(); ++it) {
+    QStringList areas;
+    QList<QCheckBox*> areasCheckBox = ui->areaGroupBox->findChildren<QCheckBox*>();
+    for (QList<QCheckBox*>::iterator it = areasCheckBox.begin(); it != areasCheckBox.end(); ++it) {
         if ((*it)->isChecked())
-            zones << (*it)->text().left(1);
+            areas << (*it)->text().right(1);
     }
-    emit changedFilterProperty("zones", QVariant(zones));
+    emit changedFilterProperty("areas", QVariant(areas));
 }
 
 void SideBar::clickedDisplayObstraclesButton()

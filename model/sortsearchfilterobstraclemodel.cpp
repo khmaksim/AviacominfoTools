@@ -46,8 +46,8 @@ bool SortSearchFilterObstracleModel::filterAcceptsRow(int sourceRow, const QMode
     if (!types.isEmpty())
         result &= sourceModel()->data(sourceModel()->index(sourceRow, 2, sourceParent)).toString().contains(QRegExp(types.join("|")));
 
-    if (!zones.isEmpty())
-        result &= sourceModel()->data(sourceModel()->index(sourceRow, 1, sourceParent)).toString().contains(QRegExp(QString("^\\w{4}[%1]{1}.").arg(zones.join(""))));
+    if (!areas.isEmpty())
+        result &= sourceModel()->data(sourceModel()->index(sourceRow, 1, sourceParent)).toString().contains(QRegExp(QString("^\\w{4}[%1]{1}.").arg(areas.join(""))));
 
     if (markingDay)
         result &= sourceModel()->data(sourceModel()->index(sourceRow, 17, sourceParent))
@@ -58,13 +58,13 @@ bool SortSearchFilterObstracleModel::filterAcceptsRow(int sourceRow, const QMode
                   .toString().contains(QRegExp("да|есть"));
 
     if (lat > 0 && lon > 0 && radius > 0) {
-        float latObstracle = Helper::convertCoordinateInDec(sourceModel()->data(sourceModel()->index(sourceRow, 6, sourceParent)).toString());
-        float lonObstracle = Helper::convertCoordinateInDec(sourceModel()->data(sourceModel()->index(sourceRow, 7, sourceParent)).toString());
+        double latObstracle = Helper::convertCoordinateInDec(sourceModel()->data(sourceModel()->index(sourceRow, 6, sourceParent)).toString());
+        double lonObstracle = Helper::convertCoordinateInDec(sourceModel()->data(sourceModel()->index(sourceRow, 7, sourceParent)).toString());
 //        qDebug() << latObstracle << lonObstracle << lat << lon;
 
         if (latObstracle > 0 && lonObstracle > 0) {
             // 6371 - radius Earth
-            float d = 6371 * 2 * qAsin(qSqrt(qPow(qSin(qDegreesToRadians((latObstracle - lat) / 2)), 2) +
+            double d = 6371 * 2 * qAsin(qSqrt(qPow(qSin(qDegreesToRadians((latObstracle - lat) / 2)), 2) +
                                                  qCos(qDegreesToRadians(lat)) *
                                                  qCos(qDegreesToRadians(latObstracle)) *
                                                  qPow(qSin(qDegreesToRadians(qAbs(lonObstracle - lon) / 2)), 2)));
@@ -123,8 +123,8 @@ void SortSearchFilterObstracleModel::setFilterProperty(QString objectName, QVari
         tags = value.toStringList();
     else if (objectName.contains("types", Qt::CaseInsensitive))
         types = value.toStringList();
-    else if (objectName.contains("zones", Qt::CaseInsensitive))
-        zones = value.toStringList();
+    else if (objectName.contains("areas", Qt::CaseInsensitive))
+        areas = value.toStringList();
     else {
         fromHeight = value.toList().at(0).toInt();
         toHeight = value.toList().at(1).toInt();
