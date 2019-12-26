@@ -14,7 +14,9 @@ void ObstracleStyledItemDelegate::paint(QPainter *painter, const QStyleOptionVie
     QDateTime datetimeLastUpdated = settings.value("datetime_updated").toDateTime();
     settings.endGroup();
 
+    // date update for entries in database
     QDateTime dateTime = QDateTime::fromString(index.model()->data(index.model()->index(index.row(), 0), Qt::UserRole + 2).toString(), "yyyy-MM-dd HH:mm:ss");
+    // data update AIP
     QString dateUpdatedSource = index.model()->data(index.model()->index(index.row(), index.model()->columnCount() - 1)).toString();
 
     // new data 15 days

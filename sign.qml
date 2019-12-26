@@ -5,18 +5,18 @@ MapQuickItem {
     anchorPoint.x: image.width/4
     anchorPoint.y: image.height
     property alias heightObstracle: labelHeight.text
-    property bool marker: false
-    property bool type: false
+    property int type: 0
     property alias idObstracle: labelId.text
     property bool selected: false
 
     sourceItem: Column {
         Row {
             Image {
+                property var srcImgSign: ["qrc:/images/res/img/N.png", "qrc:/images/res/img/A.png", "qrc:/images/res/img/M.png", "qrc:/images/res/img/G.png"]
                 id: image
-                source: type ? "qrc:/images/res/img/P.png" : (marker ? "qrc:/images/res/img/W.png" : "qrc:/images/res/img/A.png")
-                width: type ? 5 : 20
-                height: type ? 5 : 30
+                source: srcImgSign[type]
+                width: type == 0 ? 5 : 20
+                height: type == 0 ? 5 : 30
             }
             Text {
                 id: labelHeight

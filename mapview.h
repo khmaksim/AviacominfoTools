@@ -6,12 +6,13 @@
 #include <QVector>
 
 struct ObstraclePoint {
+        enum TypeObstraction { NATURAL, ARTIFICIAL_MARKING, ARTIFICIAL, GROUP};
+
         QString id;
-        float lat;
-        float lon;
+        double lat;
+        double lon;
         QString height;
-        bool marker;
-        bool type;
+        TypeObstraction type;
 };
 
 class MapView : public QQuickView

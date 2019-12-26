@@ -58,9 +58,17 @@ bool SortSearchFilterObstracleModel::filterAcceptsRow(int sourceRow, const QMode
                   .toString().contains(QRegExp("да|есть"));
 
     if (lat > 0 && lon > 0 && radius > 0) {
-        double latObstracle = Helper::convertCoordinateInDec(sourceModel()->data(sourceModel()->index(sourceRow, 6, sourceParent)).toString());
-        double lonObstracle = Helper::convertCoordinateInDec(sourceModel()->data(sourceModel()->index(sourceRow, 7, sourceParent)).toString());
-//        qDebug() << latObstracle << lonObstracle << lat << lon;
+        double latObstracle = 0;
+        double lonObstracle = 0;
+        if (sourceModel()->data(sourceModel()->index(sourceRow, 6, sourceParent)).isValid() &&
+                sourceModel()->data(sourceModel()->index(sourceRow, 7, sourceParent)).isValid()) {
+            latObstracle = Helper::convertCoordinateInDec(sourceModel()->data(sourceModel()->index(sourceRow, 6, sourceParent)).toString());
+            lonObstracle = Helper::convertCoordinateInDec(sourceModel()->data(sourceModel()->index(sourceRow, 7, sourceParent)).toString());
+        }
+        else {
+            latObstracle = Helper::convertCoordinateInDec(sourceModel()->data(sourceModel()->index(sourceRow, 8, sourceParent)).toString());
+            lonObstracle = Helper::convertCoordinateInDec(sourceModel()->data(sourceModel()->index(sourceRow, 9, sourceParent)).toString());
+        }
 
         if (latObstracle > 0 && lonObstracle > 0) {
             // 6371 - radius Earth

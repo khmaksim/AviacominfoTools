@@ -173,13 +173,12 @@ Item {
         mapMapboxView.center = QtPositioning.coordinate(lat, lon);
     }
 
-    function addMarker(lat, lon, height, marker, type, id) {
+    function addMarker(lat, lon, height, type, id) {
         var component = Qt.createComponent("qrc:/qml/sign.qml");
         if (component.status === Component.Ready) {
             var sign = component.createObject(parent);
             sign.coordinate = QtPositioning.coordinate(lat, lon);
             sign.heightObstracle = height;
-            sign.marker = marker;
             sign.type = type;
             sign.idObstracle = id;
             mapEsriView.addMapItem(sign);
@@ -189,7 +188,6 @@ Item {
             sign = component.createObject(parent);
             sign.coordinate = QtPositioning.coordinate(lat, lon);
             sign.heightObstracle = height;
-            sign.marker = marker;
             sign.type = type;
             sign.idObstracle = id;
             mapOsmView.addMapItem(sign);
@@ -199,7 +197,6 @@ Item {
             sign = component.createObject(parent);
             sign.coordinate = QtPositioning.coordinate(lat, lon);
             sign.heightObstracle = height;
-            sign.marker = marker;
             sign.type = type;
             sign.idObstracle = id;
             mapMapboxView.addMapItem(sign);
