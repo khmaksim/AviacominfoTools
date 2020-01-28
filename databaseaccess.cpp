@@ -160,7 +160,7 @@ QVector<QVariantList> DatabaseAccess::getObstracles(int id)
                       "LEFT OUTER JOIN fragility fg ON fg.id = ob.fragility "
                       "LEFT OUTER JOIN obstracle_tag obt ON ob.id = obt.id_obstracle "
                       "LEFT OUTER JOIN tag t ON obt.id_tag = t.id "
-                      "WHERE ob.airfield = ? OR ob.airfield IS NULL GROUP BY ob.id");
+                      "WHERE ob.airfield = ? GROUP BY ob.id"); // remove this: OR ob.airfield IS NULL
         query.addBindValue(id);
     }
     else {

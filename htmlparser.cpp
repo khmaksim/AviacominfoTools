@@ -93,5 +93,5 @@ void HtmlParser::stop()
 
 QVector<Airfield> HtmlParser::getAirfields()
 {
-    return airfields;
+    return QVector<Airfield>();//airfields;
 }

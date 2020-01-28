@@ -10,6 +10,7 @@ ObstraclesHandler::ObstraclesHandler(QObject *parent) : QObject(parent)
 {
     lastPage = false;
     isProcessUpdate = false;
+    isObstraclesOnWay = false;
     manager = new QNetworkAccessManager(this);
     connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
 }
@@ -47,6 +48,7 @@ void ObstraclesHandler::update()
 void ObstraclesHandler::getHtmlPage(QUrl url)
 {
     QNetworkRequest request;
+    qDebug() << url;
     request.setHeader(QNetworkRequest::UserAgentHeader, QVariant(QString("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0")));
     request.setHeader(QNetworkRequest::ContentTypeHeader, QVariant(QString("text/html")));
     request.setUrl(url);
@@ -61,6 +63,12 @@ void ObstraclesHandler::getAirfields()
 
 void ObstraclesHandler::getObstracles()
 {
+    if (obstracles.size() > 0 && isObstraclesOnWay) {
+        updateDatabase();
+        obstracles.clear();
+        return;
+    }
+
     if (!hrefPages.isEmpty()) {
         getHtmlPage(QUrl("http://www.caica.ru/ObstacleList/rus/").resolved(QUrl(hrefPages.takeFirst())));
         if (hrefPages.isEmpty())
@@ -69,14 +77,15 @@ void ObstraclesHandler::getObstracles()
     }
     lastPage = false;
 
-    if (obstracles.size() > 0) {
-        updateDatabase();
-        obstracles.clear();
+    // update is completed
+    if (airfields.isEmpty() && !isObstraclesOnWay) {
+        isObstraclesOnWay = true;
+        airfield.name = QString();
+        airfield.codeIcao = QString();
+        getHtmlPage(QUrl("http://www.caica.ru/ObstacleList/rus/").resolved(QUrl("enrt.html")));
         return;
     }
-
-    // update is completed
-    if (airfields.isEmpty()) {
+    else if (airfields.isEmpty()) {
         emit updated();
         return;
     }
@@ -126,10 +135,8 @@ void ObstraclesHandler::storeAirfields()
 {
     HtmlParser *parser = qobject_cast<HtmlParser*>(sender());
 
-    if (parser) {
+    if (parser)
         airfields = parser->getAirfields();
-//        href.append("enrt.html");
-    }
 }
 
 void ObstraclesHandler::storeObstracles(QVector<QVector<QString>> obstracles)
@@ -139,7 +146,7 @@ void ObstraclesHandler::storeObstracles(QVector<QVector<QString>> obstracles)
 
 void ObstraclesHandler::updateDatabase()
 {
-    if (airfield.name.isEmpty())
+    if (airfield.name.isEmpty() && !isObstraclesOnWay)
         return;
 
     DatabaseUpdate *update = new DatabaseUpdate;

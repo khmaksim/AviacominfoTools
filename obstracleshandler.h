@@ -26,6 +26,7 @@ class ObstraclesHandler : public QObject
         QStringList hrefPages;
         bool lastPage;
         bool isProcessUpdate;
+        bool isObstraclesOnWay;
 
         void getAirfields();
         void parser(QByteArray&, HtmlParser::TypeData);
