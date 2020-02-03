@@ -464,8 +464,7 @@ void ObstraclesForm::showObstracles(QVariant coordinate, QVariant radius)
             if (sortSearchFilterObstracleModel->index(row, 2).data(Qt::DisplayRole).toString().contains("Естественное препятствие"))
                 obstraclePoint.type = ObstraclePoint::NATURAL;
             else if (sortSearchFilterObstracleModel->index(row, 6).data().isValid() && sortSearchFilterObstracleModel->index(row, 7).data().isValid()) {
-                if (sortSearchFilterObstracleModel->index(row, 17).data(Qt::DisplayRole).toString().contains(QRegExp("да|есть")) ||
-                        sortSearchFilterObstracleModel->index(row, 20).data(Qt::DisplayRole).toString().contains(QRegExp("да|есть")))
+                if (sortSearchFilterObstracleModel->index(row, 20).data(Qt::DisplayRole).toString().contains(QRegExp("да|есть")))       // if night light
                     obstraclePoint.type = ObstraclePoint::ARTIFICIAL_MARKING;
                 else
                     obstraclePoint.type = ObstraclePoint::ARTIFICIAL;
