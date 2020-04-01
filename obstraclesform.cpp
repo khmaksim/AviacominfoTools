@@ -53,11 +53,6 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     displayOnMapButton->setIconSize(QSize(32, 32));
     displayOnMapButton->setIcon(QIcon(":/images/res/img/icons8-map-marker-48.png"));
     displayOnMapButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    settingsButton = new QToolButton(this);
-    settingsButton->setText(tr("Update setup"));
-    settingsButton->setIconSize(QSize(32, 32));
-    settingsButton->setIcon(QIcon(":/images/res/img/icons8-settings-48.png"));
-    settingsButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     updateButton = new QToolButton(this);
     updateButton->setText(tr("Forced update"));
     updateButton->setIconSize(QSize(32, 32));
@@ -75,15 +70,20 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     exportDbXlsxButton->setIconSize(QSize(32, 32));
     exportDbXlsxButton->setIcon(QIcon(":/images/res/img/icons8-microsoft-excel-48.png"));
     exportDbXlsxButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    settingsButton = new QToolButton(this);
+    settingsButton->setText(tr("Settings"));
+    settingsButton->setIconSize(QSize(32, 32));
+    settingsButton->setIcon(QIcon(":/images/res/img/icons8-settings-48.png"));
+    settingsButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
     mapView = nullptr;
     toolBar = new QToolBar(this);
     toolBar->addWidget(exportButton);
     toolBar->addWidget(displayOnMapButton);
-    toolBar->addWidget(settingsButton);
     toolBar->addWidget(updateButton);
     toolBar->addWidget(exportXlsxButton);
     toolBar->addWidget(exportDbXlsxButton);
+    toolBar->addWidget(settingsButton);
 
     sideBar = new SideBar(this);
     totalObstraclesLabel = new QLabel(tr("Total obstracles: 0"), this);

@@ -1,6 +1,7 @@
 #include "settingsobstraclesdialog.h"
 #include "ui_settingsobstraclesdialog.h"
 #include <QSettings>
+#include <QtDebug>
 
 SettingsObstraclesDialog::SettingsObstraclesDialog(QWidget *parent) :
     QDialog(parent),
@@ -41,6 +42,10 @@ void SettingsObstraclesDialog::readSettings()
             ui->radioButton->setChecked(true);
     }
     settings.endGroup();
+    if (settings.value("unit").toString().contains("metre"))
+        ui->metreRadioButton->setChecked(true);
+    else
+        ui->footRadioButton->setChecked(true);
 }
 
 void SettingsObstraclesDialog::writeSettings()
@@ -56,5 +61,7 @@ void SettingsObstraclesDialog::writeSettings()
             break;
         }
     }
+    settings.setValue("unit", ui->metreRadioButton->isChecked() ? "metre" : "foot");
+
     this->accept();
 }
