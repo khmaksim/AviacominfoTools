@@ -488,6 +488,7 @@ void ObstraclesForm::showSettingsDialog()
     SettingsObstraclesDialog settingsObstraclesDialog(this);
     if (settingsObstraclesDialog.exec() == QDialog::Accepted) {
         readSettings();
+        clearTable();
         setConfigTable();
     }
 }
@@ -517,9 +518,9 @@ void ObstraclesForm::setConfigTable()
                                                              << tr("Location options | longitude of\n center of\n arc/circle")
                                                              << tr("Location options | arc/circle\n radius (m)")
                                                              << tr("Location options | horizontal\n accuracy (m)")
-                                                             << tr("Height | orthometric\n height MSL (%1)").arg(isConvert ? "ft" : "m")
-                                                             << tr("Height | relative\n height AGL (%1)").arg(isConvert ? "ft" : "m")
-                                                             << tr("Height | vertical\n accuracy (%1)").arg(isConvert ? "ft" : "m")
+                                                             << tr("Height | orthometric\n height MSL (%1)").arg(isConvert ? tr("ft") : tr("m"))
+                                                             << tr("Height | relative\n height AGL (%1)").arg(isConvert ? tr("ft") : tr("m"))
+                                                             << tr("Height | vertical\n accuracy (%1)").arg(isConvert ? tr("ft") : tr("m"))
                                                              << tr("Design parameters | type of\n material")
                                                              << tr("Design parameters | fragility")
                                                              << tr("Marking day | Yes/no")
@@ -543,7 +544,6 @@ void ObstraclesForm::setConfigTable()
     ui->tableView->setItemDelegate(new ObstracleStyledItemDelegate(this));
     ui->tableView->horizontalHeader()->restoreState(headerTableState);
     ui->tableView->horizontalHeader()->show();
-
 
     connect(groupHeaderView, SIGNAL(clickedCheckBox(bool)), this, SLOT(setCheckedAllRowTable(bool)));
 }
