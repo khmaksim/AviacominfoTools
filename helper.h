@@ -18,6 +18,11 @@ namespace Helper {
         }
         return dec;
     }
+
+    inline int convertMetreInFoot(QString metre)
+    {
+        return qRound(metre.toDouble() * 3.28083989501312);
+    }
 }
 
 #endif // HELPER_H

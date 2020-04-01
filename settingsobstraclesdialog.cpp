@@ -13,6 +13,8 @@ SettingsObstraclesDialog::SettingsObstraclesDialog(QWidget *parent) :
     ui->radioButton_3->setProperty("update_rate", 30);
 
     connect(ui->saveButton, SIGNAL(clicked()), SLOT(writeSettings()));
+    connect(ui->saveButton, SIGNAL(clicked()), SLOT(accept()));
+    connect(ui->cancelButton, SIGNAL(clicked()), SLOT(reject()));
 
     readSettings();
 }

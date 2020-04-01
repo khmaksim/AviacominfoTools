@@ -38,7 +38,8 @@ using namespace QXlsx;
 
 ObstraclesForm::ObstraclesForm(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::ObstraclesForm)
+    ui(new Ui::ObstraclesForm),
+    isConvert(false)
 {
     ui->setupUi(this);
     exportButton = new QToolButton(this);
@@ -112,46 +113,8 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     sortSearchFilterObstracleModel->setSourceModel(obstraclesModel);
     ui->tableView->setModel(sortSearchFilterObstracleModel);
 
-    QGroupHeaderView *groupHeaderView = new QGroupHeaderView(Qt::Horizontal, ui->tableView);
-//    groupHeaderView->setStyleSheet("QHeaderView::section { color: black;border: 0.5px solid #bfbfbf; }");
-    groupHeaderView->setCheckable(true);
-    obstraclesModel->setHorizontalHeaderLabels(QStringList() << tr("*")
-                                                             << tr("ID")
-                                                             << tr("Name")
-                                                             << tr("Type of\n configuration")
-                                                             << tr("Human\n settlement")
-                                                             << tr("Location options | coordinate\n system")
-                                                             << tr("Location options | latitude")
-                                                             << tr("Location options | longitude")
-                                                             << tr("Location options | latitude of\n center of\n arc/circle")
-                                                             << tr("Location options | longitude of\n center of\n arc/circle")
-                                                             << tr("Location options | arc/circle\n radius (m)")
-                                                             << tr("Location options | horizontal\n accuracy (m)")
-                                                             << tr("Height | orthometric\n height MSL (m)")
-                                                             << tr("Height | relative\n height AGL (m)")
-                                                             << tr("Height | vertical\n accuracy (m)")
-                                                             << tr("Design parameters | type of\n material")
-                                                             << tr("Design parameters | fragility")
-                                                             << tr("Marking day | Yes/no")
-                                                             << tr("Marking day | template")
-                                                             << tr("Marking day | color")
-                                                             << tr("Night marking | Yes/no")
-                                                             << tr("Night marking | color")
-                                                             << tr("Night marking | type of\n light")
-                                                             << tr("Night marking | intensity")
-                                                             << tr("Night marking | lights working\n time")
-                                                             << tr("Night marking | compliance\n 14 ADJ. ICAO")
-                                                             << tr("Data source | supplier")
-                                                             << tr("Data source | date of\n submission"));
-
-    ui->tableView->setHorizontalHeader(groupHeaderView);
-    ui->tableView->setSortingEnabled(true);
-    ui->tableView->horizontalHeader()->setSortIndicator(1, Qt::AscendingOrder);
-    ui->tableView->horizontalHeader()->setSortIndicatorShown(true);
-    ui->tableView->horizontalHeader()->setSectionsClickable(true);
-    ui->tableView->setItemDelegateForColumn(0, new CheckboxItemDelegate(this));
-    ui->tableView->setItemDelegate(new ObstracleStyledItemDelegate(this));
-
+    readSettings();
+    setConfigTable();
     updateModelAirfields();
 
 //    if (airfieldsModel->rowCount() == 0) {
@@ -167,8 +130,7 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     spinner->setColor(QColor(93, 93, 93));
     connect(airfieldsModel, SIGNAL(modelReset()), spinner, SLOT(stop()));
     //    }
-
-    readSettings();
+//    readSettings();
 
     connect(ui->listView, SIGNAL(clicked(QModelIndex)), sideBar, SLOT(resetFilter()));
     connect(ui->listView, SIGNAL(clicked(QModelIndex)), this, SLOT(updateModelObstracles(QModelIndex)));
@@ -180,7 +142,7 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     connect(sortSearchFilterObstracleModel, SIGNAL(rowsRemoved(QModelIndex,int,int)), this, SLOT(setCheckedAllRowTable()));
     connect(exportButton, SIGNAL(clicked(bool)), this, SLOT(exportToFile()));
     connect(displayOnMapButton, SIGNAL(clicked(bool)), this, SLOT(showObstracles()));
-    connect(settingsButton, SIGNAL(clicked(bool)), this, SLOT(showSettings()));
+    connect(settingsButton, SIGNAL(clicked(bool)), this, SLOT(showSettingsDialog()));
     connect(updateButton, SIGNAL(clicked(bool)), SIGNAL(updated()));
     connect(updateButton, SIGNAL(clicked(bool)), spinner, SLOT(start()));
     connect(exportXlsxButton, SIGNAL(clicked(bool)), this, SLOT(exportToXLSXFile()));
@@ -190,7 +152,7 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     connect(sideBar, SIGNAL(changedFilterProperty(QString, QVariant)), sortSearchFilterObstracleModel, SLOT(setFilterProperty(QString, QVariant)));
     connect(sideBar, SIGNAL(filterRadius()), this, SLOT(setFilterRadius()));
     connect(sideBar, SIGNAL(displayObstracles(QVariant, QVariant)), this, SLOT(showObstracles(QVariant, QVariant)));
-    connect(groupHeaderView, SIGNAL(clickedCheckBox(bool)), this, SLOT(setCheckedAllRowTable(bool)));
+//    connect(groupHeaderView, SIGNAL(clickedCheckBox(bool)), this, SLOT(setCheckedAllRowTable(bool)));
     connect(DatabaseAccess::getInstance(), SIGNAL(updatedTags()), this, SLOT(updateModelObstracles()));
 }
 
@@ -232,11 +194,12 @@ void ObstraclesForm::readSettings()
 
     settings.beginGroup("geometry");
     ui->splitter->restoreState(settings.value(ui->splitter->objectName()).toByteArray());
-    ui->tableView->horizontalHeader()->restoreState(settings.value(ui->tableView->objectName()).toByteArray());
+    headerTableState = settings.value(ui->tableView->objectName()).toByteArray();
     settings.endGroup();
     settings.beginGroup("database");
     dateUpdatedLabel->setText(QString(tr("Date updated: %1").arg(settings.value("datetime_updated").toDateTime().toString("dd.MM.yyyy"))));
     settings.endGroup();
+    isConvert = settings.value("unit").toString().contains("foot");
 }
 
 void ObstraclesForm::updateModelAirfields()
@@ -268,10 +231,8 @@ void ObstraclesForm::updateModelObstracles(const QModelIndex &index)
     QVector<QVariantList> obstracles = DatabaseAccess::getInstance()->getObstracles(idAirfield);
     // uncheked header
     qobject_cast<QGroupHeaderView*>(ui->tableView->horizontalHeader())->setChecked(false);
-    // remove all rows
-    while (obstraclesModel->rowCount() > 0) {
-        obstraclesModel->removeRow(0);
-    }
+
+    clearTable();
 
     QStringList typesObstracle = QStringList();
     for (int i = 0; i < obstracles.size(); i++) {
@@ -283,10 +244,13 @@ void ObstraclesForm::updateModelObstracles(const QModelIndex &index)
         item->setData(fields.takeLast().toString(), Qt::UserRole + 2);      // set datetime last updated
         items.append(item);
         // get name type obstracles
-        for (int j = 0; j < fields.size(); j++) {
-            if (j == 1)
-                typesObstracle << fields.at(j).toString();
-            items.append(new QStandardItem(fields.at(j).toString()));
+        for (int col = 0; col < fields.size(); col++) {
+            if (col == 1)
+                typesObstracle << fields.at(col).toString();
+            if ((col == 11 || col == 12 || col == 13) && isConvert)
+                items.append(new QStandardItem(QString::number(Helper::convertMetreInFoot(fields.at(col).toString()))));
+            else
+                items.append(new QStandardItem(fields.at(col).toString()));
         }
         obstraclesModel->appendRow(items);
     }
@@ -310,7 +274,6 @@ void ObstraclesForm::enabledToolButton()
     exportButton->setEnabled(isEnable);
     displayOnMapButton->setEnabled(isEnable);
     exportXlsxButton->setEnabled(isEnable);
-    return;
 }
 
 void ObstraclesForm::exportToFile()
@@ -339,7 +302,10 @@ void ObstraclesForm::exportToFile()
                 out << sortSearchFilterObstracleModel->index(row, 8).data().toString().replace("с", "N").replace("ю", "S").remove(QRegExp("[\\s\\.]")).append("0") << endl;
                 out << sortSearchFilterObstracleModel->index(row, 9).data().toString().replace("в", "E").replace("з", "W").remove(QRegExp("[\\s\\.]")).append("0") << endl;
             }
-            out << sortSearchFilterObstracleModel->index(row, 12).data().toString() << endl;
+            if (isConvert)
+                out << sortSearchFilterObstracleModel->index(row, 12).data().toString().append("'") << endl;
+            else
+                out << sortSearchFilterObstracleModel->index(row, 12).data().toString() << endl;
             if (sortSearchFilterObstracleModel->index(row, 2).data(Qt::DisplayRole).toString().contains("Естественное препятствие"))
                 out << "2" << endl;
             else if (sortSearchFilterObstracleModel->index(row, 6).data().isValid() && sortSearchFilterObstracleModel->index(row, 7).data().isValid())
@@ -461,6 +427,10 @@ void ObstraclesForm::showObstracles(QVariant coordinate, QVariant radius)
                 obstraclePoint.lon = Helper::convertCoordinateInDec(sortSearchFilterObstracleModel->index(row, 9).data(Qt::DisplayRole).toString());
             }
             obstraclePoint.height = sortSearchFilterObstracleModel->index(row, 12).data(Qt::DisplayRole).toString();
+            // add for height in foot
+            if (isConvert)
+                obstraclePoint.height.append("'");
+
             if (sortSearchFilterObstracleModel->index(row, 2).data(Qt::DisplayRole).toString().contains("Естественное препятствие"))
                 obstraclePoint.type = ObstraclePoint::NATURAL;
             else if (sortSearchFilterObstracleModel->index(row, 6).data().isValid() && sortSearchFilterObstracleModel->index(row, 7).data().isValid()) {
@@ -513,8 +483,67 @@ void ObstraclesForm::setChecked(bool checked, QString id)
         }
 }
 
-void ObstraclesForm::showSettings()
+void ObstraclesForm::showSettingsDialog()
 {
     SettingsObstraclesDialog settingsObstraclesDialog(this);
-    settingsObstraclesDialog.exec();
+    if (settingsObstraclesDialog.exec() == QDialog::Accepted) {
+        readSettings();
+        setConfigTable();
+    }
+}
+
+void ObstraclesForm::clearTable()
+{
+    // remove all rows
+    while (obstraclesModel->rowCount() > 0) {
+        obstraclesModel->removeRow(0);
+    }
+}
+
+void ObstraclesForm::setConfigTable()
+{
+    QGroupHeaderView *groupHeaderView = new QGroupHeaderView(Qt::Horizontal, ui->tableView);
+//    groupHeaderView->setStyleSheet("QHeaderView::section { color: black;border: 0.5px solid #bfbfbf; }");
+    groupHeaderView->setCheckable(true);
+    obstraclesModel->setHorizontalHeaderLabels(QStringList() << tr("*")
+                                                             << tr("ID")
+                                                             << tr("Name")
+                                                             << tr("Type of\n configuration")
+                                                             << tr("Human\n settlement")
+                                                             << tr("Location options | coordinate\n system")
+                                                             << tr("Location options | latitude")
+                                                             << tr("Location options | longitude")
+                                                             << tr("Location options | latitude of\n center of\n arc/circle")
+                                                             << tr("Location options | longitude of\n center of\n arc/circle")
+                                                             << tr("Location options | arc/circle\n radius (m)")
+                                                             << tr("Location options | horizontal\n accuracy (m)")
+                                                             << tr("Height | orthometric\n height MSL (%1)").arg(isConvert ? "ft" : "m")
+                                                             << tr("Height | relative\n height AGL (%1)").arg(isConvert ? "ft" : "m")
+                                                             << tr("Height | vertical\n accuracy (%1)").arg(isConvert ? "ft" : "m")
+                                                             << tr("Design parameters | type of\n material")
+                                                             << tr("Design parameters | fragility")
+                                                             << tr("Marking day | Yes/no")
+                                                             << tr("Marking day | template")
+                                                             << tr("Marking day | color")
+                                                             << tr("Night marking | Yes/no")
+                                                             << tr("Night marking | color")
+                                                             << tr("Night marking | type of\n light")
+                                                             << tr("Night marking | intensity")
+                                                             << tr("Night marking | lights working\n time")
+                                                             << tr("Night marking | compliance\n 14 ADJ. ICAO")
+                                                             << tr("Data source | supplier")
+                                                             << tr("Data source | date of\n submission"));
+
+    ui->tableView->setHorizontalHeader(groupHeaderView);
+    ui->tableView->setSortingEnabled(true);
+    ui->tableView->horizontalHeader()->setSortIndicator(1, Qt::AscendingOrder);
+    ui->tableView->horizontalHeader()->setSortIndicatorShown(true);
+    ui->tableView->horizontalHeader()->setSectionsClickable(true);
+    ui->tableView->setItemDelegateForColumn(0, new CheckboxItemDelegate(this));
+    ui->tableView->setItemDelegate(new ObstracleStyledItemDelegate(this));
+    ui->tableView->horizontalHeader()->restoreState(headerTableState);
+    ui->tableView->horizontalHeader()->show();
+
+
+    connect(groupHeaderView, SIGNAL(clickedCheckBox(bool)), this, SLOT(setCheckedAllRowTable(bool)));
 }

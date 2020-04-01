@@ -55,10 +55,14 @@ class ObstraclesForm : public QWidget
         QLabel *totalObstraclesLabel;
         QLabel *selectedObstraclesLabel;
         QLabel *dateUpdatedLabel;
+        bool isConvert;
+        QByteArray headerTableState;
 
         void readSettings();
         void writeSettings();
         void updateModelAirfields();
+        void clearTable();
+        void setConfigTable();
 
     private slots:
         void updateModelObstracles(const QModelIndex &index = QModelIndex());
@@ -71,7 +75,7 @@ class ObstraclesForm : public QWidget
         void setFilterRadius();
         void showObstracles(QVariant c = QVariant(), QVariant radius = QVariant(0));
         void updateStatusSelectedObstracles();
-        void showSettings();
+        void showSettingsDialog();
 
     signals:
         void updated();
