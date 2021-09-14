@@ -7,8 +7,8 @@ class TableModel : public QStandardItemModel
 {
         Q_OBJECT
     public:
-        explicit TableModel(QObject *parent = nullptr);
-        ~TableModel();
+        explicit TableModel(QObject *parent = nullptr){};
+        ~TableModel(){};
 
         bool setData(const QModelIndex &index, const QVariant &value, int role);
         QVariant data(const QModelIndex &index, int role) const;

@@ -1,16 +1,6 @@
 #include "tablemodel.h"
 #include <QDebug>
 
-TableModel::TableModel(QObject *parent)
-{
-
-}
-
-TableModel::~TableModel()
-{
-
-}
-
 bool TableModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (!index.isValid())

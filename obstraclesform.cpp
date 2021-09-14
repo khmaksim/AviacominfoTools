@@ -111,9 +111,6 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     ui->listView->setItemDelegate(new ListItemDelegate());
     ui->listView->setModel(searchAirfieldsModel);
 
-//    ui->listView->setStyleSheet("QListView::item:selected { background: #66b3ff;color: white; }"
-//                                "QListView::item:hover { background: #e6f2ff;color: black; }");
-
     obstraclesModel = new QStandardItemModel(this);
     sortSearchFilterObstracleModel = new SortSearchFilterObstracleModel(this);
     sortSearchFilterObstracleModel->setSourceModel(obstraclesModel);

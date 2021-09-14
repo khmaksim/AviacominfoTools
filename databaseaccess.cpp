@@ -230,11 +230,7 @@ void DatabaseAccess::update(const QString &icaoCodeAirfield, const QString &name
     }
 
     for (int i = 0; i < obstracles.size(); i++) {
-        QVariant idCoordinationSystem = QVariant();
-        QVariant idFragility = QVariant();
-        QVariant idLocality = QVariant();
-        QVariant idTypeConfigurationObstracle = QVariant();
-        QVariant idTypeMaterial = QVariant();
+        QVariant idCoordinationSystem = QVariant(QVariant::Int);
 
         if (!obstracles.at(i).at(4).isEmpty()) {
             query.prepare("INSERT INTO coordinate_system (name) SELECT :name WHERE NOT EXISTS(SELECT 1 "
@@ -255,6 +251,8 @@ void DatabaseAccess::update(const QString &icaoCodeAirfield, const QString &name
             }
         }
 
+        QVariant idFragility = QVariant(QVariant::Int);
+
         if (!obstracles.at(i).at(15).isEmpty()) {
             query.prepare("INSERT INTO fragility (name) SELECT :name WHERE NOT EXISTS(SELECT 1 \
                           FROM fragility WHERE name = :name)");
@@ -271,6 +269,8 @@ void DatabaseAccess::update(const QString &icaoCodeAirfield, const QString &name
                     idFragility = query.value(0).toUInt();
             }
         }
+
+        QVariant idLocality = QVariant(QVariant::Int);
 
         if (!obstracles.at(i).at(3).isEmpty()) {
             query.prepare("INSERT INTO locality (name) SELECT :name WHERE NOT EXISTS(SELECT 1 \
@@ -289,6 +289,7 @@ void DatabaseAccess::update(const QString &icaoCodeAirfield, const QString &name
                     idLocality = query.value(0).toUInt();
             }
         }
+        QVariant idTypeConfigurationObstracle = QVariant(QVariant::Int);
 
         if (!obstracles.at(i).at(2).isEmpty()) {
             query.prepare("INSERT INTO type_configuration_obstracle (name) SELECT :name WHERE NOT EXISTS(SELECT 1 \
@@ -306,6 +307,8 @@ void DatabaseAccess::update(const QString &icaoCodeAirfield, const QString &name
                     idTypeConfigurationObstracle = query.value(0).toUInt();
             }
         }
+
+        QVariant idTypeMaterial = QVariant(QVariant::Int);
 
         if (!obstracles.at(i).at(14).isEmpty()) {
             query.prepare("INSERT INTO type_material (name) SELECT :name WHERE NOT EXISTS(SELECT 1 \
@@ -361,7 +364,7 @@ void DatabaseAccess::update(const QString &icaoCodeAirfield, const QString &name
         query.addBindValue(obstracles.at(i).at(26));
         query.addBindValue(idAirfield);
         if (!query.exec())
-            qDebug() << query.lastError().text() << query.lastQuery() << query.boundValues();
+            qDebug() << query.lastError().text() << query.boundValues() << query.lastQuery() ;
     }
     query.exec("COMMIT");
 //    if (!QSqlDatabase::database().commit()) {

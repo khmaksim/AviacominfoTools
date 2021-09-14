@@ -63,7 +63,7 @@ void ObstraclesHandler::getAirfields()
 
 void ObstraclesHandler::getObstracles()
 {
-    if (obstracles.size() > 0 && isObstraclesOnWay) {
+    if (obstracles.size() > 0 && !isObstraclesOnWay) {
         updateDatabase();
         obstracles.clear();
         return;
