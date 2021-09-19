@@ -116,7 +116,7 @@ Item {
                     name: "mapbox"
                     PluginParameter {
                         name: "mapbox.access_token"
-                        value: "pk.eyJ1IjoibWF4aW1raCIsImEiOiJjazMzaTNoaTIwc2N6M25tajg4ZGhtbXdiIn0.KZ6632nxyVFDhN2i8QYVkw"
+                        value: "pk.eyJ1IjoibWF4aW1raCIsImEiOiJja3RvcXkzcjYwZmkyMnZsNHFkYTE1OWY0In0.ET9XpussJxFscI22tW564w"
                     }
                 }
 
