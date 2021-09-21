@@ -39,6 +39,9 @@ void ObstraclesHandler::replyFinished(QNetworkReply *reply)
 
 void ObstraclesHandler::update()
 {
+    // Clear data from database
+    DatabaseAccess::getInstance()->deleteAll();
+
     if (!isProcessUpdate) {
         isProcessUpdate = true;
         getAirfields();

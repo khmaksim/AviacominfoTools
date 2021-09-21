@@ -21,6 +21,7 @@ class DatabaseAccess : public QObject
 
     public slots:
         void update(const QString&, const QString&, QVector<QVector<QString>> obs = QVector<QVector<QString>>());
+        void deleteAll();
 
     private:
         DatabaseAccess(QObject *parent = nullptr);

@@ -197,6 +197,21 @@ QVector<QVariantList> DatabaseAccess::getObstracles(int id)
     return obstracles;
 }
 
+void DatabaseAccess::deleteAll()
+{
+    QSqlQuery query(db);
+    QVariant idAirfield = QVariant();
+
+    query.exec("BEGIN TRANSACTION");
+    query.exec("DELETE FROM airfield");
+    if (query.lastError().isValid()) {
+        qDebug() << query.lastError().text() << query.lastQuery() << query.boundValues();
+        QSqlDatabase::database().rollback();
+    }
+
+    query.exec("COMMIT");
+}
+
 void DatabaseAccess::update(const QString &icaoCodeAirfield, const QString &nameAirfield, QVector<QVector<QString>> obstracles)
 {
     QSqlQuery query(db);
