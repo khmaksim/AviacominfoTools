@@ -14,13 +14,15 @@ void HtmlParser::process()
 
     if (type == TypeData::Airfields) {
         QString startMenu = "<div class=\"menu\">";
-        QRegExp regExp("<a target=\"view_frame\" href=\"([^\"]+)\">([^<]+)<br /><b>([^<]+)</b></a>");
+        QRegExp regExp("<a target=\"view_frame\" href=\"([^\"]+)\">([^<]+)<br />"
+                       "(<small style=\"float:right;color:gray;\">" + QRegExp::escape("(H)") +
+                       "</small>)?<b>([^<]+)</b></a>");
 
         if ((pos = htmlData.indexOf(startMenu, pos)) > 0) {
             while ((pos = regExp.indexIn(htmlData, pos)) != -1) {
                 pos += regExp.matchedLength();
                 Airfield airfield;
-                airfield.codeIcao = regExp.cap(3);
+                airfield.codeIcao = regExp.cap(4);
                 airfield.name = regExp.cap(2);
                 airfield.href = regExp.cap(1);     // store href for airfield
                 airfields.push_back(airfield);

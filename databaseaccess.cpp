@@ -22,7 +22,10 @@ DatabaseAccess::DatabaseAccess(QObject *parent) : QObject(parent)
     if (!db.open())
         qDebug() << "Can not connected to database.";
 
-    db.exec("PRAGMA FOREIGN_KEYS=ON");       //set support for foreign keys
+    QSqlQuery query("PRAGMA FOREIGN_KEYS=ON", db);      //set support for foreign keys
+    if (!query.exec()) {
+        qDebug() << query.lastError().text() << query.lastQuery();
+    }
 }
 
 DatabaseAccess* DatabaseAccess::getInstance()
@@ -203,6 +206,12 @@ void DatabaseAccess::deleteAll()
     QVariant idAirfield = QVariant();
 
     query.exec("BEGIN TRANSACTION");
+    query.exec("DELETE FROM obstracle");
+    if (query.lastError().isValid()) {
+        qDebug() << query.lastError().text() << query.lastQuery() << query.boundValues();
+        QSqlDatabase::database().rollback();
+    }
+
     query.exec("DELETE FROM airfield");
     if (query.lastError().isValid()) {
         qDebug() << query.lastError().text() << query.lastQuery() << query.boundValues();
