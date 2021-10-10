@@ -205,7 +205,10 @@ void DatabaseAccess::deleteAll()
     QSqlQuery query(db);
     QVariant idAirfield = QVariant();
 
-    query.exec("BEGIN TRANSACTION");
+
+    if (!QSqlDatabase::database().transaction())
+        query.exec("BEGIN TRANSACTION");
+
     query.exec("DELETE FROM obstracle");
     if (query.lastError().isValid()) {
         qDebug() << query.lastError().text() << query.lastQuery() << query.boundValues();
@@ -218,7 +221,14 @@ void DatabaseAccess::deleteAll()
         QSqlDatabase::database().rollback();
     }
 
-    query.exec("COMMIT");
+
+    if (!QSqlDatabase::database().commit())
+        query.exec("COMMIT");
+
+    query.exec("VACUUM");
+    if (query.lastError().isValid()) {
+        qDebug() << query.lastError().text();
+    }
 }
 
 void DatabaseAccess::update(const QString &icaoCodeAirfield, const QString &nameAirfield, QVector<QVector<QString>> obstracles)
