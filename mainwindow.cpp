@@ -13,13 +13,27 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    // create and settings spinner
+    spinner = new WaitingSpinnerWidget(this);
+    spinner->setRoundness(70.0);
+    spinner->setMinimumTrailOpacity(15.0);
+    spinner->setTrailFadePercentage(70.0);
+    spinner->setNumberOfLines(12);
+    spinner->setLineLength(15);
+    spinner->setLineWidth(3);
+    spinner->setInnerRadius(10);
+    spinner->setRevolutionsPerSecond(1);
+    spinner->setColor(QColor(93, 93, 93));
+
     obstraclesHandler = new ObstraclesHandler(this);
 
     ObstraclesForm *form = new ObstraclesForm(this);
     ui->stackedWidget->addWidget(form);
     ui->stackedWidget->setCurrentIndex(1);
 
-    connect(obstraclesHandler, SIGNAL(updated()), form, SLOT(showUpdated()));
+    connect(obstraclesHandler, SIGNAL(updated()), form, SLOT(updateModelAirfields()));
+    connect(form, SIGNAL(updated()), spinner, SLOT(start()));
     connect(form, SIGNAL(updated()), obstraclesHandler, SLOT(update()));
 //    connect(obstraclesHandler, SIGNAL(finished(Airfield,QVector<QVector<QString> >&)), DatabaseAccess::getInstance(), SLOT(update(Airfield,QVector<QVector<QString> >&)));
     connect(ui->obstracleButton, SIGNAL(clicked(bool)), this, SLOT(showObstracles()));
@@ -57,9 +71,8 @@ void MainWindow::readSettings()
     settings.beginGroup("database");
     int updateRate = settings.value("update_rate", 1).toInt();
     if (settings.value("datetime_updated").toDateTime().addDays(updateRate) < QDateTime::currentDateTime()) {
-        settings.setValue("datetime_updated", QDateTime::currentDateTime());
         obstraclesHandler->update();
-        qobject_cast<ObstraclesForm*>(ui->stackedWidget->widget(1))->spinner->start();
+        spinner->start();
     }
     settings.endGroup();
 }

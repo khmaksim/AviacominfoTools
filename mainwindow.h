@@ -9,6 +9,7 @@ namespace Ui {
 
 class Database;
 class ObstraclesHandler;
+class WaitingSpinnerWidget;
 class MainWindow : public QMainWindow
 {
         Q_OBJECT
@@ -22,7 +23,7 @@ class MainWindow : public QMainWindow
 
     private:
         Ui::MainWindow *ui;
-
+        WaitingSpinnerWidget *spinner;
         ObstraclesHandler *obstraclesHandler;
         Database *db;
 

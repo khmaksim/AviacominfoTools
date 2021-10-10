@@ -17,7 +17,6 @@
 #include <QProgressDialog>
 #include "listitemdelegate.h"
 #include "searchmodel.h"
-#include "waitingspinnerwidget.h"
 #include "qgroupheaderview.h"
 #include "filterpanel.h"
 #include "databaseaccess.h"
@@ -120,21 +119,6 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     setConfigTable();
     updateModelAirfields();
 
-//    if (airfieldsModel->rowCount() == 0) {
-    spinner = new WaitingSpinnerWidget(this);
-    spinner->setRoundness(70.0);
-    spinner->setMinimumTrailOpacity(15.0);
-    spinner->setTrailFadePercentage(70.0);
-    spinner->setNumberOfLines(12);
-    spinner->setLineLength(15);
-    spinner->setLineWidth(3);
-    spinner->setInnerRadius(10);
-    spinner->setRevolutionsPerSecond(1);
-    spinner->setColor(QColor(93, 93, 93));
-    connect(airfieldsModel, SIGNAL(modelReset()), spinner, SLOT(stop()));
-    //    }
-//    readSettings();
-
     connect(ui->listView, SIGNAL(clicked(QModelIndex)), sideBar, SLOT(resetFilter()));
     connect(ui->listView, SIGNAL(clicked(QModelIndex)), this, SLOT(updateModelObstracles(QModelIndex)));
     connect(obstraclesModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this, SLOT(enabledToolButton()));
@@ -145,7 +129,6 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     connect(displayOnMapButton, SIGNAL(clicked(bool)), this, SLOT(showObstracles()));
     connect(settingsButton, SIGNAL(clicked(bool)), this, SLOT(showSettingsDialog()));
     connect(updateButton, SIGNAL(clicked(bool)), SIGNAL(updated()));
-    connect(updateButton, SIGNAL(clicked(bool)), spinner, SLOT(start()));
     connect(exportXlsxButton, SIGNAL(clicked(bool)), this, SLOT(exportToXLSXFile()));
     connect(exportDbXlsxButton, SIGNAL(clicked(bool)), this, SLOT(exportToXLSXFile()));
     connect(ui->searchLineEdit, SIGNAL(textChanged(QString)), searchAirfieldsModel, SLOT(setFilterRegExp(QString)));
@@ -463,7 +446,11 @@ void ObstraclesForm::showObstracles(QVariant coordinate, QVariant radius)
 
 void ObstraclesForm::showUpdated()
 {
-    updateModelAirfields();
+    QSettings settings;
+    // save date update database
+    settings.beginGroup("database");
+    settings.setValue("datetime_updated", QDateTime::currentDateTime());
+    settings.endGroup();
 
     dateUpdatedLabel->setText(QString(tr("Date updated: %1")).arg(QDate::currentDate().toString("dd.MM.yyyy")));
     QMessageBox::information(this, tr("Information"), tr("Obstacle database updated!"));

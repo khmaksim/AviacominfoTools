@@ -13,7 +13,6 @@ class QStandardItemModel;
 class QToolBar;
 class QToolButton;
 class SearchModel;
-class WaitingSpinnerWidget;
 class QFrame;
 class SortSearchFilterObstracleModel;
 class SideBar;
@@ -28,7 +27,6 @@ class ObstraclesForm : public QWidget
         ~ObstraclesForm();
 
         QVariantList getCheckedObstralcles();
-        WaitingSpinnerWidget *spinner;
 
     public slots:
         void showUpdated();
@@ -60,11 +58,11 @@ class ObstraclesForm : public QWidget
 
         void readSettings();
         void writeSettings();
-        void updateModelAirfields();
         void clearTable();
         void setConfigTable();
 
     private slots:
+        void updateModelAirfields();
         void updateModelObstracles(const QModelIndex &index = QModelIndex());
         void enabledToolButton();
         void exportToFile();
