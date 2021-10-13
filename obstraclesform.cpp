@@ -128,7 +128,7 @@ ObstraclesForm::ObstraclesForm(QWidget *parent) :
     connect(exportButton, SIGNAL(clicked(bool)), this, SLOT(exportToFile()));
     connect(displayOnMapButton, SIGNAL(clicked(bool)), this, SLOT(showObstracles()));
     connect(settingsButton, SIGNAL(clicked(bool)), this, SLOT(showSettingsDialog()));
-    connect(updateButton, SIGNAL(clicked(bool)), SIGNAL(updated()));
+    connect(updateButton, SIGNAL(clicked(bool)), SLOT(showConfirmMessage()));
     connect(exportXlsxButton, SIGNAL(clicked(bool)), this, SLOT(exportToXLSXFile()));
     connect(exportDbXlsxButton, SIGNAL(clicked(bool)), this, SLOT(exportToXLSXFile()));
     connect(ui->searchLineEdit, SIGNAL(textChanged(QString)), searchAirfieldsModel, SLOT(setFilterRegExp(QString)));
@@ -310,7 +310,8 @@ void ObstraclesForm::exportToXLSXFile()
         return;
     }
 
-    QProgressDialog progress(tr("Write files..."), tr("Cancel"), 0, 100, this);
+    QProgressDialog progress(tr("Data preparation..."), tr("Cancel"), 0, 100, this);
+    progress.setFixedSize(progress.sizeHint());
     progress.setWindowModality(Qt::WindowModal);
     progress.setAutoClose(false);
     progress.setAutoReset(false);
@@ -323,7 +324,7 @@ void ObstraclesForm::exportToXLSXFile()
 
         int totalFields = obstracles.size() * obstracles.at(0).size();
         int i = 0;
-
+        progress.setLabelText(tr("Write files..."));
         for (int row = 0; row < obstracles.size(); row++) {
             QVariantList fields = obstracles.at(row);
             for (int col = 0; col < fields.size(); col++) {
@@ -534,4 +535,15 @@ void ObstraclesForm::setConfigTable()
     ui->tableView->horizontalHeader()->show();
 
     connect(groupHeaderView, SIGNAL(clickedCheckBox(bool)), this, SLOT(setCheckedAllRowTable(bool)));
+}
+
+void ObstraclesForm::showConfirmMessage()
+{
+    QMessageBox messageBox(QMessageBox::Warning, tr("Confirmation"), tr("Update the obstacle database? Previous data will be deleted!"));
+    messageBox.addButton(tr("Yes"), QMessageBox::AcceptRole);
+    QPushButton *noButton = messageBox.addButton(tr("No"), QMessageBox::RejectRole);
+    messageBox.setDefaultButton(noButton);
+
+    if (messageBox.exec() == QMessageBox::AcceptRole)
+        emit update();
 }

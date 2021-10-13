@@ -74,9 +74,10 @@ class ObstraclesForm : public QWidget
         void showObstracles(QVariant c = QVariant(), QVariant radius = QVariant(0));
         void updateStatusSelectedObstracles();
         void showSettingsDialog();
+        void showConfirmMessage();
 
     signals:
-        void updated();
+        void update();
 };
 
 #endif // OBSTRACLESFORM_H
